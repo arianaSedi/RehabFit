@@ -15,15 +15,15 @@
         android:theme="@style/Theme.RehabFit">
         <activity
             android:name=".CrearCuentaActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
-            android:name=".BienvenidaActivity"
+            android:name=".LoginActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".BienvenidaActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
