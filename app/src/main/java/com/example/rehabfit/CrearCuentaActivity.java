@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.rehabfit.models.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -89,16 +90,13 @@ public class CrearCuentaActivity extends AppCompatActivity {
                         if (user != null) {
                             String uid = user.getUid();
 
-                            HashMap<String, Object> datos = new HashMap<>();
-                            datos.put("uid", uid);
-                            datos.put("nombre", nombre);
-                            datos.put("correo", correo);
+                            Usuario usuario = new Usuario(uid, nombre, correo);
 
-                            usuariosRef.child(uid).setValue(datos)
+                            usuariosRef.child(uid).setValue(usuario)
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(this, "Cuenta creada correctamente", Toast.LENGTH_SHORT).show();
 
-                                        Intent intent = new Intent(CrearCuentaActivity.this, LoginActivity.class);
+                                        Intent intent = new Intent(CrearCuentaActivity.this, PerfilAdaptadoActivity.class);
                                         startActivity(intent);
                                         finish();
                                     })

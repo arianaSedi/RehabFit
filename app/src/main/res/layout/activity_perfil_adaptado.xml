@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:fillViewport="true"
+    tools:context=".PerfilAdaptadoActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Perfil adaptado"
+            android:textColor="@color/texto_principal"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ayúdanos a personalizar tu experiencia"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_info"
+            android:padding="12dp"
+            android:text="Esta información ayuda a adaptar las recomendaciones a tu condición específica."
+            android:textColor="@color/verde_oscuro"
+            android:textSize="12sp" />
+
+        <TextView
+            style="@style/TextoLabel"
+            android:text="Edad" />
+
+        <EditText
+            android:id="@+id/edtEdad"
+            style="@style/InputFormulario"
+            android:hint="Tu edad en años"
+            android:inputType="number" />
+
+        <TextView
+            style="@style/TextoLabel"
+            android:text="Nivel de movilidad" />
+
+        <Spinner
+            android:id="@+id/spNivelMovilidad"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/bg_input"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
+
+        <TextView
+            style="@style/TextoLabel"
+            android:text="Apoyo físico que utilizas" />
+
+        <RadioGroup
+            android:id="@+id/rgApoyoFisico"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbNinguno"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:buttonTint="@color/verde_principal"
+                    android:paddingStart="10dp"
+                    android:text="Ninguno"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="13sp" />
+
+                <RadioButton
+                    android:id="@+id/rbBaston"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:buttonTint="@color/verde_principal"
+                    android:paddingStart="10dp"
+                    android:text="Bastón"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbMuletas"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:buttonTint="@color/verde_principal"
+                    android:paddingStart="10dp"
+                    android:text="Muletas"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="13sp" />
+
+                <RadioButton
+                    android:id="@+id/rbSillaRuedas"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:buttonTint="@color/verde_principal"
+                    android:paddingStart="10dp"
+                    android:text="Silla de ruedas"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+        </RadioGroup>
+
+        <TextView
+            style="@style/TextoLabel"
+            android:text="Objetivo principal" />
+
+        <Spinner
+            android:id="@+id/spObjetivoPrincipal"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/bg_input"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nivel de dolor actual (0-10)"
+                android:textColor="@color/texto_principal"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/txtValorDolor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5/10"
+                android:textColor="@color/alerta_texto"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/seekDolor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10"
+            android:progress="5"
+            android:progressTint="@color/verde_principal"
+            android:thumbTint="@color/verde_principal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="0 Sin dolor"
+                android:textColor="@color/texto_secundario"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10 Intenso"
+                android:textColor="@color/texto_secundario"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnGuardarPerfil"
+            style="@style/BotonVerde"
+            android:layout_marginTop="26dp"
+            android:elevation="4dp"
+            android:stateListAnimator="@null"
+            android:text="Guardar perfil"
+            android:textColor="@color/blanco"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+</ScrollView>
