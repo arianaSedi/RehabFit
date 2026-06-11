@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "537740390635",
+    "project_id": "rehabfit-f35d6",
+    "storage_bucket": "rehabfit-f35d6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537740390635:android:526d7000d2e974dcc6ceae",
+        "android_client_info": {
+          "package_name": "com.example.rehabfit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL6oi8TUOGRr7BkfXyj5swiE4N_7bPCso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
