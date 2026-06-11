@@ -13,4 +13,19 @@
 
     <color name="alerta_fondo">#FFF2E5</color>
     <color name="alerta_texto">#C24A00</color>
+
+    <!-- Colores para tarjetas -->
+    <color name="azul_claro">#D7E8FF</color>
+    <color name="naranja_claro">#FFE4C2</color>
+    <color name="verde_suave">#CFF7E2</color>
+
+    <!-- Colores para chips -->
+    <color name="chip_fondo">#DDFBF6</color>
+    <color name="gris_chip">#E9EDF2</color>
+    <color name="verde_chip">#B9F4E8</color>
+
+    <!-- Acentos -->
+    <color name="verde_numero">#08BFAE</color>
+    <color name="naranja_fuerte">#FF6B00</color>
+    <color name="azul_texto">#005CFF</color>
 </resources>

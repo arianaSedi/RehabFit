@@ -121,13 +121,6 @@
             android:src="@drawable/ic_wrench"
             app:tint="@color/borde" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:text="Firebase Authentication"
-            android:textColor="@color/texto_secundario"
-            android:textSize="12sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

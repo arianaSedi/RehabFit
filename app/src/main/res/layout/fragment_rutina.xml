@@ -1,14 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.RutinaFragment">
+    android:background="@color/fondo"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mi rutina adaptada"
+        android:textColor="@color/texto_principal"
+        android:textSize="23sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtResumenRutina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3 ejercicios · 19 minutos"
+        android:textColor="@color/texto_secundario"
+        android:textSize="13sp" />
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bg_alerta"
+        android:padding="12dp"
+        android:text="⚠ Detente si sientes dolor fuerte. Esta rutina es de apoyo, no reemplaza indicaciones de tu fisioterapeuta."
+        android:textColor="@color/alerta_texto"
+        android:textSize="12sp" />
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRutina"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="14dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/btnIniciarRutina"
+        style="@style/BotonVerde"
+        android:text="▷ Iniciar rutina" />
+
+    <Button
+        android:id="@+id/btnAgregarEjercicio"
+        style="@style/BotonBorde"
+        android:layout_marginTop="12dp"
+        android:text="+ Agregar ejercicio" />
+
+</LinearLayout>
