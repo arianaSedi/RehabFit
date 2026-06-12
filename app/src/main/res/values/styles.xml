@@ -154,4 +154,8 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="BottomNav">
+        <item name="android:color">@android:color/transparent</item>
+    </style>
+
 </resources>

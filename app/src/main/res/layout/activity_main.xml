@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/fondo"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:id="@+id/main"
     tools:context=".MainActivity">
 
-    <!--aqui se cargan los fragments-->
     <FrameLayout
         android:id="@+id/contenedorFragments"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="@color/fondo" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="109dp"
         android:background="@color/blanco"
-        android:elevation="10dp"
+        android:elevation="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        app:itemBackground="@android:color/transparent"
+        app:itemIconSize="24dp"
+        app:itemActiveIndicatorStyle="@style/BottomNav"
         app:itemIconTint="@color/nav_color"
-        app:itemTextColor="@color/nav_color"
         app:itemRippleColor="@android:color/transparent"
+        app:itemTextColor="@color/nav_color"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_inferior" />
 
