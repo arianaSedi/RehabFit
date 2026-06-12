@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class BienvenidaActivity extends AppCompatActivity {
 
@@ -42,9 +43,26 @@ public class BienvenidaActivity extends AppCompatActivity {
         FirebaseUser usuarioActual = auth.getCurrentUser();
 
         if (usuarioActual != null) {
-            Intent intent = new Intent(BienvenidaActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            verificarPerfilAdaptado(usuarioActual.getUid());
         }
+    }
+
+    private void verificarPerfilAdaptado(String uid) {
+        FirebaseDatabase.getInstance()
+                .getReference("usuarios")
+                .child(uid)
+                .child("perfilAdaptado")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
+                        Intent intent = new Intent(BienvenidaActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(BienvenidaActivity.this, PerfilAdaptadoActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
     }
 }

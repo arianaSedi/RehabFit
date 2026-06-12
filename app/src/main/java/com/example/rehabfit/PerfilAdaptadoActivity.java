@@ -31,14 +31,21 @@ public class PerfilAdaptadoActivity extends AppCompatActivity {
 
     private EditText edtEdad;
     private Spinner spNivelMovilidad, spObjetivoPrincipal;
-    private RadioGroup rgApoyoFisico;
+
+    private RadioButton rbNinguno;
+    private RadioButton rbBaston;
+    private RadioButton rbMuletas;
+    private RadioButton rbSillaRuedas;
+
     private SeekBar seekDolor;
     private TextView txtValorDolor;
     private AppCompatButton btnGuardarPerfil;
+
     private FirebaseAuth auth;
     private DatabaseReference usuariosRef;
 
     private int nivelDolor = 5;
+    private String apoyoFisicoSeleccionado = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,36 +64,22 @@ public class PerfilAdaptadoActivity extends AppCompatActivity {
         edtEdad = findViewById(R.id.edtEdad);
         spNivelMovilidad = findViewById(R.id.spNivelMovilidad);
         spObjetivoPrincipal = findViewById(R.id.spObjetivoPrincipal);
-        rgApoyoFisico = findViewById(R.id.rgApoyoFisico);
+        rbNinguno = findViewById(R.id.rbNinguno);
+        rbBaston = findViewById(R.id.rbBaston);
+        rbMuletas = findViewById(R.id.rbMuletas);
+        rbSillaRuedas = findViewById(R.id.rbSillaRuedas);
         seekDolor = findViewById(R.id.seekDolor);
         txtValorDolor = findViewById(R.id.txtValorDolor);
         btnGuardarPerfil = findViewById(R.id.btnGuardarPerfil);
 
         cargarSpinners();
-
-        seekDolor.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                nivelDolor = progress;
-                txtValorDolor.setText(nivelDolor + "/10");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // No se usa
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // No se usa
-            }
-        });
+        configurarRadioButtons();
+        configurarSeekBar();
 
         btnGuardarPerfil.setOnClickListener(v -> guardarPerfil());
     }
 
     private void cargarSpinners() {
-
         ArrayList<String> nivelesMovilidad = new ArrayList<>();
         nivelesMovilidad.add("Selecciona tu nivel");
         nivelesMovilidad.add("Baja movilidad");
@@ -94,11 +87,7 @@ public class PerfilAdaptadoActivity extends AppCompatActivity {
         nivelesMovilidad.add("Buena movilidad");
         nivelesMovilidad.add("Movilidad alta");
 
-        ArrayAdapter<String> adapterMovilidad = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                nivelesMovilidad
-        );
+        ArrayAdapter<String> adapterMovilidad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nivelesMovilidad);
 
         adapterMovilidad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spNivelMovilidad.setAdapter(adapterMovilidad);
@@ -111,14 +100,45 @@ public class PerfilAdaptadoActivity extends AppCompatActivity {
         objetivos.add("Recuperación física");
         objetivos.add("Mejorar equilibrio");
 
-        ArrayAdapter<String> adapterObjetivos = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                objetivos
-        );
+        ArrayAdapter<String> adapterObjetivos = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, objetivos);
 
         adapterObjetivos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spObjetivoPrincipal.setAdapter(adapterObjetivos);
+    }
+
+    private void configurarRadioButtons() {
+        rbNinguno.setOnClickListener(v -> seleccionarApoyo(rbNinguno));
+        rbBaston.setOnClickListener(v -> seleccionarApoyo(rbBaston));
+        rbMuletas.setOnClickListener(v -> seleccionarApoyo(rbMuletas));
+        rbSillaRuedas.setOnClickListener(v -> seleccionarApoyo(rbSillaRuedas));
+    }
+
+    private void seleccionarApoyo(RadioButton seleccionado) {
+        rbNinguno.setChecked(false);
+        rbBaston.setChecked(false);
+        rbMuletas.setChecked(false);
+        rbSillaRuedas.setChecked(false);
+
+        seleccionado.setChecked(true);
+        apoyoFisicoSeleccionado = seleccionado.getText().toString();
+    }
+
+    private void configurarSeekBar() {
+        seekDolor.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                nivelDolor = progress;
+                txtValorDolor.setText(nivelDolor + "/10");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
     }
 
     private void guardarPerfil() {
@@ -148,21 +168,16 @@ public class PerfilAdaptadoActivity extends AppCompatActivity {
             return;
         }
 
+        if (apoyoFisicoSeleccionado.isEmpty()) {
+            Toast.makeText(this, "Selecciona el apoyo físico que utilizas", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (spObjetivoPrincipal.getSelectedItemPosition() == 0) {
             Toast.makeText(this, "Selecciona tu objetivo principal", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int radioSeleccionado = rgApoyoFisico.getCheckedRadioButtonId();
-
-        if (radioSeleccionado == -1) {
-            Toast.makeText(this, "Selecciona el apoyo físico que utilizas", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        RadioButton rbSeleccionado = findViewById(radioSeleccionado);
-
-        String apoyoFisico = rbSeleccionado.getText().toString();
         String nivelMovilidad = spNivelMovilidad.getSelectedItem().toString();
         String objetivoPrincipal = spObjetivoPrincipal.getSelectedItem().toString();
 
@@ -179,7 +194,7 @@ public class PerfilAdaptadoActivity extends AppCompatActivity {
 
         String uid = usuarioActual.getUid();
 
-        PerfilAdaptado perfil = new PerfilAdaptado(edad, nivelMovilidad, apoyoFisico, objetivoPrincipal, nivelDolor, true);
+        PerfilAdaptado perfil = new PerfilAdaptado(edad, nivelMovilidad, apoyoFisicoSeleccionado, objetivoPrincipal, nivelDolor, true);
 
         usuariosRef.child(uid).child("perfilAdaptado").setValue(perfil)
                 .addOnSuccessListener(unused -> {

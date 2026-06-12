@@ -9,7 +9,7 @@ public class PerfilAdaptado {
     private boolean perfilCompletado;
 
     public PerfilAdaptado() {
-        // Constructor vacío requerido por Firebase
+        // Constructor
     }
 
     public PerfilAdaptado(int edad, String nivelMovilidad, String apoyoFisico,

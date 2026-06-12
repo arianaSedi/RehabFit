@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fondo"
@@ -31,7 +32,7 @@
                     android:id="@+id/txtSaludo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hola, Angélica 👋"
+                    android:text="Hola"
                     android:textColor="@color/texto_principal"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -50,8 +51,11 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:background="@drawable/bg_circulo_verde"
+                android:clickable="true"
+                android:focusable="true"
                 android:gravity="center"
                 android:text="👤"
+                android:textColor="@color/texto_principal"
                 android:textSize="21sp" />
         </LinearLayout>
 
@@ -115,12 +119,12 @@
                 android:textStyle="bold" />
         </GridLayout>
 
-        <!-- Botón principal -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnIniciarRutina"
             style="@style/BotonVerde"
             android:layout_marginTop="16dp"
-            android:text="🏃 Iniciar rutina de hoy" />
+            android:text="Iniciar rutina de hoy"
+            app:backgroundTint="@null" />
 
         <!-- Accesos rápidos -->
         <TextView
@@ -138,35 +142,41 @@
             android:columnCount="3"
             android:useDefaultMargins="true">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnIrEjercicios"
                 style="@style/CardAcceso"
-                android:text="🧩\nEjercicios" />
+                android:text="Ejercicios"
+                android:backgroundTint="@color/blanco" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnIrRutina"
                 style="@style/CardAcceso"
-                android:text="📋\nMi rutina" />
+                android:text="Mi rutina"
+                android:backgroundTint="@color/blanco" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnIrHistorial"
                 style="@style/CardAcceso"
-                android:text="↩\nHistorial" />
+                android:text="Historial"
+                android:backgroundTint="@color/blanco" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnIrProgreso"
                 style="@style/CardAcceso"
-                android:text="↗\nProgreso" />
+                android:text="Progreso"
+                android:backgroundTint="@color/blanco" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnIrIA"
                 style="@style/CardAcceso"
-                android:text="🤖\nConsultar IA" />
+                android:text="Consultar IA"
+                android:backgroundTint="@color/blanco" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnIrComunidad"
                 style="@style/CardAcceso"
-                android:text="👥\nComunidad" />
+                android:text="Comunidad"
+                android:backgroundTint="@color/blanco" />
         </GridLayout>
 
     </LinearLayout>

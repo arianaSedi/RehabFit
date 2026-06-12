@@ -30,6 +30,8 @@
         android:hint="Buscar ejercicio..."
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
+        android:textColor="@color/texto_principal"
+        android:textColorHint="@color/texto_secundario"
         android:textSize="14sp" />
 
     <HorizontalScrollView
@@ -43,11 +45,35 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button style="@style/ChipFiltro" android:text="Rodilla" />
-            <Button style="@style/ChipFiltro" android:text="Tobillo" />
-            <Button style="@style/ChipFiltro" android:text="Hombro" />
-            <Button style="@style/ChipFiltro" android:text="Espalda" />
-            <Button style="@style/ChipFiltro" android:text="Sentado" />
+            <TextView
+                android:id="@+id/btnTodos"
+                style="@style/ChipFiltroVerde"
+                android:text="Todos" />
+
+            <TextView
+                android:id="@+id/btnRodilla"
+                style="@style/ChipFiltroVerde"
+                android:text="Rodilla" />
+
+            <TextView
+                android:id="@+id/btnTobillo"
+                style="@style/ChipFiltroGris"
+                android:text="Tobillo" />
+
+            <TextView
+                android:id="@+id/btnHombro"
+                style="@style/ChipFiltroGris"
+                android:text="Hombro" />
+
+            <TextView
+                android:id="@+id/btnEspalda"
+                style="@style/ChipFiltroGris"
+                android:text="Espalda" />
+
+            <TextView
+                android:id="@+id/btnSentado"
+                style="@style/ChipFiltroGris"
+                android:text="Sentado" />
 
         </LinearLayout>
     </HorizontalScrollView>

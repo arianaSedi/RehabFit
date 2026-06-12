@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.bottomNavigation);
 
-        cargarFragment(new InicioFragment());
-
         bottomNavigation.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();
@@ -66,6 +64,14 @@ public class MainActivity extends AppCompatActivity {
 
             return false;
         });
+
+        if (savedInstanceState == null) {
+            bottomNavigation.setSelectedItemId(R.id.nav_inicio);
+        }
+    }
+
+    public void cambiarFragmentBoton(int idMenu) {
+        bottomNavigation.setSelectedItemId(idMenu);
     }
 
     private void cargarFragment(Fragment fragment) {
@@ -74,5 +80,4 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.contenedorFragments, fragment)
                 .commit();
     }
-
 }

@@ -39,15 +39,17 @@
         android:layout_marginTop="14dp"
         android:layout_weight="1" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnIniciarRutina"
         style="@style/BotonVerde"
-        android:text="▷ Iniciar rutina" />
+        android:text="▷ Iniciar rutina"
+        android:backgroundTint="@color/verde_principal" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAgregarEjercicio"
         style="@style/BotonBorde"
         android:layout_marginTop="12dp"
-        android:text="+ Agregar ejercicio" />
+        android:text="+ Agregar ejercicio"
+        android:backgroundTint="@color/blanco" />
 
 </LinearLayout>

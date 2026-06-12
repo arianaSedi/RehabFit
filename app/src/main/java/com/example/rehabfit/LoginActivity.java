@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -19,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvIrRegistro, tvOlvidasteContra;
 
     private FirebaseAuth auth;
+    private DatabaseReference usuariosRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         tvOlvidasteContra = findViewById(R.id.tvOlvidasteContra);
 
         auth = FirebaseAuth.getInstance();
+        usuariosRef = FirebaseDatabase.getInstance().getReference("usuarios");
 
         btnLogin.setOnClickListener(v -> iniciarSesion());
 
@@ -61,15 +65,39 @@ public class LoginActivity extends AppCompatActivity {
         auth.signInWithEmailAndPassword(correo, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        verificarPerfilAdaptado();
+                    } else {
+                        Toast.makeText(this, "Correo o contraseña incorrectos", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void verificarPerfilAdaptado() {
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(this, "Error al obtener usuario", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String uid = auth.getCurrentUser().getUid();
+
+        usuariosRef.child(uid).child("perfilAdaptado").get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
                         Toast.makeText(this, "Inicio de sesión correcto", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
-
                     } else {
-                        Toast.makeText(this, "Correo o contraseña incorrectos", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Completa tu perfil adaptado", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(LoginActivity.this, PerfilAdaptadoActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al verificar perfil: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
