@@ -1,7 +1,8 @@
 package com.example.rehabfit.fragments;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import com.example.rehabfit.R;
 import com.example.rehabfit.adapters.RutinaAdapter;
 import com.example.rehabfit.utils.RutinaManager;
 
+import java.util.Locale;
 
 public class RutinaFragment extends Fragment {
 
@@ -28,26 +30,24 @@ public class RutinaFragment extends Fragment {
     private AppCompatButton btnAgregarEjercicio;
 
     private RutinaAdapter adapter;
+    private CountDownTimer countDownTimer;
+    private boolean rutinaEnCurso = false;
 
     public RutinaFragment() {
-        // Required empty public constructor
     }
     public static RutinaFragment newInstance(String param1, String param2) {
         RutinaFragment fragment = new RutinaFragment();
         Bundle args = new Bundle();
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
-    @SuppressLint("WrongViewCast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View vista = inflater.inflate(R.layout.fragment_rutina, container, false);
 
         txtResumenRutina = vista.findViewById(R.id.txtResumenRutina);
@@ -60,17 +60,16 @@ public class RutinaFragment extends Fragment {
         adapter = new RutinaAdapter(RutinaManager.obtenerRutina(), this::actualizarResumen);
         rvRutina.setAdapter(adapter);
 
-        actualizarResumen();
+        cargarRutinaGuardada();
 
-        btnIniciarRutina.setOnClickListener(v -> {
-            if (RutinaManager.obtenerRutina().isEmpty()) {
-                Toast.makeText(requireContext(), "Primero agrega ejercicios a tu rutina", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(), "Rutina iniciada próximamente", Toast.LENGTH_SHORT).show();
-            }
-        });
+        btnIniciarRutina.setOnClickListener(v -> iniciarRutina());
 
         btnAgregarEjercicio.setOnClickListener(v -> {
+            if (rutinaEnCurso) {
+                Toast.makeText(requireContext(), "Termina la rutina antes de agregar ejercicios", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).cambiarFragmentBoton(R.id.nav_ejercicios);
             }
@@ -78,22 +77,113 @@ public class RutinaFragment extends Fragment {
 
         return vista;
     }
+    private void cargarRutinaGuardada() {
+        RutinaManager.cargarRutinaActual(() -> {
+            if (!isAdded()) {
+                return;
+            }
+
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+
+            actualizarResumen();
+        });
+    }
+
+    private void iniciarRutina() {
+        if (RutinaManager.obtenerRutina().isEmpty()) {
+            Toast.makeText(requireContext(), "Primero agrega ejercicios a tu rutina", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (rutinaEnCurso) {
+            Toast.makeText(requireContext(), "La rutina ya está en curso", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int totalMinutos = RutinaManager.obtenerTotalMinutos();
+
+        if (totalMinutos <= 0) {
+            Toast.makeText(requireContext(), "La rutina no tiene tiempo válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        long tiempoTotalMillis = totalMinutos * 60L * 1000L;
+
+        rutinaEnCurso = true;
+        btnIniciarRutina.setEnabled(false);
+        btnAgregarEjercicio.setEnabled(false);
+
+        Toast.makeText(requireContext(), "Rutina iniciada", Toast.LENGTH_SHORT).show();
+
+        countDownTimer = new CountDownTimer(tiempoTotalMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long segundosTotales = millisUntilFinished / 1000;
+                long minutos = segundosTotales / 60;
+                long segundos = segundosTotales % 60;
+
+                String tiempo = String.format(Locale.getDefault(), "%02d:%02d", minutos, segundos);
+                btnIniciarRutina.setText("Tiempo restante: " + tiempo);
+            }
+            @Override
+            public void onFinish() {
+                rutinaEnCurso = false;
+                btnIniciarRutina.setEnabled(true);
+                btnAgregarEjercicio.setEnabled(true);
+                btnIniciarRutina.setText("▷ Iniciar rutina");
+
+                int minutosTerminados = RutinaManager.obtenerTotalMinutos();
+                int cantidadEjercicios = RutinaManager.obtenerRutina().size();
+
+                RutinaManager.guardarSesionTerminada(minutosTerminados, cantidadEjercicios, new RutinaManager.AccionCallback() {
+                    @Override
+                    public void onExito() {
+                        if (!isAdded()) {
+                            return;
+                        }
+
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Rutina finalizada")
+                                .setMessage("¡Muy bien! Terminaste tu rutina de " + minutosTerminados + " minutos.")
+                                .setPositiveButton("Aceptar", null)
+                                .show();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        if (!isAdded()) {
+                            return;
+                        }
+
+                        Toast.makeText(requireContext(), "Rutina terminada, pero no se pudo guardar: " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        };
+
+        countDownTimer.start();
+    }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
-
-        actualizarResumen();
+        cargarRutinaGuardada();
     }
-
     private void actualizarResumen() {
         int cantidad = RutinaManager.obtenerRutina().size();
         int minutos = RutinaManager.obtenerTotalMinutos();
 
         txtResumenRutina.setText(cantidad + " ejercicios · " + minutos + " minutos");
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 }

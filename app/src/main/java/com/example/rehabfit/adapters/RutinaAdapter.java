@@ -46,14 +46,23 @@ public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaView
         holder.txtDetalleRutina.setText(ejercicio.getZona() + " · " + ejercicio.getDuracionMinutos() + " min · " + ejercicio.getRepeticiones() + " rep · " + ejercicio.getNivel());
 
         holder.txtEliminarRutina.setOnClickListener(v -> {
-            RutinaManager.eliminarEjercicio(ejercicio);
-            notifyDataSetChanged();
+            RutinaManager.eliminarEjercicio(ejercicio, new RutinaManager.AccionCallback() {
+                @Override
+                public void onExito() {
+                    notifyDataSetChanged();
 
-            if (listener != null) {
-                listener.onRutinaCambiada();
-            }
+                    if (listener != null) {
+                        listener.onRutinaCambiada();
+                    }
 
-            Toast.makeText(v.getContext(), "Ejercicio eliminado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "Ejercicio eliminado", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(v.getContext(), "Error al eliminar: " + error, Toast.LENGTH_LONG).show();
+                }
+            });
         });
     }
 

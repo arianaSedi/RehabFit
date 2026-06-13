@@ -11,8 +11,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rehabfit.R;
-import com.example.rehabfit.models.Ejercicio;
 import com.example.rehabfit.fragments.DetalleEjerciciosFragment;
+import com.example.rehabfit.models.Ejercicio;
 import com.example.rehabfit.utils.RutinaManager;
 
 import java.util.List;
@@ -42,6 +42,7 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
         holder.txtDatosEjercicio.setText(ejercicio.getZona() + "   " + ejercicio.getNivel() + "   " + ejercicio.getPosicion());
         holder.txtDuracionEjercicio.setText("⏱ " + ejercicio.getDuracionMinutos() + " min · " + ejercicio.getRepeticiones() + " rep");
         holder.txtGuardar.setText("☆");
+
         holder.itemView.setOnClickListener(v -> {
             DetalleEjerciciosFragment detalleFragment = DetalleEjerciciosFragment.newInstance(ejercicio);
 
@@ -55,30 +56,32 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
         });
 
         holder.txtGuardar.setOnClickListener(v -> {
-            RutinaManager.agregarEjercicio(ejercicio);
-            holder.txtGuardar.setText("★");
-
-            Toast.makeText(v.getContext(), "Ejercicio agregado a tu rutina", Toast.LENGTH_SHORT).show();
+            RutinaManager.agregarEjercicio(ejercicio, new RutinaManager.AccionCallback() {
+                @Override
+                public void onExito() {
+                    holder.txtGuardar.setText("★");
+                    Toast.makeText(v.getContext(), "Ejercicio agregado a tu rutina", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(v.getContext(), "Error al guardar: " + error, Toast.LENGTH_LONG).show();
+                }
+            });
         });
     }
-
     @Override
     public int getItemCount() {
         return listaEjercicios.size();
     }
-
     public void actualizarLista(List<Ejercicio> nuevaLista) {
         this.listaEjercicios = nuevaLista;
         notifyDataSetChanged();
     }
-
     public static class EjercicioViewHolder extends RecyclerView.ViewHolder {
-
         TextView txtNombreEjercicio;
         TextView txtDatosEjercicio;
         TextView txtDuracionEjercicio;
         TextView txtGuardar;
-
         public EjercicioViewHolder(@NonNull View itemView) {
             super(itemView);
 

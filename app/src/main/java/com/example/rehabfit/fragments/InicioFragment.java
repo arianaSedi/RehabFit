@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.example.rehabfit.utils.RutinaManager;
 
 
 public class InicioFragment extends Fragment {
@@ -143,8 +144,7 @@ public class InicioFragment extends Fragment {
                         txtDolorPromedio.setText("0/10\nDolor actual");
                     }
 
-                    txtSesionesSemana.setText("0\nSesiones esta semana");
-                    txtTiempoTotal.setText("0 min\nTiempo total");
+                    cargarResumenEstadisticas();
 
                 })
                 .addOnFailureListener(e -> {
@@ -199,6 +199,24 @@ public class InicioFragment extends Fragment {
     private void irAComunidad() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).cambiarFragmentBoton(R.id.nav_comunidad);
+        }
+    }
+    private void cargarResumenEstadisticas() {
+        RutinaManager.cargarResumenInicio((sesionesSemana, minutosTotales) -> {
+            if (!isAdded()) {
+                return;
+            }
+
+            txtSesionesSemana.setText(sesionesSemana + "\nSesiones esta semana");
+            txtTiempoTotal.setText(minutosTotales + " min\nTiempo total");
+        });
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (txtSesionesSemana != null && txtTiempoTotal != null) {
+            cargarResumenEstadisticas();
         }
     }
 }
