@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical"
+    android:padding="18dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Historial"
+        android:textColor="@color/texto_principal"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tus sesiones realizadas"
+        android:textColor="@color/texto_secundario"
+        android:textSize="13sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnHoy"
+            style="@style/ChipFiltroGris"
+            android:text="Hoy"
+            android:backgroundTint="@color/gris_chip" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSemana"
+            style="@style/ChipFiltroVerde"
+            android:text="Esta semana"
+            android:backgroundTint="@color/verde_principal" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnMes"
+            style="@style/ChipFiltroGris"
+            android:text="Este mes"
+            android:backgroundTint="@color/gris_chip" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtHistorialVacio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:gravity="center"
+        android:text="Aún no tienes sesiones guardadas."
+        android:textColor="@color/texto_secundario"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHistorial"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="18dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

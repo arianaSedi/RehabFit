@@ -166,7 +166,11 @@ public class InicioFragment extends Fragment {
         btnIrComunidad.setOnClickListener(v -> irAComunidad());
 
         btnIrHistorial.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Historial próximamente", Toast.LENGTH_SHORT).show();
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedorFragments, new HistorialFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
 
         btnIrProgreso.setOnClickListener(v -> {getParentFragmentManager()
