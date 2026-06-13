@@ -1,6 +1,8 @@
 package com.example.rehabfit.models;
 
-public class Ejercicio {
+import java.io.Serializable;
+
+public class Ejercicio implements Serializable {
 
     private int id;
     private String nombre;

@@ -52,7 +52,7 @@
 
             <TextView
                 android:id="@+id/btnRodilla"
-                style="@style/ChipFiltroVerde"
+                style="@style/ChipFiltroGris"
                 android:text="Rodilla" />
 
             <TextView

@@ -1,6 +1,5 @@
 package com.example.rehabfit.adapters;
 
-import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +7,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.Ejercicio;
+import com.example.rehabfit.fragments.DetalleEjerciciosFragment;
 import com.example.rehabfit.utils.RutinaManager;
 
 import java.util.List;
@@ -42,19 +43,15 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
         holder.txtDuracionEjercicio.setText("⏱ " + ejercicio.getDuracionMinutos() + " min · " + ejercicio.getRepeticiones() + " rep");
         holder.txtGuardar.setText("☆");
         holder.itemView.setOnClickListener(v -> {
-            String mensaje = "Zona: " + ejercicio.getZona() + "\n" +
-                            "Nivel: " + ejercicio.getNivel() + "\n" +
-                            "Posición: " + ejercicio.getPosicion() + "\n" +
-                            "Duración: " + ejercicio.getDuracionMinutos() + " minutos\n" +
-                            "Repeticiones: " + ejercicio.getRepeticiones() + "\n\n" +
-                            "Descripción:\n" + ejercicio.getDescripcion() + "\n\n" +
-                            "Advertencia:\n" + ejercicio.getAdvertencia();
+            DetalleEjerciciosFragment detalleFragment = DetalleEjerciciosFragment.newInstance(ejercicio);
 
-            new AlertDialog.Builder(v.getContext())
-                    .setTitle(ejercicio.getNombre())
-                    .setMessage(mensaje)
-                    .setPositiveButton("Entendido", null)
-                    .show();
+            FragmentActivity activity = (FragmentActivity) v.getContext();
+
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedorFragments, detalleFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
 
         holder.txtGuardar.setOnClickListener(v -> {
