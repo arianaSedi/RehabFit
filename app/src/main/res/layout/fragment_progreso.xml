@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Progreso"
+            android:textColor="@color/texto_principal"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tu evolución semanal"
+            android:textColor="@color/texto_secundario"
+            android:textSize="13sp" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:columnCount="2"
+            android:useDefaultMargins="true">
+
+            <TextView
+                android:id="@+id/txtSesionesCompletadas"
+                style="@style/CardMetrica"
+                android:background="@drawable/bg_card_verde"
+                android:text="0\nSesiones completadas"
+                android:textColor="@color/texto_principal"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtTiempoTerapia"
+                style="@style/CardMetrica"
+                android:background="@drawable/bg_card_verde"
+                android:text="0 min\nTiempo de terapia"
+                android:textColor="@color/verde_oscuro"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtZonaMasTrabajada"
+                style="@style/CardMetrica"
+                android:background="@drawable/bg_card_azul"
+                android:text="Sin datos\nZona más trabajada"
+                android:textColor="@color/azul_texto"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtDolorPromedioProgreso"
+                style="@style/CardMetrica"
+                android:background="@drawable/bg_card_naranja"
+                android:text="0.0\nDolor promedio"
+                android:textColor="@color/alerta_texto"
+                android:textStyle="bold" />
+        </GridLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_card_blanca"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sesiones por día (esta semana)"
+                android:textColor="@color/texto_principal"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtResumenSemana"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="L:0   M:0   X:0   J:0   V:0   S:0   D:0"
+                android:textColor="@color/texto_secundario"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_card_blanca"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Evolución del dolor promedio"
+                android:textColor="@color/texto_principal"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtSemanasDolor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Sem 1: 0/10   Sem 2: 0/10   Sem 3: 0/10"
+                android:textColor="@color/texto_secundario"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtMensajeProgreso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_card_verde"
+            android:padding="16dp"
+            android:text="Aún no hay suficientes datos para evaluar tu progreso."
+            android:textColor="@color/verde_oscuro"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="El progreso puede variar según cada persona. Consulta con tu médico o fisioterapeuta."
+            android:textColor="@color/texto_secundario"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</ScrollView>

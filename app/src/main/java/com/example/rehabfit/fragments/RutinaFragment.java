@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 
 import com.example.rehabfit.MainActivity;
 import com.example.rehabfit.R;
@@ -31,6 +33,7 @@ public class RutinaFragment extends Fragment {
 
     private RutinaAdapter adapter;
     private CountDownTimer countDownTimer;
+    private int dolorAntesRutina = 0;
     private boolean rutinaEnCurso = false;
 
     public RutinaFragment() {
@@ -102,6 +105,51 @@ public class RutinaFragment extends Fragment {
             return;
         }
 
+        pedirDolorAntes();
+    }
+    private void pedirDolorAntes() {
+        LinearLayout contenedor = new LinearLayout(requireContext());
+        contenedor.setOrientation(LinearLayout.VERTICAL);
+        contenedor.setPadding(50, 25, 50, 10);
+
+        TextView txtValorDolor = new TextView(requireContext());
+        txtValorDolor.setText("Dolor seleccionado: 0/10");
+        txtValorDolor.setTextSize(18);
+        txtValorDolor.setTextColor(getResources().getColor(R.color.texto_principal));
+
+        SeekBar seekBarDolor = new SeekBar(requireContext());
+        seekBarDolor.setMax(10);
+        seekBarDolor.setProgress(0);
+
+        seekBarDolor.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                dolorAntesRutina = progress;
+                txtValorDolor.setText("Dolor seleccionado: " + progress + "/10");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        contenedor.addView(txtValorDolor);
+        contenedor.addView(seekBarDolor);
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Dolor antes de iniciar")
+                .setMessage("Mueve la barra según el dolor que sientes ahora.")
+                .setView(contenedor)
+                .setPositiveButton("Iniciar", (dialog, which) -> iniciarCronometroRutina())
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void iniciarCronometroRutina() {
         int totalMinutos = RutinaManager.obtenerTotalMinutos();
 
         if (totalMinutos <= 0) {
@@ -127,6 +175,7 @@ public class RutinaFragment extends Fragment {
                 String tiempo = String.format(Locale.getDefault(), "%02d:%02d", minutos, segundos);
                 btnIniciarRutina.setText("Tiempo restante: " + tiempo);
             }
+
             @Override
             public void onFinish() {
                 rutinaEnCurso = false;
@@ -134,10 +183,68 @@ public class RutinaFragment extends Fragment {
                 btnAgregarEjercicio.setEnabled(true);
                 btnIniciarRutina.setText("▷ Iniciar rutina");
 
-                int minutosTerminados = RutinaManager.obtenerTotalMinutos();
-                int cantidadEjercicios = RutinaManager.obtenerRutina().size();
+                pedirDolorDespuesYGuardar();
+            }
+        };
 
-                RutinaManager.guardarSesionTerminada(minutosTerminados, cantidadEjercicios, new RutinaManager.AccionCallback() {
+        countDownTimer.start();
+    }
+
+    private void pedirDolorDespuesYGuardar() {
+        LinearLayout contenedor = new LinearLayout(requireContext());
+        contenedor.setOrientation(LinearLayout.VERTICAL);
+        contenedor.setPadding(50, 25, 50, 10);
+
+        final int[] dolorDespues = {dolorAntesRutina};
+
+        TextView txtValorDolor = new TextView(requireContext());
+        txtValorDolor.setText("Dolor seleccionado: " + dolorAntesRutina + "/10");
+        txtValorDolor.setTextSize(18);
+        txtValorDolor.setTextColor(getResources().getColor(R.color.texto_principal));
+
+        SeekBar seekBarDolor = new SeekBar(requireContext());
+        seekBarDolor.setMax(10);
+        seekBarDolor.setProgress(dolorAntesRutina);
+
+        seekBarDolor.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                dolorDespues[0] = progress;
+                txtValorDolor.setText("Dolor seleccionado: " + progress + "/10");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        contenedor.addView(txtValorDolor);
+        contenedor.addView(seekBarDolor);
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Rutina finalizada")
+                .setMessage("Mueve la barra según el dolor que sientes ahora.")
+                .setView(contenedor)
+                .setPositiveButton("Guardar sesión", (dialog, which) -> guardarSesionConDolor(dolorDespues[0]))
+                .setCancelable(false)
+                .show();
+    }
+    private void guardarSesionConDolor(int dolorDespues) {
+        int minutosTerminados = RutinaManager.obtenerTotalMinutos();
+        int cantidadEjercicios = RutinaManager.obtenerRutina().size();
+        String zonaPrincipal = obtenerZonaPrincipal();
+
+        RutinaManager.guardarSesionTerminada(
+                minutosTerminados,
+                cantidadEjercicios,
+                dolorAntesRutina,
+                dolorDespues,
+                zonaPrincipal,
+                new RutinaManager.AccionCallback() {
                     @Override
                     public void onExito() {
                         if (!isAdded()) {
@@ -145,7 +252,7 @@ public class RutinaFragment extends Fragment {
                         }
 
                         new AlertDialog.Builder(requireContext())
-                                .setTitle("Rutina finalizada")
+                                .setTitle("Sesión guardada")
                                 .setMessage("¡Muy bien! Terminaste tu rutina de " + minutosTerminados + " minutos.")
                                 .setPositiveButton("Aceptar", null)
                                 .show();
@@ -159,11 +266,20 @@ public class RutinaFragment extends Fragment {
 
                         Toast.makeText(requireContext(), "Rutina terminada, pero no se pudo guardar: " + error, Toast.LENGTH_LONG).show();
                     }
-                });
-            }
-        };
+                }
+        );
+    }
 
-        countDownTimer.start();
+    private String obtenerZonaPrincipal() {
+        if (RutinaManager.obtenerRutina().isEmpty()) {
+            return "Sin datos";
+        }
+
+        if (RutinaManager.obtenerRutina().get(0).getZona() != null) {
+            return RutinaManager.obtenerRutina().get(0).getZona();
+        }
+
+        return "Sin datos";
     }
 
     @Override

@@ -169,8 +169,11 @@ public class InicioFragment extends Fragment {
             Toast.makeText(requireContext(), "Historial próximamente", Toast.LENGTH_SHORT).show();
         });
 
-        btnIrProgreso.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Progreso próximamente", Toast.LENGTH_SHORT).show();
+        btnIrProgreso.setOnClickListener(v -> {getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedorFragments, new ProgresoFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
 
         btnIrIA.setOnClickListener(v -> {

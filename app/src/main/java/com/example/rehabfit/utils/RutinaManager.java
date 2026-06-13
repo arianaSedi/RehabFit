@@ -168,8 +168,9 @@ public class RutinaManager {
 
         return total;
     }
-
-    public static void guardarSesionTerminada(int minutosTotales, int cantidadEjercicios, AccionCallback callback) {
+    public static void guardarSesionTerminada(int minutosTotales, int cantidadEjercicios, int dolorAntes,
+            int dolorDespues, String zonaPrincipal, AccionCallback callback)
+    {
         DatabaseReference usuarioRef = obtenerReferenciaUsuario();
 
         if (usuarioRef == null) {
@@ -183,6 +184,9 @@ public class RutinaManager {
         sesion.put("fechaMillis", System.currentTimeMillis());
         sesion.put("minutosTotales", minutosTotales);
         sesion.put("cantidadEjercicios", cantidadEjercicios);
+        sesion.put("dolorAntes", dolorAntes);
+        sesion.put("dolorDespues", dolorDespues);
+        sesion.put("zonaPrincipal", zonaPrincipal);
 
         usuarioRef.child("sesiones").push().setValue(sesion)
                 .addOnSuccessListener(unused -> {
