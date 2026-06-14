@@ -181,7 +181,11 @@ public class InicioFragment extends Fragment {
         });
 
         btnIrIA.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Consultar IA próximamente", Toast.LENGTH_SHORT).show();
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedorFragments, new ConsultasIAFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 

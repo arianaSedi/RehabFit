@@ -1,9 +1,13 @@
 package com.example.rehabfit.network;
 import com.example.rehabfit.models.Ejercicio;
 import com.example.rehabfit.models.EjercicioResponse;
+import com.example.rehabfit.models.IARequest;
+import com.example.rehabfit.models.IAResponse;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 public interface ApiService {
@@ -22,4 +26,6 @@ public interface ApiService {
 
     @GET("buscar")
     Call<EjercicioResponse> buscarEjercicios(@Query("texto") String texto);
+    @POST("ia/recomendacion")
+    Call<IAResponse> generarRecomendacionIA(@Body IARequest request);
 }
