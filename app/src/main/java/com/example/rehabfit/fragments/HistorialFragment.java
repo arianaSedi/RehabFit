@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,7 +122,9 @@ public class HistorialFragment extends Fragment {
                         return;
                     }
 
-                    Toast.makeText(requireContext(), "Error al cargar historial: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(),
+                            "Error al cargar historial: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
                 });
     }
 
@@ -152,29 +155,17 @@ public class HistorialFragment extends Fragment {
     }
 
     private void actualizarBotones() {
-        btnHoy.setBackgroundTintList(getResources().getColorStateList(
-                filtroActual.equals("HOY") ? R.color.verde_principal : R.color.gris_chip
-        ));
+        pintarBoton(btnHoy, filtroActual.equals("HOY"));
+        pintarBoton(btnSemana, filtroActual.equals("SEMANA"));
+        pintarBoton(btnMes, filtroActual.equals("MES"));
+    }
 
-        btnSemana.setBackgroundTintList(getResources().getColorStateList(
-                filtroActual.equals("SEMANA") ? R.color.verde_principal : R.color.gris_chip
-        ));
+    private void pintarBoton(AppCompatButton boton, boolean seleccionado) {
+        int colorFondo = seleccionado ? R.color.verde_principal : R.color.gris_chip;
+        int colorTexto = seleccionado ? R.color.blanco : R.color.texto_principal;
 
-        btnMes.setBackgroundTintList(getResources().getColorStateList(
-                filtroActual.equals("MES") ? R.color.verde_principal : R.color.gris_chip
-        ));
-
-        btnHoy.setTextColor(getResources().getColor(
-                filtroActual.equals("HOY") ? R.color.blanco : R.color.texto_principal
-        ));
-
-        btnSemana.setTextColor(getResources().getColor(
-                filtroActual.equals("SEMANA") ? R.color.blanco : R.color.texto_principal
-        ));
-
-        btnMes.setTextColor(getResources().getColor(
-                filtroActual.equals("MES") ? R.color.blanco : R.color.texto_principal
-        ));
+        boton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorFondo)));
+        boton.setTextColor(getResources().getColor(colorTexto));
     }
 
     private boolean esDeHoy(long fechaMillis) {
