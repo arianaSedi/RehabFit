@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Compartir ejercicio"
+            android:textColor="@color/texto_principal"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comparte tu avance con la comunidad"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:padding="14dp"
+            android:text="💚 Comparte solo información que te sientas cómodo mostrando. La comunidad es un espacio de apoyo."
+            android:textColor="@color/verde_oscuro"
+            android:textSize="13sp"
+            android:background="@drawable/bg_chip_verde" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Ejercicio realizado"
+            android:textColor="@color/texto_principal"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtEjercicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input"
+            android:hint="Ej: Extensión de rodilla"
+            android:padding="14dp"
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario" />
+
+        <TextView
+            android:layout_marginTop="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zona trabajada"
+            android:textColor="@color/texto_principal"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spZona"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_input" />
+
+        <TextView
+            android:layout_marginTop="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Duración"
+            android:textColor="@color/texto_principal"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtDuracion"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Ej: 20 minutos"
+            android:padding="14dp"
+            android:background="@drawable/bg_input"
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario" />
+
+        <TextView
+            android:layout_marginTop="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dificultad percibida"
+            android:textColor="@color/texto_principal"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/rgDificultad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbBaja"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Baja" />
+
+            <RadioButton
+                android:id="@+id/rbMedia"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Media" />
+
+            <RadioButton
+                android:id="@+id/rbAlta"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Alta" />
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_marginTop="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Cómo te sentiste?"
+            android:textColor="@color/texto_principal"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtExperiencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input"
+            android:gravity="top"
+            android:hint="Comparte cómo fue tu experiencia con este ejercicio..."
+            android:padding="14dp"
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario" />
+
+        <Button
+            android:id="@+id/btnGuardarPublicacion"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/verde_principal"
+            android:text="✈ Publicar"
+            android:textAllCaps="false"
+            android:textColor="@color/blanco"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/blanco"
+            android:text="×  Cancelar"
+            android:textAllCaps="false"
+            android:textColor="@color/texto_secundario" />
+
+    </LinearLayout>
+</ScrollView>

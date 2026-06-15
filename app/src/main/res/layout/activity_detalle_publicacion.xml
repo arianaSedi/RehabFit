@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtAvatarDetalle"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="👩"
+                android:textSize="24sp"
+                android:background="@drawable/bg_circulo_verde" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtNombreDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="María G."
+                    android:textColor="@color/texto_principal"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtFechaDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11 Jun 2026 · Comunidad RehabFit"
+                    android:textColor="@color/texto_secundario"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/bg_chip_verde">
+
+            <TextView
+                android:id="@+id/txtEjercicioDetalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Extensión de rodilla"
+                android:textColor="@color/verde_oscuro"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtDatosDetalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="🦵 Rodilla   ⏱️ 20 minutos"
+                android:textColor="@color/texto_secundario"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/txtDificultadDetalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Dificultad: Media"
+                android:textColor="@color/verde_oscuro"
+                android:textSize="13sp"
+                android:padding="6dp"
+                android:background="@drawable/bg_chip_verde" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtExperienciaDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:padding="18dp"
+            android:text="¡Logré hacer la extensión completa sin dolor hoy!"
+            android:textColor="@color/texto_principal"
+            android:textSize="15sp"
+            android:lineSpacingExtra="5dp"
+            android:background="@drawable/bg_card" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="✨ Cada avance cuenta.\nLa recuperación es un proceso personal y único."
+            android:textColor="@color/verde_oscuro"
+            android:textSize="14sp"
+            android:background="@drawable/bg_chip_verde" />
+
+        <Button
+            android:id="@+id/btnInspirar"
+            android:layout_width="200dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="22dp"
+            android:text="♡ 0 Me inspira"
+            android:textAllCaps="false"
+            android:textColor="@color/texto_secundario"
+            android:textSize="15sp"
+            android:backgroundTint="@color/blanco" />
+
+    </LinearLayout>
+</ScrollView>
