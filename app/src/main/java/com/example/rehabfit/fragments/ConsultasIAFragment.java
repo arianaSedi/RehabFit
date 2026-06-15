@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,9 @@ public class ConsultasIAFragment extends Fragment {
     private AppCompatButton btnGenerarIA;
     private AppCompatButton btnLimpiarIA;
     private TextView txtVerHistorialIA;
+    private LinearLayout layoutResultadoIA;
+    private TextView txtRespuestaIA;
+    private TextView txtEjerciciosIA;
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
@@ -58,8 +62,7 @@ public class ConsultasIAFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_consultas_ia, container, false);
 
@@ -70,6 +73,9 @@ public class ConsultasIAFragment extends Fragment {
         btnGenerarIA = vista.findViewById(R.id.btnGenerarIA);
         btnLimpiarIA = vista.findViewById(R.id.btnLimpiarIA);
         txtVerHistorialIA = vista.findViewById(R.id.txtVerHistorialIA);
+        layoutResultadoIA = vista.findViewById(R.id.layoutResultadoIA);
+        txtRespuestaIA = vista.findViewById(R.id.txtRespuestaIA);
+        txtEjerciciosIA = vista.findViewById(R.id.txtEjerciciosIA);
 
         cargarPerfilUsuario();
         configurarEventos();
@@ -103,10 +109,14 @@ public class ConsultasIAFragment extends Fragment {
         });
 
         btnGenerarIA.setOnClickListener(v -> generarRecomendacion());
-
         btnLimpiarIA.setOnClickListener(v -> edtConsultaIA.setText(""));
-
-        txtVerHistorialIA.setOnClickListener(v -> mostrarHistorialConsultas());
+        txtVerHistorialIA.setOnClickListener(v -> {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedorFragments, new HistorialConsultaFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     private void cargarPerfilUsuario() {
@@ -151,14 +161,7 @@ public class ConsultasIAFragment extends Fragment {
         btnGenerarIA.setEnabled(false);
         btnGenerarIA.setText("Generando...");
 
-        IARequest request = new IARequest(
-                usuario.getUid(),
-                consulta,
-                movilidad,
-                objetivo,
-                apoyoFisico,
-                dolorActual
-        );
+        IARequest request = new IARequest(usuario.getUid(), consulta, movilidad, objetivo, apoyoFisico, dolorActual);
 
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
@@ -212,17 +215,7 @@ public class ConsultasIAFragment extends Fragment {
                 .document()
                 .getId();
 
-        ConsultasIA consultaIA = new ConsultasIA(
-                id,
-                consulta,
-                recomendacion,
-                movilidad,
-                objetivo,
-                apoyoFisico,
-                dolorActual,
-                System.currentTimeMillis(),
-                ejerciciosRecomendados
-        );
+        ConsultasIA consultaIA = new ConsultasIA(id, consulta, recomendacion, movilidad, objetivo, apoyoFisico, dolorActual, System.currentTimeMillis(), ejerciciosRecomendados);
 
         firestore.collection("users")
                 .document(uid)
@@ -237,8 +230,7 @@ public class ConsultasIAFragment extends Fragment {
                     btnGenerarIA.setText("✈  Generar recomendación");
                     btnGenerarIA.setEnabled(true);
 
-                    String textoFinal = construirTextoConEjercicios(recomendacion, ejerciciosRecomendados);
-                    mostrarResultado(textoFinal);
+                    mostrarResultadoPantalla(recomendacion, ejerciciosRecomendados);
                 })
                 .addOnFailureListener(e -> {
                     if (!isAdded()) {
@@ -248,14 +240,9 @@ public class ConsultasIAFragment extends Fragment {
                     btnGenerarIA.setText("✈  Generar recomendación");
                     btnGenerarIA.setEnabled(true);
 
-                    Toast.makeText(
-                            requireContext(),
-                            "Error al guardar: " + e.getMessage(),
-                            Toast.LENGTH_LONG
-                    ).show();
+                    Toast.makeText(requireContext(), "Error al guardar: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
-                    String textoFinal = construirTextoConEjercicios(recomendacion, ejerciciosRecomendados);
-                    mostrarResultado(textoFinal);
+                    mostrarResultadoPantalla(recomendacion, ejerciciosRecomendados);
                 });
     }
 
@@ -265,72 +252,6 @@ public class ConsultasIAFragment extends Fragment {
                 .setMessage(recomendacionCompleta)
                 .setPositiveButton("Aceptar", null)
                 .show();
-    }
-
-    private void mostrarHistorialConsultas() {
-        FirebaseUser usuario = auth.getCurrentUser();
-
-        if (usuario == null) {
-            Toast.makeText(requireContext(), "Debes iniciar sesión", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        firestore.collection("users")
-                .document(usuario.getUid())
-                .collection("consultasIA")
-                .orderBy("fechaMillis", Query.Direction.DESCENDING)
-                .limit(10)
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    if (snapshot.isEmpty()) {
-                        Toast.makeText(
-                                requireContext(),
-                                "Aún no tienes consultas guardadas",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        return;
-                    }
-
-                    List<ConsultasIA> consultas = new ArrayList<>();
-                    List<String> titulos = new ArrayList<>();
-
-                    for (com.google.firebase.firestore.DocumentSnapshot doc : snapshot.getDocuments()) {
-                        ConsultasIA item = doc.toObject(ConsultasIA.class);
-
-                        if (item != null) {
-                            consultas.add(item);
-                            titulos.add(
-                                    formatearFecha(item.getFechaMillis())
-                                            + "\n"
-                                            + recortar(item.getConsulta(), 55)
-                            );
-                        }
-                    }
-
-                    new AlertDialog.Builder(requireContext())
-                            .setTitle("Historial de consultas")
-                            .setItems(titulos.toArray(new String[0]), (dialog, which) -> {
-                                ConsultasIA seleccionada = consultas.get(which);
-                                mostrarDetalleHistorial(seleccionada);
-                            })
-                            .setNegativeButton("Cerrar", null)
-                            .show();
-                })
-                .addOnFailureListener(e -> {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    Toast.makeText(
-                            requireContext(),
-                            "Error al cargar historial: " + e.getMessage(),
-                            Toast.LENGTH_LONG
-                    ).show();
-                });
     }
 
     private void mostrarDetalleHistorial(ConsultasIA consultaIA) {
@@ -357,34 +278,16 @@ public class ConsultasIAFragment extends Fragment {
             builder.append("\n\nEjercicios recomendados:\n\n");
 
             for (Ejercicio ejercicio : ejercicios) {
-                builder.append("• ")
-                        .append(valorSeguro(ejercicio.getNombre(), "Ejercicio"))
-                        .append("\n");
-
-                builder.append("  Zona: ")
-                        .append(valorSeguro(ejercicio.getZona(), "No especificada"))
-                        .append("\n");
-
-                builder.append("  Nivel: ")
-                        .append(valorSeguro(ejercicio.getNivel(), "No especificado"))
-                        .append("\n");
-
-                builder.append("  Posición: ")
-                        .append(valorSeguro(ejercicio.getPosicion(), "No especificada"))
-                        .append("\n");
-
-                builder.append("  Duración: ")
-                        .append(ejercicio.getDuracionMinutos())
-                        .append(" minutos\n");
-
-                builder.append("  Repeticiones: ")
-                        .append(ejercicio.getRepeticiones())
-                        .append("\n\n");
+                builder.append("• ").append(valorSeguro(ejercicio.getNombre(), "Ejercicio")).append("\n");
+                builder.append("  Zona: ").append(valorSeguro(ejercicio.getZona(), "No especificada")).append("\n");
+                builder.append("  Nivel: ").append(valorSeguro(ejercicio.getNivel(), "No especificado")).append("\n");
+                builder.append("  Posición: ").append(valorSeguro(ejercicio.getPosicion(), "No especificada")).append("\n");
+                builder.append("  Duración: ").append(ejercicio.getDuracionMinutos()).append(" minutos\n");
+                builder.append("  Repeticiones: ").append(ejercicio.getRepeticiones()).append("\n\n");
             }
         } else {
             builder.append("\n\nNo se encontraron ejercicios específicos desde la API.");
         }
-
         return builder.toString();
     }
 
@@ -446,5 +349,39 @@ public class ConsultasIAFragment extends Fragment {
     private String formatearFecha(long fechaMillis) {
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         return formato.format(new Date(fechaMillis));
+    }
+
+    private void mostrarResultadoPantalla(String recomendacion, List<Ejercicio> ejercicios) {
+        layoutResultadoIA.setVisibility(View.VISIBLE);
+
+        txtRespuestaIA.setText(limpiarTextoIA(recomendacion));
+
+        if (ejercicios != null && !ejercicios.isEmpty()) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Ejercicios recomendados:\n\n");
+
+            for (Ejercicio ejercicio : ejercicios) {
+                builder.append("• ").append(valorSeguro(ejercicio.getNombre(), "Ejercicio")).append("\n");
+                builder.append("  Zona: ").append(valorSeguro(ejercicio.getZona(), "No especificada"))
+                        .append(" | Nivel: ").append(valorSeguro(ejercicio.getNivel(), "No especificado"))
+                        .append("\n");
+
+                builder.append("  Posición: ").append(valorSeguro(ejercicio.getPosicion(), "No especificada"))
+                        .append(" | Duración: ").append(ejercicio.getDuracionMinutos())
+                        .append(" min").append("\n\n");
+            }
+
+            txtEjerciciosIA.setText(builder.toString());
+        } else {
+            txtEjerciciosIA.setText("No se encontraron ejercicios específicos desde la API.");
+        }
+    }
+
+    private String limpiarTextoIA(String texto) {
+        if (texto == null) {
+            return "";
+        }
+
+        return texto.replace("**", "").replace("* ", "• ").replace("*", "•").trim();
     }
 }

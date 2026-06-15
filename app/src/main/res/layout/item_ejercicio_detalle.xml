@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/bg_card"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/txtNombreEjercicioDetalleIA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Extensión suave de rodilla"
+        android:textColor="@color/texto_principal"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtDetalleEjercicioDetalleIA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Rodilla · Baja · Sentado"
+        android:textColor="@color/verde_oscuro"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/txtTiempoEjercicioDetalleIA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="⏱ 5 min · 10 rep"
+        android:textColor="@color/texto_secundario"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/txtDescripcionEjercicioDetalleIA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:lineSpacingExtra="2dp"
+        android:text="Descripción del ejercicio"
+        android:textColor="@color/texto_principal"
+        android:textSize="12sp" />
+
+</LinearLayout>

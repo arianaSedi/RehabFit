@@ -23,7 +23,6 @@
                 android:layout_height="42dp"
                 android:background="@drawable/ic_medical"
                 android:gravity="center"
-                android:text="⚕"
                 android:textColor="@color/blanco"
                 android:textSize="22sp" />
 
@@ -116,7 +115,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_chip_gris"
                 android:enabled="false"
-                android:text="✈  Generar recomendación"
+                android:text="Generar recomendación"
                 android:textAllCaps="false"
                 android:textColor="#98A2B3"
                 android:textStyle="bold" />
@@ -133,25 +132,55 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/layoutResultadoIA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_recomendacion"
+            android:orientation="vertical"
+            android:padding="14dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚕  Recomendación generada"
+                android:textColor="@color/verde_principal"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtRespuestaIA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/texto_principal"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/txtEjerciciosIA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/texto_principal"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/txtVerHistorialIA"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:gravity="center"
-            android:text="Ver historial de consultas →"
+            android:text="Ver historial de consultas"
             android:textColor="#2815FF"
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="⚕  API de IA externa · Firestore users/{uid}/consultasIA"
-            android:textColor="#98A2B3"
-            android:textSize="12sp" />
 
     </LinearLayout>
 

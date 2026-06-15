@@ -32,22 +32,75 @@ public class ConsultasIA {
         this.ejerciciosRecomendados = ejerciciosRecomendados;
     }
 
-    public String getId() {return id;}
-    public String getConsulta() {return consulta;}
-    public String getRecomendacion() {return recomendacion;}
-    public String getMovilidad() {return movilidad;}
-    public String getObjetivo() {return objetivo;}
-    public String getApoyoFisico() {return apoyoFisico;}
-    public int getDolorActual() {return dolorActual;}
-    public long getFechaMillis() {return fechaMillis;}
-    public List<Ejercicio> getEjerciciosRecomendados() {return ejerciciosRecomendados;}
-    public void setId(String id) {this.id = id;}
-    public void setConsulta(String consulta) {this.consulta = consulta;}
-    public void setRecomendacion(String recomendacion) {this.recomendacion = recomendacion;}
-    public void setMovilidad(String movilidad) {this.movilidad = movilidad;}
-    public void setObjetivo(String objetivo) {this.objetivo = objetivo;}
-    public void setApoyoFisico(String apoyoFisico) {this.apoyoFisico = apoyoFisico;}
-    public void setDolorActual(int dolorActual) {this.dolorActual = dolorActual;}
-    public void setFechaMillis(long fechaMillis) {this.fechaMillis = fechaMillis;}
-    public void setEjerciciosRecomendados(List<Ejercicio> ejerciciosRecomendados) {this.ejerciciosRecomendados = ejerciciosRecomendados;}
+    public String getId() {
+        return id;
+    }
+
+    public String getConsulta() {
+        return consulta;
+    }
+
+    public String getRecomendacion() {
+        return recomendacion;
+    }
+
+    public String getMovilidad() {
+        return movilidad;
+    }
+
+    public String getObjetivo() {
+        return objetivo;
+    }
+
+    public String getApoyoFisico() {
+        return apoyoFisico;
+    }
+
+    public int getDolorActual() {
+        return dolorActual;
+    }
+
+    public long getFechaMillis() {
+        return fechaMillis;
+    }
+
+    public List<Ejercicio> getEjerciciosRecomendados() {
+        return ejerciciosRecomendados;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setConsulta(String consulta) {
+        this.consulta = consulta;
+    }
+
+    public void setRecomendacion(String recomendacion) {
+        this.recomendacion = recomendacion;
+    }
+
+    public void setMovilidad(String movilidad) {
+        this.movilidad = movilidad;
+    }
+
+    public void setObjetivo(String objetivo) {
+        this.objetivo = objetivo;
+    }
+
+    public void setApoyoFisico(String apoyoFisico) {
+        this.apoyoFisico = apoyoFisico;
+    }
+
+    public void setDolorActual(int dolorActual) {
+        this.dolorActual = dolorActual;
+    }
+
+    public void setFechaMillis(long fechaMillis) {
+        this.fechaMillis = fechaMillis;
+    }
+
+    public void setEjerciciosRecomendados(List<Ejercicio> ejerciciosRecomendados) {
+        this.ejerciciosRecomendados = ejerciciosRecomendados;
+    }
 }
