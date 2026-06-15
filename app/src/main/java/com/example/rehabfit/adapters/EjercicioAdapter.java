@@ -1,5 +1,6 @@
 package com.example.rehabfit.adapters;
 
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,22 +8,67 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rehabfit.R;
 import com.example.rehabfit.fragments.DetalleEjerciciosFragment;
 import com.example.rehabfit.models.Ejercicio;
-import com.example.rehabfit.utils.RutinaManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.EjercicioViewHolder> {
 
     private List<Ejercicio> listaEjercicios;
 
+    private DatabaseReference favoritosRef;
+    private ValueEventListener favoritosListener;
+    private final Set<String> idsFavoritos = new HashSet<>();
+
     public EjercicioAdapter(List<Ejercicio> listaEjercicios) {
         this.listaEjercicios = listaEjercicios;
+        configurarFavoritosFirebase();
+    }
+
+    private void configurarFavoritosFirebase() {
+        FirebaseUser usuarioActual = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (usuarioActual == null) {
+            return;
+        }
+
+        favoritosRef = FirebaseDatabase.getInstance()
+                .getReference("usuarios")
+                .child(usuarioActual.getUid())
+                .child("favoritos");
+
+        favoritosListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                idsFavoritos.clear();
+
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    idsFavoritos.add(item.getKey());
+                }
+
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull com.google.firebase.database.DatabaseError error) {
+            }
+        };
+
+        favoritosRef.addValueEventListener(favoritosListener);
     }
 
     @NonNull
@@ -38,13 +84,26 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
     public void onBindViewHolder(@NonNull EjercicioViewHolder holder, int position) {
         Ejercicio ejercicio = listaEjercicios.get(position);
 
+        String idEjercicio = obtenerIdEjercicio(ejercicio);
+        boolean favorito = idsFavoritos.contains(idEjercicio);
+
         holder.txtNombreEjercicio.setText(ejercicio.getNombre());
-        holder.txtDatosEjercicio.setText(ejercicio.getZona() + "   " + ejercicio.getNivel() + "   " + ejercicio.getPosicion());
-        holder.txtDuracionEjercicio.setText("⏱ " + ejercicio.getDuracionMinutos() + " min · " + ejercicio.getRepeticiones() + " rep");
-        holder.txtGuardar.setText("☆");
+        holder.txtDatosEjercicio.setText(
+                ejercicio.getZona() + "   " +
+                        ejercicio.getNivel() + "   " +
+                        ejercicio.getPosicion()
+        );
+        holder.txtDuracionEjercicio.setText(
+                "⏱ " + ejercicio.getDuracionMinutos() + " min · " +
+                        ejercicio.getRepeticiones() + " rep"
+        );
+
+        holder.txtIconoEjercicio.setText(obtenerIconoEjercicio(ejercicio));
+        Estrella(holder, favorito);
 
         holder.itemView.setOnClickListener(v -> {
-            DetalleEjerciciosFragment detalleFragment = DetalleEjerciciosFragment.newInstance(ejercicio);
+            DetalleEjerciciosFragment detalleFragment =
+                    DetalleEjerciciosFragment.newInstance(ejercicio);
 
             FragmentActivity activity = (FragmentActivity) v.getContext();
 
@@ -56,35 +115,137 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
         });
 
         holder.txtGuardar.setOnClickListener(v -> {
-            RutinaManager.agregarEjercicio(ejercicio, new RutinaManager.AccionCallback() {
-                @Override
-                public void onExito() {
-                    holder.txtGuardar.setText("★");
-                    Toast.makeText(v.getContext(), "Ejercicio agregado a tu rutina", Toast.LENGTH_SHORT).show();
-                }
-                @Override
-                public void onError(String error) {
-                    Toast.makeText(v.getContext(), "Error al guardar: " + error, Toast.LENGTH_LONG).show();
-                }
-            });
+            if (favoritosRef == null) {
+                Toast.makeText(v.getContext(),
+                        "Debes iniciar sesión para guardar favoritos",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            boolean actualmenteFavorito = idsFavoritos.contains(idEjercicio);
+
+            if (actualmenteFavorito) {
+                favoritosRef.child(idEjercicio).removeValue()
+                        .addOnSuccessListener(unused -> {
+                            idsFavoritos.remove(idEjercicio);
+                            Estrella(holder, false);
+
+                            Toast.makeText(v.getContext(),
+                                    "Quitado de favoritos",
+                                    Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(v.getContext(),
+                                "Error al quitar favorito: " + e.getMessage(),
+                                Toast.LENGTH_LONG).show());
+            } else {
+                favoritosRef.child(idEjercicio).setValue(ejercicio)
+                        .addOnSuccessListener(unused -> {
+                            idsFavoritos.add(idEjercicio);
+                            Estrella(holder, true);
+
+                            Toast.makeText(v.getContext(),
+                                    "Guardado en favoritos",
+                                    Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(v.getContext(),
+                                "Error al guardar favorito: " + e.getMessage(),
+                                Toast.LENGTH_LONG).show());
+            }
         });
     }
+
+    private String obtenerIdEjercicio(Ejercicio ejercicio) {
+        if (ejercicio.getId() != 0) {
+            return String.valueOf(ejercicio.getId());
+        }
+
+        String nombre = ejercicio.getNombre() != null ? ejercicio.getNombre() : "sin_nombre";
+        String zona = ejercicio.getZona() != null ? ejercicio.getZona() : "sin_zona";
+
+        return limpiarTextoParaFirebase(nombre + "_" + zona);
+    }
+
+    private String limpiarTextoParaFirebase(String texto) {
+        return texto.replace(".", "_")
+                .replace("#", "_")
+                .replace("$", "_")
+                .replace("[", "_")
+                .replace("]", "_")
+                .replace("/", "_");
+    }
+
+    private String obtenerIconoEjercicio(Ejercicio ejercicio) {
+        String zona = ejercicio.getZona() != null ? ejercicio.getZona().toLowerCase() : "";
+        String posicion = ejercicio.getPosicion() != null ? ejercicio.getPosicion().toLowerCase() : "";
+        String nombre = ejercicio.getNombre() != null ? ejercicio.getNombre().toLowerCase() : "";
+
+        if (zona.contains("rodilla") || nombre.contains("rodilla")) {
+            return "🦵";
+        }
+
+        if (zona.contains("tobillo") || nombre.contains("tobillo")) {
+            return "🦶";
+        }
+
+        if (zona.contains("hombro") || nombre.contains("hombro")) {
+            return "💪";
+        }
+
+        if (zona.contains("espalda") || nombre.contains("espalda")) {
+            return "🧍";
+        }
+
+        if (posicion.contains("sentado") || nombre.contains("sentado")) {
+            return "🪑";
+        }
+
+        return "🏃";
+    }
+
+    private void Estrella(EjercicioViewHolder holder, boolean favorito) {
+        if (favorito) {
+            holder.txtGuardar.setText("★");
+            holder.txtGuardar.setTextColor(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.amarillo_estrella)
+            );
+            holder.txtGuardar.setTypeface(null, Typeface.BOLD);
+        } else {
+            holder.txtGuardar.setText("☆");
+            holder.txtGuardar.setTextColor(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.borde)
+            );
+            holder.txtGuardar.setTypeface(null, Typeface.NORMAL);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return listaEjercicios.size();
     }
+
     public void actualizarLista(List<Ejercicio> nuevaLista) {
         this.listaEjercicios = nuevaLista;
         notifyDataSetChanged();
     }
+
+    public void liberarListenerFavoritos() {
+        if (favoritosRef != null && favoritosListener != null) {
+            favoritosRef.removeEventListener(favoritosListener);
+        }
+    }
+
     public static class EjercicioViewHolder extends RecyclerView.ViewHolder {
+
+        TextView txtIconoEjercicio;
         TextView txtNombreEjercicio;
         TextView txtDatosEjercicio;
         TextView txtDuracionEjercicio;
         TextView txtGuardar;
+
         public EjercicioViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            txtIconoEjercicio = itemView.findViewById(R.id.txtIconoEjercicio);
             txtNombreEjercicio = itemView.findViewById(R.id.txtNombreEjercicio);
             txtDatosEjercicio = itemView.findViewById(R.id.txtDatosEjercicio);
             txtDuracionEjercicio = itemView.findViewById(R.id.txtDuracionEjercicio);

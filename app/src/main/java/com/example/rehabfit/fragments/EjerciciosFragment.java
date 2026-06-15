@@ -6,19 +6,22 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.rehabfit.R;
 import com.example.rehabfit.adapters.EjercicioAdapter;
 import com.example.rehabfit.models.Ejercicio;
 import com.example.rehabfit.models.EjercicioResponse;
 import com.example.rehabfit.network.ApiService;
 import com.example.rehabfit.network.RetrofitClient;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,40 +34,29 @@ public class EjerciciosFragment extends Fragment {
     private RecyclerView rvEjercicios;
     private EditText edtBuscarEjercicio;
 
+    private TextView btnTodos;
     private TextView btnRodilla;
     private TextView btnTobillo;
     private TextView btnHombro;
     private TextView btnEspalda;
     private TextView btnSentado;
-    private TextView btnTodos;
 
     private EjercicioAdapter adapter;
 
-    private List<Ejercicio> listaCompleta = new ArrayList<>();
-    private List<Ejercicio> listaFiltrada = new ArrayList<>();
+    private final List<Ejercicio> listaCompleta = new ArrayList<>();
+    private final List<Ejercicio> listaFiltrada = new ArrayList<>();
 
     private Call<EjercicioResponse> callEjercicios;
 
+    private String filtroSeleccionado = "Todos";
+
     public EjerciciosFragment() {
-        // Required empty public constructor
-    }
-
-    public static EjerciciosFragment newInstance(String param1, String param2) {
-        EjerciciosFragment fragment = new EjerciciosFragment();
-        Bundle args = new Bundle();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View vista = inflater.inflate(R.layout.fragment_ejercicios, container, false);
 
         rvEjercicios = vista.findViewById(R.id.rvEjercicios);
@@ -82,9 +74,10 @@ public class EjerciciosFragment extends Fragment {
         adapter = new EjercicioAdapter(listaFiltrada);
         rvEjercicios.setAdapter(adapter);
 
-        cargarEjerciciosDesdeApi();
-        configurarBuscador();
         configurarFiltros();
+        configurarBuscador();
+        actualizarChips();
+        cargarEjerciciosDesdeApi();
 
         return vista;
     }
@@ -92,8 +85,8 @@ public class EjerciciosFragment extends Fragment {
     private void cargarEjerciciosDesdeApi() {
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         callEjercicios = apiService.obtenerEjercicios();
-        callEjercicios.enqueue(new Callback<EjercicioResponse>() {
 
+        callEjercicios.enqueue(new Callback<EjercicioResponse>() {
             @Override
             public void onResponse(Call<EjercicioResponse> call, Response<EjercicioResponse> response) {
                 if (!isAdded()) {
@@ -101,7 +94,6 @@ public class EjerciciosFragment extends Fragment {
                 }
 
                 if (response.isSuccessful() && response.body() != null) {
-
                     listaCompleta.clear();
                     listaFiltrada.clear();
 
@@ -110,38 +102,26 @@ public class EjerciciosFragment extends Fragment {
 
                     adapter.notifyDataSetChanged();
 
-                    Toast.makeText(requireContext(), "Ejercicios cargados: " + listaCompleta.size(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(),
+                            "Ejercicios cargados: " + listaCompleta.size(),
+                            Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(requireContext(), "No se pudieron cargar los ejercicios", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(),
+                            "No se pudieron cargar los ejercicios",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<EjercicioResponse> call, Throwable t) {
-                if (!isAdded()) {
+                if (!isAdded() || call.isCanceled()) {
                     return;
                 }
-                Toast.makeText(requireContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
-    private void configurarBuscador() {
-        edtBuscarEjercicio.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No se usa
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filtrarPorTexto(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // No se usa
+                Toast.makeText(requireContext(),
+                        "Error de conexión: " + t.getMessage(),
+                        Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -155,7 +135,27 @@ public class EjerciciosFragment extends Fragment {
         btnSentado.setOnClickListener(v -> filtrarPorCategoria("Sentado"));
     }
 
+    private void configurarBuscador() {
+        edtBuscarEjercicio.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtrarPorTexto(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
     private void mostrarTodos() {
+        filtroSeleccionado = "Todos";
+        actualizarChips();
+
         edtBuscarEjercicio.setText("");
 
         listaFiltrada.clear();
@@ -164,6 +164,9 @@ public class EjerciciosFragment extends Fragment {
     }
 
     private void filtrarPorCategoria(String categoria) {
+        filtroSeleccionado = categoria;
+        actualizarChips();
+
         edtBuscarEjercicio.setText("");
 
         listaFiltrada.clear();
@@ -184,9 +187,14 @@ public class EjerciciosFragment extends Fragment {
     }
 
     private void filtrarPorTexto(String texto) {
-        listaFiltrada.clear();
-
         String busqueda = texto.toLowerCase().trim();
+
+        if (!busqueda.isEmpty()) {
+            filtroSeleccionado = "Todos";
+            actualizarChips();
+        }
+
+        listaFiltrada.clear();
 
         if (busqueda.isEmpty()) {
             listaFiltrada.addAll(listaCompleta);
@@ -212,12 +220,37 @@ public class EjerciciosFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    private void actualizarChips() {
+        pintarChip(btnTodos, filtroSeleccionado.equalsIgnoreCase("Todos"));
+        pintarChip(btnRodilla, filtroSeleccionado.equalsIgnoreCase("Rodilla"));
+        pintarChip(btnTobillo, filtroSeleccionado.equalsIgnoreCase("Tobillo"));
+        pintarChip(btnHombro, filtroSeleccionado.equalsIgnoreCase("Hombro"));
+        pintarChip(btnEspalda, filtroSeleccionado.equalsIgnoreCase("Espalda"));
+        pintarChip(btnSentado, filtroSeleccionado.equalsIgnoreCase("Sentado"));
+    }
+
+    private void pintarChip(TextView chip, boolean seleccionado) {
+        if (seleccionado) {
+            chip.setBackgroundResource(R.drawable.bg_chip_verde);
+            chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.verde_oscuro));
+            chip.setTypeface(null, android.graphics.Typeface.BOLD);
+        } else {
+            chip.setBackgroundResource(R.drawable.bg_chip_gris);
+            chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.texto_principal));
+            chip.setTypeface(null, android.graphics.Typeface.NORMAL);
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
         if (callEjercicios != null) {
             callEjercicios.cancel();
+        }
+
+        if (adapter != null) {
+            adapter.liberarListenerFavoritos();
         }
     }
 }

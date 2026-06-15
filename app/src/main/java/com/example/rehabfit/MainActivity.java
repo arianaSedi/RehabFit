@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cambiarFragmentBoton(int idMenu) {
+        bottomNavigation.setVisibility(android.view.View.VISIBLE);
         bottomNavigation.setSelectedItemId(idMenu);
     }
 

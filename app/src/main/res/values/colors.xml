@@ -28,4 +28,6 @@
     <color name="verde_numero">#08BFAE</color>
     <color name="naranja_fuerte">#FF6B00</color>
     <color name="azul_texto">#005CFF</color>
+
+    <color name="amarillo_estrella">#FFC107</color>
 </resources>
