@@ -72,8 +72,9 @@
                 android:hint="Tu contraseña"
                 android:inputType="textPassword"
                 android:drawableStart="@drawable/ic_lock"
+                android:drawableEnd="@drawable/ic_no_visible"
                 android:drawablePadding="12dp"
-                android:drawableTint="@color/verde_principal" />
+                android:drawableTint="@color/verde_principal"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogin"

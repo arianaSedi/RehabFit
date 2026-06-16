@@ -1,8 +1,12 @@
 package com.example.rehabfit;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +39,8 @@ public class CrearCuentaActivity extends AppCompatActivity {
         etCorreo = findViewById(R.id.etCorreo);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
+        configurarVerPassword(etPassword);
+        configurarVerPassword(etConfirmPassword);
         btnRegistrarme = findViewById(R.id.btnRegistrarme);
         tvIrLogin = findViewById(R.id.tvIrLogin);
 
@@ -109,5 +115,58 @@ public class CrearCuentaActivity extends AppCompatActivity {
                         Toast.makeText(this, "Error al crear cuenta: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void configurarVerPassword(EditText editText) {
+
+        editText.setOnTouchListener((v, event) -> {
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
+                if (editText.getCompoundDrawables()[2] == null) {
+                    return false;
+                }
+
+                if (event.getRawX() >=
+                        (editText.getRight()
+                                - editText.getCompoundDrawables()[2].getBounds().width())) {
+
+                    int cursor = editText.getSelectionEnd();
+
+                    boolean oculta =
+                            editText.getTransformationMethod()
+                                    instanceof PasswordTransformationMethod;
+
+                    if (oculta) {
+
+                        editText.setTransformationMethod(
+                                HideReturnsTransformationMethod.getInstance());
+
+                        editText.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_lock,
+                                0,
+                                R.drawable.ic_visible,
+                                0);
+
+                    } else {
+
+                        editText.setTransformationMethod(
+                                PasswordTransformationMethod.getInstance());
+
+                        editText.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_lock,
+                                0,
+                                R.drawable.ic_no_visible,
+                                0);
+                    }
+
+                    editText.setSelection(cursor);
+                    return true;
+                }
+            }
+
+            return false;
+        });
     }
 }
