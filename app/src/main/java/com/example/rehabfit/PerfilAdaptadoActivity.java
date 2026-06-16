@@ -200,7 +200,7 @@ public class PerfilAdaptadoActivity extends AppCompatActivity {
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(this, "Perfil guardado correctamente", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(PerfilAdaptadoActivity.this, MainActivity.class);
+                    Intent intent = new Intent(PerfilAdaptadoActivity.this, ZonaAfectadaActivity.class);
                     startActivity(intent);
                     finish();
                 })

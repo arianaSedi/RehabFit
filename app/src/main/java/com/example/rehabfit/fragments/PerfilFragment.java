@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.rehabfit.BienvenidaActivity;
 import com.example.rehabfit.PerfilAdaptadoActivity;
 import com.example.rehabfit.R;
+import com.example.rehabfit.ZonaAfectadaActivity;
 import com.example.rehabfit.models.PerfilAdaptado;
 import com.example.rehabfit.models.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
@@ -223,11 +224,20 @@ public class PerfilFragment extends Fragment {
         });
 
         btnCambiarZona.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Pantalla para cambiar zona afectada próximamente", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(requireContext(), ZonaAfectadaActivity.class);
+            startActivity(intent);
         });
 
         btnMisConsultasIA.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Mis consultas IA próximamente", Toast.LENGTH_SHORT).show();
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedorFragments, new ConsultasIAFragment())
+                    .addToBackStack(null)
+                    .commit();
+
         });
 
         btnCerrarSesion.setOnClickListener(v -> mostrarDialogoCerrarSesion());

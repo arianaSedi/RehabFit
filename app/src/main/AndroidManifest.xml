@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RehabFit">
         <activity
+            android:name=".ZonaAfectadaActivity"
+            android:exported="false" />
+        <activity
             android:name=".DetallePublicacionActivity"
             android:exported="false" />
         <activity
