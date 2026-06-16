@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fondo"
@@ -64,7 +65,10 @@
                 android:text="0.0\nDolor promedio"
                 android:textColor="@color/alerta_texto"
                 android:textStyle="bold" />
+
         </GridLayout>
+
+        <!-- GRAFICA SEMANAL -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,16 +86,15 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtResumenSemana"
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChartSemana"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:text="L:0   M:0   X:0   J:0   V:0   S:0   D:0"
-                android:textColor="@color/texto_secundario"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:layout_height="220dp"
+                android:layout_marginTop="12dp" />
+
         </LinearLayout>
+
+        <!-- GRAFICA DOLOR -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,20 +107,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Evolución del dolor promedio"
+                android:text="Evolución del dolor (últimas 4 semanas)"
                 android:textColor="@color/texto_principal"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtSemanasDolor"
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChartDolor"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:text="Sem 1: 0/10   Sem 2: 0/10   Sem 3: 0/10"
-                android:textColor="@color/texto_secundario"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:layout_height="220dp"
+                android:layout_marginTop="12dp" />
+
         </LinearLayout>
 
         <TextView
@@ -137,9 +137,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="El progreso puede variar según cada persona. Consulta con tu médico o fisioterapeuta."
+            android:text="El progreso puede variar según cada persona."
             android:textColor="@color/texto_secundario"
             android:textSize="12sp" />
 
     </LinearLayout>
+
 </ScrollView>
