@@ -1,7 +1,7 @@
 package com.example.rehabfit;
 
 import android.os.Bundle;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -9,16 +9,29 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rehabfit.models.PublicacionComunidad;
-import com.google.firebase.database.*;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class DetallePublicacionActivity extends AppCompatActivity {
 
-    private TextView txtNombreDetalle, txtFechaDetalle, txtEjercicioDetalle;
-    private TextView txtDatosDetalle, txtDificultadDetalle, txtExperienciaDetalle;
-    private Button btnInspirar;
+    private TextView txtNombreDetalle;
+    private TextView txtFechaDetalle;
+    private TextView txtEjercicioDetalle;
+    private TextView txtDatosDetalle;
+    private TextView txtDificultadDetalle;
+    private TextView txtExperienciaDetalle;
+
+    private ImageButton btnInspirar;
 
     private DatabaseReference refPublicacion;
+
     private String idPublicacion;
+
     private PublicacionComunidad publicacionActual;
 
     @Override
@@ -38,53 +51,121 @@ public class DetallePublicacionActivity extends AppCompatActivity {
 
         if (idPublicacion == null) {
             Toast.makeText(this, "Publicación no encontrada", Toast.LENGTH_SHORT).show();
+
             finish();
             return;
         }
 
-        refPublicacion = FirebaseDatabase.getInstance()
-                .getReference("publicacionesComunidad")
-                .child(idPublicacion);
-
+        refPublicacion = FirebaseDatabase.getInstance().getReference("publicacionesComunidad").child(idPublicacion);
         cargarDetalle();
-
-        btnInspirar.setOnClickListener(v -> sumarLike());
+        btnInspirar.setOnClickListener(v -> toggleApoyo());
     }
+
     private void cargarDetalle() {
-        refPublicacion.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                publicacionActual = snapshot.getValue(PublicacionComunidad.class);
 
-                if (publicacionActual == null) {
-                    Toast.makeText(DetallePublicacionActivity.this, "La publicación ya no existe", Toast.LENGTH_SHORT).show();
-                    finish();
-                    return;
+        refPublicacion.addValueEventListener(
+                new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        publicacionActual =
+                                snapshot.getValue(PublicacionComunidad.class);
+
+                        if (publicacionActual == null) {
+
+                            Toast.makeText(DetallePublicacionActivity.this, "La publicación ya no existe", Toast.LENGTH_SHORT).show();
+                            finish();
+                            return;
+                        }
+
+                        txtNombreDetalle.setText(publicacionActual.getNombreUsuario());
+                        txtFechaDetalle.setText(publicacionActual.getFecha() + " · Comunidad RehabFit");
+                        txtEjercicioDetalle.setText(publicacionActual.getEjercicio());
+                        txtDatosDetalle.setText("🦵 " + publicacionActual.getZona() + "   ⏱️ " + publicacionActual.getDuracion());
+                        txtDificultadDetalle.setText("Dificultad: " + publicacionActual.getDificultad());
+                        txtExperienciaDetalle.setText(publicacionActual.getExperiencia());
+
+                        verificarApoyo();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                        Toast.makeText(DetallePublicacionActivity.this, "Error al cargar detalle", Toast.LENGTH_SHORT).show();
+                    }
                 }
-
-                txtNombreDetalle.setText(publicacionActual.getNombreUsuario());
-                txtFechaDetalle.setText(publicacionActual.getFecha() + " · Comunidad RehabFit");
-                txtEjercicioDetalle.setText(publicacionActual.getEjercicio());
-                txtDatosDetalle.setText("🦵 " + publicacionActual.getZona() + "   ⏱️ " + publicacionActual.getDuracion());
-                txtDificultadDetalle.setText("Dificultad: " + publicacionActual.getDificultad());
-                txtExperienciaDetalle.setText(publicacionActual.getExperiencia());
-                btnInspirar.setText("♡ " + publicacionActual.getLikes() + " Me inspira");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(DetallePublicacionActivity.this, "Error al cargar detalle", Toast.LENGTH_SHORT).show();
-            }
-        });
+        );
     }
-    private void sumarLike() {
-        if (publicacionActual == null) return;
 
-        int nuevosLikes = publicacionActual.getLikes() + 1;
+    private void verificarApoyo() {
 
-        refPublicacion.child("likes").setValue(nuevosLikes)
-                .addOnSuccessListener(unused ->
-                        Toast.makeText(this, "Gracias por apoyar 💚", Toast.LENGTH_SHORT).show()
-                );
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (usuario == null) return;
+
+        refPublicacion
+                .child("usuariosInspirados")
+                .child(usuario.getUid())
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                if (snapshot.exists()) {
+                                    btnInspirar.setImageResource(R.drawable.ic_like);
+
+                                } else {
+                                    btnInspirar.setImageResource(R.drawable.ic_no_like);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+    }
+
+    private void toggleApoyo() {
+
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (usuario == null) return;
+
+        DatabaseReference refApoyo = refPublicacion.child("usuariosInspirados").child(usuario.getUid());
+
+        refApoyo.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        if (snapshot.exists()) {
+
+                            refApoyo.removeValue().addOnSuccessListener(unused -> {
+                                        Toast.makeText(DetallePublicacionActivity.this, "Apoyo eliminado", Toast.LENGTH_SHORT).show();
+                                    });
+
+                        } else {
+                            refApoyo.setValue(true).addOnSuccessListener(unused -> {
+
+                                        Toast.makeText(DetallePublicacionActivity.this, "Gracias por apoyar", Toast.LENGTH_SHORT
+                                        ).show();
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(
+                            @NonNull DatabaseError error) {
+
+                        Toast.makeText(
+                                DetallePublicacionActivity.this,
+                                "Error al registrar apoyo",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
     }
 }

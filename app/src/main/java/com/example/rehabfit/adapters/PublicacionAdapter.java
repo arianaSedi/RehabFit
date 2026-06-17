@@ -3,6 +3,7 @@ package com.example.rehabfit.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.PublicacionComunidad;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -22,7 +30,10 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     private List<PublicacionComunidad> lista;
     private OnPublicacionClick listener;
 
-    public PublicacionAdapter(List<PublicacionComunidad> lista, OnPublicacionClick listener) {
+    public PublicacionAdapter(
+            List<PublicacionComunidad> lista,
+            OnPublicacionClick listener
+    ) {
         this.lista = lista;
         this.listener = listener;
     }
@@ -30,23 +41,31 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     @NonNull
     @Override
     public PublicacionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View vista = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_publicacion_comunidad, parent, false);
+
+        View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_publicacion_comunidad, parent, false);
         return new PublicacionViewHolder(vista);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PublicacionViewHolder holder, int position) {
+
         PublicacionComunidad p = lista.get(position);
 
         holder.txtNombre.setText(p.getNombreUsuario());
         holder.txtFecha.setText(p.getFecha());
         holder.txtDificultad.setText(p.getDificultad());
+
         holder.txtEjercicio.setText("💪 " + p.getEjercicio());
+
         holder.txtZona.setText("🦵 " + p.getZona());
+
         holder.txtDuracion.setText("⏱️ " + p.getDuracion());
+
         holder.txtExperiencia.setText(p.getExperiencia());
-        holder.txtLikes.setText("♡ " + p.getLikes() + " Me inspira");
+
+        verificarApoyo(p, holder);
+
+        holder.btnLike.setOnClickListener(v -> toggleApoyo(p, holder));
 
         holder.txtVerDetalle.setOnClickListener(v -> {
             if (listener != null) {
@@ -66,11 +85,93 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         return lista.size();
     }
 
+    private void verificarApoyo(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
+
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (usuario == null) return;
+
+        FirebaseDatabase.getInstance()
+                .getReference("publicacionesComunidad")
+                .child(publicacion.getId())
+                .child("usuariosInspirados")
+                .child(usuario.getUid())
+                .addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(
+                                    @NonNull DataSnapshot snapshot) {
+
+                                if(snapshot.exists()) {
+                                    holder.btnLike.setImageResource(R.drawable.ic_like);
+
+                                } else {
+
+                                    holder.btnLike.setImageResource(R.drawable.ic_no_like);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+    }
+
+    private void toggleApoyo(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
+
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(usuario == null) return;
+
+        DatabaseReference refApoyo =
+                FirebaseDatabase.getInstance()
+                        .getReference("publicacionesComunidad")
+                        .child(publicacion.getId())
+                        .child("usuariosInspirados")
+                        .child(usuario.getUid());
+
+        refApoyo.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        if(snapshot.exists()) {
+
+                            refApoyo.removeValue();
+                            holder.btnLike.setImageResource(
+                                    R.drawable.ic_no_like
+                            );
+
+                        }
+                        else {
+
+                            refApoyo.setValue(true);
+
+                            holder.btnLike.setImageResource(R.drawable.ic_like
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
     static class PublicacionViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtAvatar, txtNombre, txtFecha, txtDificultad;
-        TextView txtEjercicio, txtZona, txtDuracion, txtExperiencia;
-        TextView txtLikes, txtVerDetalle;
+        TextView txtAvatar;
+        TextView txtNombre;
+        TextView txtFecha;
+        TextView txtDificultad;
+        TextView txtEjercicio;
+        TextView txtZona;
+        TextView txtDuracion;
+        TextView txtExperiencia;
+        ImageButton btnLike;
+        TextView txtVerDetalle;
 
         public PublicacionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,7 +184,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
             txtZona = itemView.findViewById(R.id.txtZona);
             txtDuracion = itemView.findViewById(R.id.txtDuracion);
             txtExperiencia = itemView.findViewById(R.id.txtExperiencia);
-            txtLikes = itemView.findViewById(R.id.txtLikes);
+            btnLike = itemView.findViewById(R.id.btnInspirar);
             txtVerDetalle = itemView.findViewById(R.id.txtVerDetalle);
         }
     }

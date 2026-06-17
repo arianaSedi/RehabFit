@@ -49,15 +49,10 @@ public class PublicarComunidadActivity extends AppCompatActivity {
     }
 
     private void configurarSpinner() {
-        String[] zonas = {
-                "Selecciona una zona", "Rodilla", "Hombro", "Espalda", "Cadera", "Pierna", "Brazo", "Cuello", "Tobillo"
+        String[] zonas = {"Selecciona una zona", "Rodilla", "Hombro", "Espalda", "Cadera", "Pierna", "Brazo", "Cuello", "Tobillo"
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                zonas
-        );
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, zonas);
 
         spZona.setAdapter(adapter);
     }
@@ -130,17 +125,12 @@ public class PublicarComunidadActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(
-                                PublicarComunidadActivity.this,
-                                "Error al obtener usuario: " + error.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show();
+                        Toast.makeText(PublicarComunidadActivity.this, "Error al obtener usuario: " + error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    private void guardarPublicacion(String uid, String nombre, String ejercicio, String zona,
-                                    String duracion, String dificultad, String experiencia) {
+    private void guardarPublicacion(String uid, String nombre, String ejercicio, String zona, String duracion, String dificultad, String experiencia) {
 
         String id = refPublicaciones.push().getKey();
 
@@ -149,17 +139,15 @@ public class PublicarComunidadActivity extends AppCompatActivity {
             return;
         }
 
-        String fecha = new SimpleDateFormat("dd MMM yyyy", new Locale("es", "ES"))
-                .format(new Date());
+        String fecha = new SimpleDateFormat("dd MMM yyyy", new Locale("es", "ES")).format(new Date());
 
         long timestamp = System.currentTimeMillis();
 
         PublicacionComunidad publicacion = new PublicacionComunidad(
-                id, uid, nombre, fecha, ejercicio, zona, duracion, dificultad, experiencia, 0, timestamp
+                id, uid, nombre, fecha, ejercicio, zona, duracion, dificultad, experiencia, timestamp
         );
 
-        refPublicaciones.child(id).setValue(publicacion)
-                .addOnSuccessListener(unused -> {
+        refPublicaciones.child(id).setValue(publicacion).addOnSuccessListener(unused -> {
                     Toast.makeText(this, "Publicación realizada", Toast.LENGTH_SHORT).show();
                     finish();
                 })
