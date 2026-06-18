@@ -11,14 +11,14 @@
         android:orientation="vertical"
         android:padding="18dp">
 
-        <TextView
+        <ImageView
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_gravity="center_horizontal"
+            android:src="@drawable/festejo"
             android:background="@drawable/bg_circulo_verde"
-            android:gravity="center"
-            android:text="🎉"
-            android:textSize="34sp" />
+            android:scaleType="centerInside"
+            android:padding="18dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -54,50 +54,156 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtResumenDuracion"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:text="⏱  Duración                                      19 minutos"
-                android:textColor="@color/texto_principal"
-                android:textSize="14sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtResumenCompletados"
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/reloj"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Duración"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtResumenDuracion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="19 minutos"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="✅  Ejercicios completados                 3"
-                android:textColor="@color/texto_principal"
-                android:textSize="14sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtResumenSaltados"
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/listo"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ejercicios completados"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtResumenCompletados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="⏭  Ejercicios saltados                       0"
-                android:textColor="@color/texto_principal"
-                android:textSize="14sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtResumenZona"
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/salto"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ejercicios saltados"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtResumenSaltados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="🦵  Zona trabajada                         Rodilla"
-                android:textColor="@color/texto_principal"
-                android:textSize="14sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtResumenFecha"
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/humano"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Zona trabajada"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtResumenZona"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rodilla"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="🗓  Fecha                                      11 Jun 2026"
-                android:textColor="@color/texto_principal"
-                android:textSize="14sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/fecha"
+                    android:layout_marginEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Fecha"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtResumenFecha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11 Jun 2026"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

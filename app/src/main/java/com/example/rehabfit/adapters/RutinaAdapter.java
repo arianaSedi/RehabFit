@@ -3,6 +3,7 @@ package com.example.rehabfit.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +46,7 @@ public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaView
 
         holder.txtDetalleRutina.setText(ejercicio.getZona() + " · " + ejercicio.getDuracionMinutos() + " min · " + ejercicio.getRepeticiones() + " rep · " + ejercicio.getNivel());
 
-        holder.txtEliminarRutina.setOnClickListener(v -> {
+        holder.EliminarRutina.setOnClickListener(v -> {
             RutinaManager.eliminarEjercicio(ejercicio, new RutinaManager.AccionCallback() {
                 @Override
                 public void onExito() {
@@ -76,7 +77,7 @@ public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaView
         TextView txtNumeroRutina;
         TextView txtNombreRutina;
         TextView txtDetalleRutina;
-        TextView txtEliminarRutina;
+        ImageView EliminarRutina;
 
         public RutinaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,7 +85,7 @@ public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaView
             txtNumeroRutina = itemView.findViewById(R.id.txtNumeroRutina);
             txtNombreRutina = itemView.findViewById(R.id.txtNombreRutina);
             txtDetalleRutina = itemView.findViewById(R.id.txtDetalleRutina);
-            txtEliminarRutina = itemView.findViewById(R.id.txtEliminarRutina);
+            EliminarRutina = itemView.findViewById(R.id.EliminarRutina);
         }
     }
 }

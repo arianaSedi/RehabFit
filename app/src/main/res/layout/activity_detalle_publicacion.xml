@@ -17,14 +17,14 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
                 android:id="@+id/txtAvatarDetalle"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:gravity="center"
-                android:text="👩"
-                android:textSize="24sp"
-                android:background="@drawable/bg_circulo_verde" />
+                android:src="@drawable/usuario"
+                android:background="@drawable/bg_circulo_verde"
+                android:scaleType="centerInside"
+                android:padding="10px" />
 
             <LinearLayout
                 android:layout_width="0dp"

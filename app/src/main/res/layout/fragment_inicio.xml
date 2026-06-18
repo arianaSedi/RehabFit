@@ -59,9 +59,7 @@
                 android:textSize="21sp" />
         </LinearLayout>
 
-        <!-- Aviso -->
-        <TextView
-            android:id="@+id/txtAvisoSeguridad"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
@@ -70,9 +68,24 @@
             android:paddingTop="12dp"
             android:paddingEnd="14dp"
             android:paddingBottom="12dp"
-            android:text="⚠  Aviso de seguridad\nRealiza ejercicios suaves y detente si sientes dolor fuerte.\nLas recomendaciones no sustituyen atención médica."
-            android:textColor="@color/alerta_texto"
-            android:textSize="12sp" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/precaucion"
+                android:layout_marginEnd="8dp"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/txtAvisoSeguridad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aviso de seguridad\nRealiza ejercicios suaves y detente si sientes dolor fuerte.\nLas recomendaciones no sustituyen atención médica."
+                android:textColor="@color/alerta_texto"
+                android:textSize="12sp" />
+
+        </LinearLayout>
 
         <!-- Métricas -->
         <GridLayout

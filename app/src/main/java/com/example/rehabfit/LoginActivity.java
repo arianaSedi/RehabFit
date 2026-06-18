@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
 
         auth.sendPasswordResetEmail(correo)
                 .addOnSuccessListener(unused -> {
-                    Toast.makeText(this, "Correo de recuperación enviado", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Correo de recuperación enviado, revisa tu bandeja de spam", Toast.LENGTH_LONG).show();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();

@@ -42,12 +42,12 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/txtEliminarRutina"
+    <ImageView
+        android:id="@+id/EliminarRutina"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:gravity="center"
-        android:text="🗑"
-        android:textSize="16sp" />
+        android:src="@drawable/basurero"
+        android:background="?attr/selectableItemBackground"
+        android:scaleType="centerInside" />
 
 </LinearLayout>

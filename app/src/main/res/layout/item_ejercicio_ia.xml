@@ -25,14 +25,29 @@
         android:textColor="@color/verde_oscuro"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/txtTiempoEjercicioIA"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:text="⏱ 5 min · 10 rep"
-        android:textColor="@color/texto_secundario"
-        android:textSize="12sp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/reloj"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/txtTiempoEjercicioIA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="5 min · 10 rep"
+            android:textColor="@color/texto_secundario"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAgregarEjercicioRutinaIA"

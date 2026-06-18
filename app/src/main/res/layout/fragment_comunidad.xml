@@ -44,15 +44,29 @@
             android:backgroundTint="@color/verde_principal" />
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:background="@drawable/bg_chip_verde"
         android:padding="14dp"
-        android:text="💚 Evita comparar tu progreso con otros. Cada recuperación es diferente y personal."
-        android:textColor="@color/verde_oscuro"
-        android:textSize="13sp"
-        android:background="@drawable/bg_chip_verde" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/corazon"
+            android:layout_marginEnd="8dp"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Evita comparar tu progreso con otros. Cada recuperación es diferente y personal."
+            android:textColor="@color/verde_oscuro"
+            android:textSize="13sp" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPublicaciones"
