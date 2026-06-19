@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "https://rehabfit-api-1.onrender.com/";
+    private static final String BASE_URL = "https://rehabfitapi.onrender.com/api/";
 
     private static Retrofit retrofit;
 
