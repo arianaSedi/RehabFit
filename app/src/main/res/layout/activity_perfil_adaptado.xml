@@ -48,7 +48,10 @@
             android:id="@+id/edtEdad"
             style="@style/InputFormulario"
             android:hint="Tu edad en años"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario"
+            android:background="@drawable/bg_input"/>
 
         <TextView
             style="@style/TextoLabel"
@@ -59,13 +62,13 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="7dp"
-            android:background="@drawable/bg_input"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
+            android:background="@drawable/bg_spinner"
+            android:popupBackground="@color/blanco"/>
 
         <TextView
             style="@style/TextoLabel"
-            android:text="Apoyo físico que utilizas" />
+            android:text="Apoyo físico que utilizas"
+            android:layout_marginBottom="10dp"/>
 
         <RadioGroup
             android:id="@+id/rgApoyoFisico"
@@ -84,9 +87,9 @@
                     android:layout_height="48dp"
                     android:layout_marginEnd="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_card"
-                    android:buttonTint="@color/verde_principal"
+                    app:buttonTint="@color/radio_verde"
                     android:paddingStart="10dp"
+                    android:background="@drawable/bg_radio"
                     android:text="Ninguno"
                     android:textColor="@color/texto_principal"
                     android:textSize="13sp" />
@@ -97,9 +100,9 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_card"
-                    android:buttonTint="@color/verde_principal"
+                    app:buttonTint="@color/radio_verde"
                     android:paddingStart="10dp"
+                    android:background="@drawable/bg_radio"
                     android:text="Bastón"
                     android:textColor="@color/texto_principal"
                     android:textSize="13sp" />
@@ -117,9 +120,9 @@
                     android:layout_height="48dp"
                     android:layout_marginEnd="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_card"
-                    android:buttonTint="@color/verde_principal"
+                    app:buttonTint="@color/radio_verde"
                     android:paddingStart="10dp"
+                    android:background="@drawable/bg_radio"
                     android:text="Muletas"
                     android:textColor="@color/texto_principal"
                     android:textSize="13sp" />
@@ -130,8 +133,8 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="6dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_card"
-                    android:buttonTint="@color/verde_principal"
+                    android:background="@drawable/bg_radio"
+                    app:buttonTint="@color/radio_verde"
                     android:paddingStart="10dp"
                     android:text="Silla de ruedas"
                     android:textColor="@color/texto_principal"
@@ -149,7 +152,8 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="7dp"
-            android:background="@drawable/bg_input"
+            android:background="@drawable/bg_spinner"
+            android:popupBackground="@color/blanco"
             android:paddingStart="12dp"
             android:paddingEnd="12dp" />
 

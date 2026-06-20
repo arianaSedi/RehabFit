@@ -38,7 +38,7 @@
                 android:id="@+id/txtSesionesCompletadas"
                 style="@style/CardMetrica"
                 android:background="@drawable/bg_card_verde"
-                android:text="0\nSesiones completadas"
+                android:text="0\nSesiones completas"
                 android:textColor="@color/texto_principal"
                 android:textStyle="bold" />
 

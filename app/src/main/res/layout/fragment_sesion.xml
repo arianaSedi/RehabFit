@@ -147,7 +147,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_boton_borde"
                 android:gravity="center"
-                android:text="⏭  Saltar"
+                android:text="Saltar"
                 android:textColor="@color/texto_secundario"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -160,7 +160,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_boton_verde"
                 android:gravity="center"
-                android:text="✓  Completado"
+                android:text="Completado"
                 android:textColor="@color/blanco"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -170,11 +170,12 @@
             android:id="@+id/btnFinalizarSesion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="✕ Finalizar sesión"
-            android:textColor="@color/texto_secundario"
-            android:textSize="13sp" />
+            android:text="Finalizar sesión"
+            android:textColor="@color/alerta_texto"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>

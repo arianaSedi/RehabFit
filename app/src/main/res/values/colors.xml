@@ -30,4 +30,5 @@
     <color name="azul_texto">#005CFF</color>
 
     <color name="amarillo_estrella">#FFC107</color>
+    <color name="negro">#020202</color>
 </resources>

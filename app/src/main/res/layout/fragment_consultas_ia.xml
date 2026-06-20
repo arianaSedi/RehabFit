@@ -21,7 +21,7 @@
                 android:id="@+id/txtIconoIA"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@drawable/ic_medical"
+                android:background="@drawable/ic_heart_pulse"
                 android:gravity="center"
                 android:textColor="@color/blanco"
                 android:textSize="22sp" />
@@ -191,10 +191,9 @@
             android:layout_marginTop="24dp"
             android:gravity="center"
             android:text="Ver historial de consultas"
-            android:textColor="#2815FF"
+            android:textColor="@color/alerta_texto"
             android:textSize="14sp"
             android:textStyle="bold" />
-
 
     </LinearLayout>
 
