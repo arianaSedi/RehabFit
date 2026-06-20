@@ -12,8 +12,7 @@ public class PerfilAdaptado {
         // Constructor
     }
 
-    public PerfilAdaptado(int edad, String nivelMovilidad, String apoyoFisico,
-                          String objetivoPrincipal, int nivelDolor, boolean perfilCompletado) {
+    public PerfilAdaptado(int edad, String nivelMovilidad, String apoyoFisico, String objetivoPrincipal, int nivelDolor, boolean perfilCompletado) {
         this.edad = edad;
         this.nivelMovilidad = nivelMovilidad;
         this.apoyoFisico = apoyoFisico;

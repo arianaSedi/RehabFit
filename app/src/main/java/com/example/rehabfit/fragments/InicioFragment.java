@@ -62,8 +62,7 @@ public class InicioFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View vista = inflater.inflate(R.layout.fragment_inicio, container, false);
 
@@ -73,14 +72,11 @@ public class InicioFragment extends Fragment {
         txtSaludo = vista.findViewById(R.id.txtSaludo);
         txtSubSaludo = vista.findViewById(R.id.txtSubSaludo);
         txtAvatar = vista.findViewById(R.id.txtAvatar);
-
         txtSesionesSemana = vista.findViewById(R.id.txtSesionesSemana);
         txtTiempoTotal = vista.findViewById(R.id.txtTiempoTotal);
         txtZonaTrabajada = vista.findViewById(R.id.txtZonaTrabajada);
         txtDolorPromedio = vista.findViewById(R.id.txtDolorPromedio);
-
         btnIniciarRutina = vista.findViewById(R.id.btnIniciarRutina);
-
         btnIrEjercicios = vista.findViewById(R.id.btnIrEjercicios);
         btnIrRutina = vista.findViewById(R.id.btnIrRutina);
         btnIrHistorial = vista.findViewById(R.id.btnIrHistorial);
@@ -90,7 +86,6 @@ public class InicioFragment extends Fragment {
 
         cargarDatosUsuario();
         configurarBotones();
-
         return vista;
     }
 
@@ -130,14 +125,8 @@ public class InicioFragment extends Fragment {
 
                     if (perfil != null) {
                         txtSubSaludo.setText("¿Lista para tu sesión de hoy?");
-
-                        txtZonaTrabajada.setText(
-                                perfil.getObjetivoPrincipal() + "\nObjetivo"
-                        );
-
-                        txtDolorPromedio.setText(
-                                perfil.getNivelDolor() + "/10\nDolor actual"
-                        );
+                        txtZonaTrabajada.setText(perfil.getObjetivoPrincipal() + "\nObjetivo");
+                        txtDolorPromedio.setText(perfil.getNivelDolor() + "/10\nDolor actual");
                     } else {
                         txtSubSaludo.setText("Completa tu perfil adaptado");
                         txtZonaTrabajada.setText("Sin datos\nObjetivo");
@@ -148,23 +137,16 @@ public class InicioFragment extends Fragment {
 
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(
-                            requireContext(),
-                            "Error al cargar datos: " + e.getMessage(),
-                            Toast.LENGTH_LONG
-                    ).show();
+                    Toast.makeText(requireContext(), "Error al cargar datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
     private void configurarBotones() {
         txtAvatar.setOnClickListener(v -> irAPerfil());
-
         btnIniciarRutina.setOnClickListener(v -> irARutina());
-
         btnIrEjercicios.setOnClickListener(v -> irAEjercicios());
         btnIrRutina.setOnClickListener(v -> irARutina());
         btnIrComunidad.setOnClickListener(v -> irAComunidad());
-
         btnIrHistorial.setOnClickListener(v -> {
             getParentFragmentManager()
                     .beginTransaction()

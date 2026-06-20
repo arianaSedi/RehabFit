@@ -15,7 +15,6 @@ import java.util.List;
 public class RutinaManager {
 
     private static final List<Ejercicio> ejerciciosRutina = new ArrayList<>();
-
     public interface RutinaCallback {
         void onRutinaCargada();
     }

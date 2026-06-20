@@ -128,44 +128,25 @@ public class CrearCuentaActivity extends AppCompatActivity {
                     return false;
                 }
 
-                if (event.getRawX() >=
-                        (editText.getRight()
-                                - editText.getCompoundDrawables()[2].getBounds().width())) {
+                if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[2].getBounds().width())) {
 
                     int cursor = editText.getSelectionEnd();
 
-                    boolean oculta =
-                            editText.getTransformationMethod()
-                                    instanceof PasswordTransformationMethod;
+                    boolean oculta = editText.getTransformationMethod() instanceof PasswordTransformationMethod;
 
                     if (oculta) {
-
-                        editText.setTransformationMethod(
-                                HideReturnsTransformationMethod.getInstance());
-
-                        editText.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_lock,
-                                0,
-                                R.drawable.ic_visible,
-                                0);
+                        editText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                        editText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock, 0, R.drawable.ic_visible, 0);
 
                     } else {
 
-                        editText.setTransformationMethod(
-                                PasswordTransformationMethod.getInstance());
-
-                        editText.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_lock,
-                                0,
-                                R.drawable.ic_no_visible,
-                                0);
+                        editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                        editText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lock, 0, R.drawable.ic_no_visible, 0);
                     }
-
                     editText.setSelection(cursor);
                     return true;
                 }
             }
-
             return false;
         });
     }

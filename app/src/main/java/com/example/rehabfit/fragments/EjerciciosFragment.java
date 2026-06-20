@@ -54,14 +54,12 @@ public class EjerciciosFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_ejercicios, container, false);
 
         rvEjercicios = vista.findViewById(R.id.rvEjercicios);
         edtBuscarEjercicio = vista.findViewById(R.id.edtBuscarEjercicio);
-
         btnTodos = vista.findViewById(R.id.btnTodos);
         btnRodilla = vista.findViewById(R.id.btnRodilla);
         btnTobillo = vista.findViewById(R.id.btnTobillo);
@@ -78,7 +76,6 @@ public class EjerciciosFragment extends Fragment {
         configurarBuscador();
         actualizarChips();
         cargarEjerciciosDesdeApi();
-
         return vista;
     }
 
@@ -102,14 +99,10 @@ public class EjerciciosFragment extends Fragment {
 
                     adapter.notifyDataSetChanged();
 
-                    Toast.makeText(requireContext(),
-                            "Ejercicios cargados: " + listaCompleta.size(),
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Ejercicios cargados: " + listaCompleta.size(), Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(requireContext(),
-                            "No se pudieron cargar los ejercicios",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "No se pudieron cargar los ejercicios", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -119,9 +112,7 @@ public class EjerciciosFragment extends Fragment {
                     return;
                 }
 
-                Toast.makeText(requireContext(),
-                        "Error de conexión: " + t.getMessage(),
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

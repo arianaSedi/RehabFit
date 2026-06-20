@@ -64,11 +64,9 @@ public class CompletadosFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_completados, container, false);
-
         ocultarBottomNavigation();
 
         txtResumenDuracion = vista.findViewById(R.id.txtResumenDuracion);
@@ -83,7 +81,6 @@ public class CompletadosFragment extends Fragment {
         recibirDatos();
         pintarDatos();
         configurarBotones();
-
         return vista;
     }
 
@@ -117,9 +114,7 @@ public class CompletadosFragment extends Fragment {
             textoMejora = " · Aumentó";
         }
 
-        txtDolorSesionCompletada.setText(
-                "Antes de la sesión: " + dolorAntes + "/10\n" +
-                        "Después de la sesión: " + dolorDespues + "/10" + textoMejora
+        txtDolorSesionCompletada.setText("Antes de la sesión: " + dolorAntes + "/10\n" + "Después de la sesión: " + dolorDespues + "/10" + textoMejora
         );
     }
 
@@ -141,12 +136,7 @@ public class CompletadosFragment extends Fragment {
             return;
         }
 
-        RutinaManager.guardarSesionTerminada(
-                minutosTotales,
-                ejerciciosCompletados,
-                dolorAntes,
-                dolorDespues,
-                zonaPrincipal,
+        RutinaManager.guardarSesionTerminada(minutosTotales, ejerciciosCompletados, dolorAntes, dolorDespues, zonaPrincipal,
                 new RutinaManager.AccionCallback() {
                     @Override
                     public void onExito() {
@@ -155,10 +145,7 @@ public class CompletadosFragment extends Fragment {
                         }
 
                         historialGuardado = true;
-                        Toast.makeText(requireContext(),
-                                "Sesión guardada en historial",
-                                Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(requireContext(), "Sesión guardada en historial", Toast.LENGTH_SHORT).show();
                         abrirHistorial();
                     }
 
@@ -168,9 +155,7 @@ public class CompletadosFragment extends Fragment {
                             return;
                         }
 
-                        Toast.makeText(requireContext(),
-                                "Error al guardar historial: " + error,
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(requireContext(), "Error al guardar historial: " + error, Toast.LENGTH_LONG).show();
                     }
                 }
         );

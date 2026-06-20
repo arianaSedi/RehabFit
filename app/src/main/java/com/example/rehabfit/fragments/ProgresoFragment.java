@@ -56,7 +56,6 @@ public class ProgresoFragment extends Fragment {
         txtMensajeProgreso = vista.findViewById(R.id.txtMensajeProgreso);
 
         cargarProgreso();
-
         return vista;
     }
 
@@ -287,7 +286,6 @@ public class ProgresoFragment extends Fragment {
         dataSet.setDrawValues(false);
 
         BarData data = new BarData(dataSet);
-
         barChartSemana.setData(data);
 
         String[] dias = {"L","M","X","J","V","S","D"};
@@ -322,27 +320,20 @@ public class ProgresoFragment extends Fragment {
         );
 
         dataSet.setValueTextSize(12f);
-
         BarData data = new BarData(dataSet);
-
         barChartDolor.setData(data);
 
-        String[] semanas = {"Sem 1", "Sem 2", "Sem 3", "Sem 4"
-        };
+        String[] semanas = {"Sem 1", "Sem 2", "Sem 3", "Sem 4"};
 
         XAxis xAxis = barChartDolor.getXAxis();
-
         xAxis.setValueFormatter(new IndexAxisValueFormatter(semanas));
-
         xAxis.setGranularity(1f);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
         barChartDolor.getDescription().setEnabled(false);
         barChartDolor.getLegend().setEnabled(false);
         barChartDolor.getAxisRight().setEnabled(false);
-
         barChartDolor.animateY(1000);
-
         barChartDolor.invalidate();
     }
 }

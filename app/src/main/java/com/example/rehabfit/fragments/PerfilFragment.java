@@ -74,7 +74,6 @@ public class PerfilFragment extends Fragment {
         inicializarVistas(vista);
         cargarDatosPerfil();
         configurarBotones();
-
         return vista;
     }
 
@@ -224,7 +223,6 @@ public class PerfilFragment extends Fragment {
         });
 
         btnCambiarZona.setOnClickListener(v -> {
-
             Intent intent = new Intent(requireContext(), ZonaAfectadaActivity.class);
             startActivity(intent);
         });

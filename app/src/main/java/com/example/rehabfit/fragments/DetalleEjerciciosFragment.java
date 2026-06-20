@@ -58,11 +58,9 @@ public class DetalleEjerciciosFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_detalle_ejercicios, container, false);
-
         ocultarBottomNavigation();
 
         btnVolverDetalle = vista.findViewById(R.id.btnVolverDetalle);
@@ -82,7 +80,6 @@ public class DetalleEjerciciosFragment extends Fragment {
 
         cargarDatosDelEjercicio();
         configurarBotones();
-
         return vista;
     }
 
@@ -99,10 +96,8 @@ public class DetalleEjerciciosFragment extends Fragment {
 
         txtNombreDetalle.setText(valorSeguro(ejercicioActual.getNombre(), "Ejercicio"));
 
-        txtInfoDetalle.setText("✓ "
-                + valorSeguro(ejercicioActual.getNivel(), "Nivel no especificado")
-                + " · Movilidad suave · Recomendado para "
-                + valorSeguro(ejercicioActual.getZona(), "rehabilitación").toLowerCase());
+        txtInfoDetalle.setText("✓ " + valorSeguro(ejercicioActual.getNivel(), "Nivel no especificado")
+                + " · Movilidad suave · Recomendado para " + valorSeguro(ejercicioActual.getZona(), "rehabilitación").toLowerCase());
 
         txtZonaDetalle.setText("Zona\n" + valorSeguro(ejercicioActual.getZona(), "No especificado"));
         txtDificultadDetalle.setText("Nivel\n" + valorSeguro(ejercicioActual.getNivel(), "No especificado"));
@@ -114,8 +109,7 @@ public class DetalleEjerciciosFragment extends Fragment {
 
         cargarInstruccionesComoFigma(crearInstrucciones(ejercicioActual));
 
-        txtPrecaucionDetalle.setText(
-                "⚠ Precaución\n\n" +
+        txtPrecaucionDetalle.setText("Precaución\n\n" +
                         "• No realizar si causa dolor intenso al extender.\n" +
                         "• Detente si aumenta la inflamación.\n" +
                         "• Consulta con tu fisioterapeuta ante cualquier molestia."
@@ -144,15 +138,11 @@ public class DetalleEjerciciosFragment extends Fragment {
                         return;
                     }
 
-                    Toast.makeText(requireContext(),
-                            "Ejercicio agregado a tu rutina",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Ejercicio agregado a tu rutina", Toast.LENGTH_SHORT).show();
 
                     mostrarBottomNavigation();
 
-                    requireActivity()
-                            .getSupportFragmentManager()
-                            .popBackStack();
+                    requireActivity().getSupportFragmentManager().popBackStack();
 
                     if (getActivity() instanceof MainActivity) {
                         ((MainActivity) getActivity()).cambiarFragmentBoton(R.id.nav_rutina);
@@ -165,9 +155,7 @@ public class DetalleEjerciciosFragment extends Fragment {
                         return;
                     }
 
-                    Toast.makeText(requireContext(),
-                            "Error al agregar a rutina: " + error,
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), "Error al agregar a rutina: " + error, Toast.LENGTH_LONG).show();
                 }
             });
         });
@@ -200,11 +188,7 @@ public class DetalleEjerciciosFragment extends Fragment {
             texto.setTextSize(13);
             texto.setLineSpacing(convertirDp(2), 1.0f);
 
-            LinearLayout.LayoutParams paramsTexto = new LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1
-            );
+            LinearLayout.LayoutParams paramsTexto = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT, 1);
             paramsTexto.setMargins(convertirDp(10), 0, 0, 0);
             texto.setLayoutParams(paramsTexto);
 
@@ -255,9 +239,7 @@ public class DetalleEjerciciosFragment extends Fragment {
 
     private void cambiarFavorito() {
         if (favoritoRef == null) {
-            Toast.makeText(requireContext(),
-                    "Debes iniciar sesión para guardar favoritos",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Debes iniciar sesión para guardar favoritos", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -267,41 +249,31 @@ public class DetalleEjerciciosFragment extends Fragment {
                         esFavorito = false;
                         pintarBotonFavorito(false);
 
-                        Toast.makeText(requireContext(),
-                                "Ejercicio quitado de favoritos",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Ejercicio quitado de favoritos", Toast.LENGTH_SHORT).show();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(requireContext(),
-                            "Error al quitar favorito: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show());
+                    .addOnFailureListener(e ->
+                            Toast.makeText(requireContext(), "Error al quitar favorito: " + e.getMessage(), Toast.LENGTH_LONG).show());
         } else {
             favoritoRef.setValue(ejercicioActual)
                     .addOnSuccessListener(unused -> {
                         esFavorito = true;
                         pintarBotonFavorito(true);
 
-                        Toast.makeText(requireContext(),
-                                "Ejercicio guardado en favoritos",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Ejercicio guardado en favoritos", Toast.LENGTH_SHORT).show();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(requireContext(),
-                            "Error al guardar favorito: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show());
+                    .addOnFailureListener(e ->
+                            Toast.makeText(requireContext(), "Error al guardar favorito: " + e.getMessage(), Toast.LENGTH_LONG).show());
         }
     }
 
     private void pintarBotonFavorito(boolean favorito) {
         if (favorito) {
             btnGuardarEjercicioDetalle.setText("★  Ejercicio guardado");
-            btnGuardarEjercicioDetalle.setTextColor(
-                    ContextCompat.getColor(requireContext(), R.color.amarillo_estrella)
-            );
+            btnGuardarEjercicioDetalle.setTextColor(ContextCompat.getColor(requireContext(), R.color.amarillo_estrella));
             btnGuardarEjercicioDetalle.setTypeface(null, Typeface.BOLD);
         } else {
             btnGuardarEjercicioDetalle.setText("☆  Guardar ejercicio");
-            btnGuardarEjercicioDetalle.setTextColor(
-                    ContextCompat.getColor(requireContext(), R.color.verde_oscuro)
-            );
+            btnGuardarEjercicioDetalle.setTextColor(ContextCompat.getColor(requireContext(), R.color.verde_oscuro));
             btnGuardarEjercicioDetalle.setTypeface(null, Typeface.NORMAL);
         }
     }

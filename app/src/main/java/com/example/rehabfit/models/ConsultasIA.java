@@ -17,10 +17,7 @@ public class ConsultasIA {
     public ConsultasIA() {
     }
 
-    public ConsultasIA(String id, String consulta, String recomendacion,
-                       String movilidad, String objetivo, String apoyoFisico,
-                       int dolorActual, long fechaMillis,
-                       List<Ejercicio> ejerciciosRecomendados) {
+    public ConsultasIA(String id, String consulta, String recomendacion, String movilidad, String objetivo, String apoyoFisico, int dolorActual, long fechaMillis, List<Ejercicio> ejerciciosRecomendados) {
         this.id = id;
         this.consulta = consulta;
         this.recomendacion = recomendacion;

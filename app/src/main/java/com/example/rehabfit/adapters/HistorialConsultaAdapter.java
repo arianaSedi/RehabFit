@@ -61,8 +61,7 @@ public class HistorialConsultaAdapter extends RecyclerView.Adapter<HistorialCons
         });
 
         holder.btnAgregarRutina.setOnClickListener(v -> {
-            if (consulta.getEjerciciosRecomendados() == null
-                    || consulta.getEjerciciosRecomendados().isEmpty()) {
+            if (consulta.getEjerciciosRecomendados() == null || consulta.getEjerciciosRecomendados().isEmpty()) {
 
                 Toast.makeText(v.getContext(), "Esta consulta no tiene ejercicios recomendados", Toast.LENGTH_SHORT).show();
                 return;

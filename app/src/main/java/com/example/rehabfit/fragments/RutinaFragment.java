@@ -38,8 +38,7 @@ public class RutinaFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_rutina, container, false);
 
@@ -82,9 +81,7 @@ public class RutinaFragment extends Fragment {
 
     private void iniciarRutina() {
         if (RutinaManager.obtenerRutina().isEmpty()) {
-            Toast.makeText(requireContext(),
-                    "Primero agrega ejercicios a tu rutina",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Primero agrega ejercicios a tu rutina", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -136,10 +133,7 @@ public class RutinaFragment extends Fragment {
     private void abrirSesionEnCurso() {
         ArrayList<Ejercicio> ejercicios = new ArrayList<>(RutinaManager.obtenerRutina());
 
-        SesionFragment fragment = SesionFragment.newInstance(
-                ejercicios,
-                dolorAntesRutina
-        );
+        SesionFragment fragment = SesionFragment.newInstance(ejercicios, dolorAntesRutina);
 
         requireActivity()
                 .getSupportFragmentManager()

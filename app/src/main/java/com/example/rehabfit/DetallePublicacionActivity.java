@@ -69,8 +69,7 @@ public class DetallePublicacionActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        publicacionActual =
-                                snapshot.getValue(PublicacionComunidad.class);
+                        publicacionActual = snapshot.getValue(PublicacionComunidad.class);
 
                         if (publicacionActual == null) {
 
@@ -142,30 +141,21 @@ public class DetallePublicacionActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         if (snapshot.exists()) {
-
                             refApoyo.removeValue().addOnSuccessListener(unused -> {
                                         Toast.makeText(DetallePublicacionActivity.this, "Apoyo eliminado", Toast.LENGTH_SHORT).show();
-                                    });
+                            });
 
                         } else {
                             refApoyo.setValue(true).addOnSuccessListener(unused -> {
-
-                                        Toast.makeText(DetallePublicacionActivity.this, "Gracias por apoyar", Toast.LENGTH_SHORT
-                                        ).show();
-                                    });
+                                        Toast.makeText(DetallePublicacionActivity.this, "Gracias por apoyar", Toast.LENGTH_SHORT).show();
+                            });
                         }
                     }
 
                     @Override
-                    public void onCancelled(
-                            @NonNull DatabaseError error) {
-
-                        Toast.makeText(
-                                DetallePublicacionActivity.this,
-                                "Error al registrar apoyo",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(DetallePublicacionActivity.this, "Error al registrar apoyo", Toast.LENGTH_SHORT).show();
                     }
-                });
+        });
     }
 }

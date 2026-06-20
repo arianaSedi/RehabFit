@@ -38,8 +38,7 @@ public class ComunidadFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_comunidad, container, false);
 
         rvPublicaciones = vista.findViewById(R.id.rvPublicaciones);
@@ -55,7 +54,6 @@ public class ComunidadFragment extends Fragment {
 
         rvPublicaciones.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvPublicaciones.setAdapter(adapter);
-
         refPublicaciones = FirebaseDatabase.getInstance().getReference("publicacionesComunidad");
 
         btnPublicar.setOnClickListener(v -> {
@@ -64,7 +62,6 @@ public class ComunidadFragment extends Fragment {
         });
 
         cargarPublicaciones();
-
         return vista;
     }
 

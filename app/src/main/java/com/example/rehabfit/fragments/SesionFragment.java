@@ -61,11 +61,9 @@ public class SesionFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_sesion, container, false);
-
         ocultarBottomNavigation();
 
         txtPlanSesion = vista.findViewById(R.id.txtPlanSesion);
@@ -111,11 +109,8 @@ public class SesionFragment extends Fragment {
 
     private void configurarBotones() {
         btnCompletarEjercicio.setOnClickListener(v -> completarEjercicio());
-
         btnSaltarEjercicio.setOnClickListener(v -> saltarEjercicio());
-
         btnFinalizarSesion.setOnClickListener(v -> confirmarFinalizarSesion());
-
         txtCronometroSesion.setOnClickListener(v -> pausarOContinuar());
         txtEstadoCronometro.setOnClickListener(v -> pausarOContinuar());
     }
@@ -196,9 +191,7 @@ public class SesionFragment extends Fragment {
         long minutos = segundosTotales / 60;
         long segundos = segundosTotales % 60;
 
-        txtCronometroSesion.setText(
-                String.format(Locale.getDefault(), "%02d:%02d", minutos, segundos)
-        );
+        txtCronometroSesion.setText(String.format(Locale.getDefault(), "%02d:%02d", minutos, segundos));
     }
 
     private void completarEjercicio() {
@@ -289,14 +282,8 @@ public class SesionFragment extends Fragment {
     }
 
     private void abrirSesionCompletada(int dolorDespues) {
-        CompletadosFragment fragment = CompletadosFragment.newInstance(
-                calcularMinutosTotales(),
-                ejerciciosCompletados,
-                ejerciciosSaltados,
-                dolorAntes,
-                dolorDespues,
-                obtenerZonaPrincipal()
-        );
+        CompletadosFragment fragment = CompletadosFragment.newInstance(calcularMinutosTotales(), ejerciciosCompletados,
+                ejerciciosSaltados, dolorAntes, dolorDespues, obtenerZonaPrincipal());
 
         requireActivity()
                 .getSupportFragmentManager()
@@ -329,7 +316,6 @@ public class SesionFragment extends Fragment {
         if (zona == null || zona.trim().isEmpty()) {
             return "Sin datos";
         }
-
         return zona;
     }
 
@@ -394,7 +380,6 @@ public class SesionFragment extends Fragment {
         if (timer != null) {
             timer.cancel();
         }
-
         mostrarBottomNavigation();
     }
 }

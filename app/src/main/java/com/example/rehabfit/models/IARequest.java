@@ -10,7 +10,7 @@ public class IARequest {
     private int dolorActual;
 
     public IARequest() {
-        // Constructor vacío requerido por Firebase/Retrofit
+        // Constructor
     }
 
     public IARequest(String uid, String consulta, String movilidad, String objetivo, String apoyoFisico, int dolorActual) {

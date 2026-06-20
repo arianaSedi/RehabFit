@@ -1,5 +1,6 @@
 package com.example.rehabfit.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
@@ -61,6 +62,7 @@ public class ConsultasIAFragment extends Fragment {
     public ConsultasIAFragment() {
     }
 
+    @SuppressLint("WrongViewCast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -162,7 +164,6 @@ public class ConsultasIAFragment extends Fragment {
         btnGenerarIA.setText("Generando...");
 
         IARequest request = new IARequest(usuario.getUid(), consulta, movilidad, objetivo, apoyoFisico, dolorActual);
-
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
         apiService.generarRecomendacionIA(request).enqueue(new Callback<IAResponse>() {
@@ -206,8 +207,7 @@ public class ConsultasIAFragment extends Fragment {
         });
     }
 
-    private void guardarConsulta(String uid, String consulta, String recomendacion,
-                                 List<Ejercicio> ejerciciosRecomendados) {
+    private void guardarConsulta(String uid, String consulta, String recomendacion, List<Ejercicio> ejerciciosRecomendados) {
 
         String id = firestore.collection("users")
                 .document(uid)

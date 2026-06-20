@@ -30,10 +30,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     private List<PublicacionComunidad> lista;
     private OnPublicacionClick listener;
 
-    public PublicacionAdapter(
-            List<PublicacionComunidad> lista,
-            OnPublicacionClick listener
-    ) {
+    public PublicacionAdapter(List<PublicacionComunidad> lista, OnPublicacionClick listener) {
         this.lista = lista;
         this.listener = listener;
     }
@@ -54,17 +51,12 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         holder.txtNombre.setText(p.getNombreUsuario());
         holder.txtFecha.setText(p.getFecha());
         holder.txtDificultad.setText(p.getDificultad());
-
         holder.txtEjercicio.setText("💪 " + p.getEjercicio());
-
         holder.txtZona.setText("🦵 " + p.getZona());
-
         holder.txtDuracion.setText("⏱️ " + p.getDuracion());
-
         holder.txtExperiencia.setText(p.getExperiencia());
 
         verificarApoyo(p, holder);
-
         holder.btnLike.setOnClickListener(v -> toggleApoyo(p, holder));
 
         holder.txtVerDetalle.setOnClickListener(v -> {
@@ -100,21 +92,18 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                         new ValueEventListener() {
 
                             @Override
-                            public void onDataChange(
-                                    @NonNull DataSnapshot snapshot) {
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                                 if(snapshot.exists()) {
                                     holder.btnLike.setImageResource(R.drawable.ic_like);
 
                                 } else {
-
                                     holder.btnLike.setImageResource(R.drawable.ic_no_like);
                                 }
                             }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
                             }
                         });
     }
@@ -125,8 +114,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
 
         if(usuario == null) return;
 
-        DatabaseReference refApoyo =
-                FirebaseDatabase.getInstance()
+        DatabaseReference refApoyo = FirebaseDatabase.getInstance()
                         .getReference("publicacionesComunidad")
                         .child(publicacion.getId())
                         .child("usuariosInspirados")
@@ -138,25 +126,18 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         if(snapshot.exists()) {
-
                             refApoyo.removeValue();
-                            holder.btnLike.setImageResource(
-                                    R.drawable.ic_no_like
-                            );
+                            holder.btnLike.setImageResource(R.drawable.ic_no_like);
 
                         }
                         else {
-
                             refApoyo.setValue(true);
-
-                            holder.btnLike.setImageResource(R.drawable.ic_like
-                            );
+                            holder.btnLike.setImageResource(R.drawable.ic_like);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
                     }
                 });
     }

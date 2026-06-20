@@ -46,15 +46,13 @@ public class HistorialFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View vista = inflater.inflate(R.layout.fragment_historial, container, false);
 
         btnHoy = vista.findViewById(R.id.btnHoy);
         btnSemana = vista.findViewById(R.id.btnSemana);
         btnMes = vista.findViewById(R.id.btnMes);
-
         rvHistorial = vista.findViewById(R.id.rvHistorial);
         txtHistorialVacio = vista.findViewById(R.id.txtHistorialVacio);
 
@@ -65,7 +63,6 @@ public class HistorialFragment extends Fragment {
 
         configurarFiltros();
         cargarSesiones();
-
         return vista;
     }
 
@@ -122,9 +119,7 @@ public class HistorialFragment extends Fragment {
                         return;
                     }
 
-                    Toast.makeText(requireContext(),
-                            "Error al cargar historial: " + e.getMessage(),
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), "Error al cargar historial: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
@@ -186,8 +181,7 @@ public class HistorialFragment extends Fragment {
 
         int diaActual = inicioSemana.get(Calendar.DAY_OF_WEEK);
         int diferencia = (diaActual == Calendar.SUNDAY)
-                ? -6
-                : Calendar.MONDAY - diaActual;
+                ? -6 : Calendar.MONDAY - diaActual;
 
         inicioSemana.add(Calendar.DAY_OF_MONTH, diferencia);
         inicioSemana.set(Calendar.HOUR_OF_DAY, 0);
@@ -198,8 +192,7 @@ public class HistorialFragment extends Fragment {
         Calendar finSemana = (Calendar) inicioSemana.clone();
         finSemana.add(Calendar.DAY_OF_MONTH, 7);
 
-        return fecha.getTimeInMillis() >= inicioSemana.getTimeInMillis()
-                && fecha.getTimeInMillis() < finSemana.getTimeInMillis();
+        return fecha.getTimeInMillis() >= inicioSemana.getTimeInMillis() && fecha.getTimeInMillis() < finSemana.getTimeInMillis();
     }
 
     private boolean esDeEsteMes(long fechaMillis) {
@@ -208,7 +201,6 @@ public class HistorialFragment extends Fragment {
 
         Calendar hoy = Calendar.getInstance();
 
-        return fecha.get(Calendar.YEAR) == hoy.get(Calendar.YEAR)
-                && fecha.get(Calendar.MONTH) == hoy.get(Calendar.MONTH);
+        return fecha.get(Calendar.YEAR) == hoy.get(Calendar.YEAR) && fecha.get(Calendar.MONTH) == hoy.get(Calendar.MONTH);
     }
 }

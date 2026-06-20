@@ -27,9 +27,7 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
     @NonNull
     @Override
     public HistorialViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View vista = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_historial, parent, false);
-
+        View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_historial, parent, false);
         return new HistorialViewHolder(vista);
     }
 
@@ -46,10 +44,7 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
             zona = "Sin zona";
         }
 
-        holder.txtDetalleSesion.setText(
-                "🏃 " + zona +
-                        " · ⏱ " + sesion.getMinutosTotales() + " min" +
-                        " · ✅ " + sesion.getCantidadEjercicios() + " ejercicios"
+        holder.txtDetalleSesion.setText("🏃 " + zona + " · ⏱ " + sesion.getMinutosTotales() + " min" + " · ✅ " + sesion.getCantidadEjercicios() + " ejercicios"
         );
 
         if (sesion.getDolorAntes() > 0 || sesion.getDolorDespues() > 0) {

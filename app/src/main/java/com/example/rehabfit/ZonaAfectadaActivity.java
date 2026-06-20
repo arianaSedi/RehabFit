@@ -86,26 +86,15 @@ public class ZonaAfectadaActivity extends AppCompatActivity {
             limpiarSeleccion();
             card.setStrokeColor(getResources().getColor(R.color.verde_principal));
             card.setCardBackgroundColor(getResources().getColor(R.color.verde_claro));
-
             zonaSeleccionada = zona;
         });
     }
 
     private void limpiarSeleccion() {
 
-        int[] cards = {
-                R.id.cardBrazo,
-                R.id.cardHombro,
-                R.id.cardMuneca,
-                R.id.cardMano,
-                R.id.cardEspalda,
-                R.id.cardRodilla,
-                R.id.cardPierna,
-                R.id.cardTobillo
-        };
+        int[] cards = {R.id.cardBrazo, R.id.cardHombro, R.id.cardMuneca, R.id.cardMano, R.id.cardEspalda, R.id.cardRodilla, R.id.cardPierna, R.id.cardTobillo};
 
         for (int id : cards) {
-
             MaterialCardView card = findViewById(id);
             card.setCardBackgroundColor(getResources().getColor(R.color.blanco));
             card.setStrokeColor(getResources().getColor(R.color.borde));
@@ -115,7 +104,6 @@ public class ZonaAfectadaActivity extends AppCompatActivity {
     private void guardarDatos() {
 
         if (zonaSeleccionada.isEmpty()) {
-
             Toast.makeText(this, "Selecciona una zona", Toast.LENGTH_SHORT).show();
             return;
         }

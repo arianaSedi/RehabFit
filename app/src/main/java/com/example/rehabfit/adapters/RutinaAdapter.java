@@ -43,9 +43,7 @@ public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaView
 
         holder.txtNumeroRutina.setText(String.valueOf(position + 1));
         holder.txtNombreRutina.setText(ejercicio.getNombre());
-
         holder.txtDetalleRutina.setText(ejercicio.getZona() + " · " + ejercicio.getDuracionMinutos() + " min · " + ejercicio.getRepeticiones() + " rep · " + ejercicio.getNivel());
-
         holder.EliminarRutina.setOnClickListener(v -> {
             RutinaManager.eliminarEjercicio(ejercicio, new RutinaManager.AccionCallback() {
                 @Override

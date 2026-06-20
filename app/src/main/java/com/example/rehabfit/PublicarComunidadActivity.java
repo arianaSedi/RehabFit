@@ -44,7 +44,6 @@ public class PublicarComunidadActivity extends AppCompatActivity {
         configurarSpinner();
 
         btnGuardarPublicacion.setOnClickListener(v -> validarYPublicar());
-
         btnCancelar.setOnClickListener(v -> finish());
     }
 
@@ -102,8 +101,7 @@ public class PublicarComunidadActivity extends AppCompatActivity {
 
         obtenerNombreYGuardar(usuario, ejercicio, zona, duracion, dificultad, experiencia);
     }
-    private void obtenerNombreYGuardar(FirebaseUser usuario, String ejercicio, String zona,
-                                       String duracion, String dificultad, String experiencia) {
+    private void obtenerNombreYGuardar(FirebaseUser usuario, String ejercicio, String zona, String duracion, String dificultad, String experiencia) {
 
         refUsuarios.child(usuario.getUid()).child("nombre")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -143,9 +141,7 @@ public class PublicarComunidadActivity extends AppCompatActivity {
 
         long timestamp = System.currentTimeMillis();
 
-        PublicacionComunidad publicacion = new PublicacionComunidad(
-                id, uid, nombre, fecha, ejercicio, zona, duracion, dificultad, experiencia, timestamp
-        );
+        PublicacionComunidad publicacion = new PublicacionComunidad(id, uid, nombre, fecha, ejercicio, zona, duracion, dificultad, experiencia, timestamp);
 
         refPublicaciones.child(id).setValue(publicacion).addOnSuccessListener(unused -> {
                     Toast.makeText(this, "Publicación realizada", Toast.LENGTH_SHORT).show();
