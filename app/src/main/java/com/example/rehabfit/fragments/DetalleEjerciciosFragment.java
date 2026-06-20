@@ -96,8 +96,7 @@ public class DetalleEjerciciosFragment extends Fragment {
 
         txtNombreDetalle.setText(valorSeguro(ejercicioActual.getNombre(), "Ejercicio"));
 
-        txtInfoDetalle.setText("✓ " + valorSeguro(ejercicioActual.getNivel(), "Nivel no especificado")
-                + " · Movilidad suave · Recomendado para " + valorSeguro(ejercicioActual.getZona(), "rehabilitación").toLowerCase());
+        txtInfoDetalle.setText("✓ " + valorSeguro(ejercicioActual.getNivel(), "Nivel no especificado") + " · Movilidad suave · Recomendado para " + valorSeguro(ejercicioActual.getZona(), "rehabilitación").toLowerCase());
 
         txtZonaDetalle.setText("Zona\n" + valorSeguro(ejercicioActual.getZona(), "No especificado"));
         txtDificultadDetalle.setText("Nivel\n" + valorSeguro(ejercicioActual.getNivel(), "No especificado"));
@@ -109,11 +108,7 @@ public class DetalleEjerciciosFragment extends Fragment {
 
         cargarInstruccionesComoFigma(crearInstrucciones(ejercicioActual));
 
-        txtPrecaucionDetalle.setText("Precaución\n\n" +
-                        "• No realizar si causa dolor intenso al extender.\n" +
-                        "• Detente si aumenta la inflamación.\n" +
-                        "• Consulta con tu fisioterapeuta ante cualquier molestia."
-        );
+        txtPrecaucionDetalle.setText("Precaución\n\n" + "• No realizar si causa dolor intenso al extender.\n" + "• Detente si aumenta la inflamación.\n" + "• Consulta con tu fisioterapeuta ante cualquier molestia.");
 
         txtIconoDetalle.setText(obtenerIconoEjercicio(ejercicioActual));
 
@@ -131,22 +126,26 @@ public class DetalleEjerciciosFragment extends Fragment {
                 return;
             }
 
-            RutinaManager.agregarEjercicio(ejercicioActual, new RutinaManager.AccionCallback() {
+            RutinaManager.agregarEjercicioConValidacion(ejercicioActual, new RutinaManager.AgregarCallback() {
                 @Override
-                public void onExito() {
+                public void onAgregado() {
                     if (!isAdded()) {
                         return;
                     }
 
                     Toast.makeText(requireContext(), "Ejercicio agregado a tu rutina", Toast.LENGTH_SHORT).show();
 
-                    mostrarBottomNavigation();
+                    irARutina();
+                }
 
-                    requireActivity().getSupportFragmentManager().popBackStack();
-
-                    if (getActivity() instanceof MainActivity) {
-                        ((MainActivity) getActivity()).cambiarFragmentBoton(R.id.nav_rutina);
+                @Override
+                public void onYaExistia() {
+                    if (!isAdded()) {
+                        return;
                     }
+
+                    Toast.makeText(requireContext(), "Este ejercicio ya estaba en tu rutina", Toast.LENGTH_SHORT).show();
+                    irARutina();
                 }
 
                 @Override
@@ -161,6 +160,16 @@ public class DetalleEjerciciosFragment extends Fragment {
         });
 
         btnGuardarEjercicioDetalle.setOnClickListener(v -> cambiarFavorito());
+    }
+
+    private void irARutina() {
+        mostrarBottomNavigation();
+
+        requireActivity().getSupportFragmentManager().popBackStack();
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).cambiarFragmentBoton(R.id.nav_rutina);
+        }
     }
 
     private void cargarInstruccionesComoFigma(String[] pasos) {

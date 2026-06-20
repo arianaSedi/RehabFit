@@ -98,11 +98,11 @@ public class CompletadosFragment extends Fragment {
     }
 
     private void pintarDatos() {
-        txtResumenDuracion.setText("⏱  Duración                                      " + minutosTotales + " minutos");
-        txtResumenCompletados.setText("✅  Ejercicios completados                 " + ejerciciosCompletados);
-        txtResumenSaltados.setText("⏭  Ejercicios saltados                       " + ejerciciosSaltados);
-        txtResumenZona.setText("🦵  Zona trabajada                         " + zonaPrincipal);
-        txtResumenFecha.setText("🗓  Fecha                                      " + obtenerFechaActual());
+        txtResumenDuracion.setText(minutosTotales + " minutos");
+        txtResumenCompletados.setText(String.valueOf(ejerciciosCompletados));
+        txtResumenSaltados.setText(String.valueOf(ejerciciosSaltados));
+        txtResumenZona.setText(zonaPrincipal);
+        txtResumenFecha.setText(obtenerFechaActual());
 
         String textoMejora;
 

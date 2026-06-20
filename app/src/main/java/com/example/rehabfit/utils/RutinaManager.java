@@ -24,6 +24,12 @@ public class RutinaManager {
         void onError(String error);
     }
 
+    public interface AgregarCallback {
+        void onAgregado();
+        void onYaExistia();
+        void onError(String error);
+    }
+
     public interface ResumenCallback {
         void onResumen(int sesionesSemana, int minutosTotales);
     }
@@ -122,6 +128,42 @@ public class RutinaManager {
                 });
     }
 
+    public static void agregarEjercicioConValidacion(Ejercicio ejercicio, AgregarCallback callback) {
+        DatabaseReference usuarioRef = obtenerReferenciaUsuario();
+
+        if (usuarioRef == null) {
+            if (callback != null) {
+                callback.onError("No hay usuario activo");
+            }
+            return;
+        }
+
+        for (Ejercicio item : ejerciciosRutina) {
+            if (item.getId() == ejercicio.getId()) {
+                if (callback != null) {
+                    callback.onYaExistia();
+                }
+                return;
+            }
+        }
+
+        String idEjercicio = String.valueOf(ejercicio.getId());
+
+        usuarioRef.child("rutina").child(idEjercicio).setValue(ejercicio)
+                .addOnSuccessListener(unused -> {
+                    ejerciciosRutina.add(ejercicio);
+
+                    if (callback != null) {
+                        callback.onAgregado();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) {
+                        callback.onError(e.getMessage());
+                    }
+                });
+    }
+
     public static void eliminarEjercicio(Ejercicio ejercicio, AccionCallback callback) {
         DatabaseReference usuarioRef = obtenerReferenciaUsuario();
 
@@ -168,7 +210,7 @@ public class RutinaManager {
         return total;
     }
     public static void guardarSesionTerminada(int minutosTotales, int cantidadEjercicios, int dolorAntes,
-            int dolorDespues, String zonaPrincipal, AccionCallback callback)
+                                              int dolorDespues, String zonaPrincipal, AccionCallback callback)
     {
         DatabaseReference usuarioRef = obtenerReferenciaUsuario();
 

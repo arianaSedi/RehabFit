@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +46,7 @@ public class ConsultasIAFragment extends Fragment {
 
     private EditText edtConsultaIA;
     private AppCompatButton btnGenerarIA;
-    private AppCompatButton btnLimpiarIA;
+    private ImageButton btnLimpiarIA;
     private TextView txtVerHistorialIA;
     private LinearLayout layoutResultadoIA;
     private TextView txtRespuestaIA;
@@ -62,7 +63,6 @@ public class ConsultasIAFragment extends Fragment {
     public ConsultasIAFragment() {
     }
 
-    @SuppressLint("WrongViewCast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

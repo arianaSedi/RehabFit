@@ -99,8 +99,6 @@ public class EjerciciosFragment extends Fragment {
 
                     adapter.notifyDataSetChanged();
 
-                    Toast.makeText(requireContext(), "Ejercicios cargados: " + listaCompleta.size(), Toast.LENGTH_SHORT).show();
-
                 } else {
                     Toast.makeText(requireContext(), "No se pudieron cargar los ejercicios", Toast.LENGTH_SHORT).show();
                 }
@@ -197,12 +195,7 @@ public class EjerciciosFragment extends Fragment {
                 String posicion = ejercicio.getPosicion() != null ? ejercicio.getPosicion().toLowerCase() : "";
                 String descripcion = ejercicio.getDescripcion() != null ? ejercicio.getDescripcion().toLowerCase() : "";
 
-                if (nombre.contains(busqueda)
-                        || zona.contains(busqueda)
-                        || nivel.contains(busqueda)
-                        || posicion.contains(busqueda)
-                        || descripcion.contains(busqueda)) {
-
+                if (nombre.contains(busqueda) || zona.contains(busqueda) || nivel.contains(busqueda) || posicion.contains(busqueda) || descripcion.contains(busqueda)) {
                     listaFiltrada.add(ejercicio);
                 }
             }

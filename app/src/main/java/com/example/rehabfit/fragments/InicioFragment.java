@@ -93,7 +93,7 @@ public class InicioFragment extends Fragment {
         FirebaseUser usuarioActual = auth.getCurrentUser();
 
         if (usuarioActual == null) {
-            txtSaludo.setText("Hola 👋");
+            txtSaludo.setText("Hola");
             txtSubSaludo.setText("Inicia sesión para ver tu información");
             return;
         }
@@ -104,7 +104,7 @@ public class InicioFragment extends Fragment {
                 .addOnSuccessListener(snapshot -> {
 
                     if (!snapshot.exists()) {
-                        txtSaludo.setText("Hola 👋");
+                        txtSaludo.setText("Hola");
                         txtSubSaludo.setText("Bienvenida a RehabFit");
                         return;
                     }
@@ -112,13 +112,12 @@ public class InicioFragment extends Fragment {
                     Usuario usuario = snapshot.getValue(Usuario.class);
 
                     if (usuario != null && usuario.getNombre() != null && !usuario.getNombre().isEmpty()) {
-                        txtSaludo.setText("Hola, " + usuario.getNombre() + " 👋");
+                        txtSaludo.setText("Hola, " + usuario.getNombre());
 
                         String inicial = usuario.getNombre().substring(0, 1).toUpperCase();
                         txtAvatar.setText(inicial);
                     } else {
-                        txtSaludo.setText("Hola 👋");
-                        txtAvatar.setText("👤");
+                        txtSaludo.setText("Hola");
                     }
 
                     PerfilAdaptado perfil = snapshot.child("perfilAdaptado").getValue(PerfilAdaptado.class);
