@@ -79,7 +79,7 @@ public class CompletadosFragment extends Fragment {
         btnVolverInicioSesion = vista.findViewById(R.id.btnVolverInicioSesion);
 
         recibirDatos();
-        pintarDatos();
+        mostrarDatos();
         configurarBotones();
         return vista;
     }
@@ -97,7 +97,7 @@ public class CompletadosFragment extends Fragment {
         zonaPrincipal = getArguments().getString("zonaPrincipal", "Sin datos");
     }
 
-    private void pintarDatos() {
+    private void mostrarDatos() {
         txtResumenDuracion.setText(minutosTotales + " minutos");
         txtResumenCompletados.setText(String.valueOf(ejerciciosCompletados));
         txtResumenSaltados.setText(String.valueOf(ejerciciosSaltados));

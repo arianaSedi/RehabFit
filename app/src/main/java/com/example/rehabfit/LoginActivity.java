@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error al verificar perfil: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
-
+    //metodo utilizado para la recuperacióm de comtraseña
     private void recuperarPassword() {
         String correo = etLoginCorreo.getText().toString().trim();
 

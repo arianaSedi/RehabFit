@@ -55,7 +55,7 @@ public class PublicarComunidadActivity extends AppCompatActivity {
 
         spZona.setAdapter(adapter);
     }
-
+    //valida que todos los campos esten  completos
     private void validarYPublicar() {
         String ejercicio = edtEjercicio.getText().toString().trim();
         String duracion = edtDuracion.getText().toString().trim();
@@ -68,12 +68,12 @@ public class PublicarComunidadActivity extends AppCompatActivity {
         }
 
         if (zona.equals("Selecciona una zona")) {
-            Toast.makeText(this, "Selecciona una zona trabajada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Selecciona una zona de tu cuerpo trabajada", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (duracion.isEmpty()) {
-            edtDuracion.setError("Escribe la duración");
+            edtDuracion.setError("Escribe la duración de tu entrenamiendo");
             return;
         }
 

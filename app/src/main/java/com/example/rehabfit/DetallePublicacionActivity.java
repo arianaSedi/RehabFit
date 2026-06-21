@@ -127,7 +127,7 @@ public class DetallePublicacionActivity extends AppCompatActivity {
                         });
     }
 
-    private void toggleApoyo() {
+    private void agregarApoyo() {
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 

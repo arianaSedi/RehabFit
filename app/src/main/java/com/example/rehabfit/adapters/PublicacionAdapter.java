@@ -57,7 +57,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         holder.txtExperiencia.setText(p.getExperiencia());
 
         verificarApoyo(p, holder);
-        holder.btnLike.setOnClickListener(v -> toggleApoyo(p, holder));
+        holder.btnLike.setOnClickListener(v -> agregarApoyo(p, holder));
 
         holder.txtVerDetalle.setOnClickListener(v -> {
             if (listener != null) {
@@ -108,7 +108,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                         });
     }
 
-    private void toggleApoyo(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
+    private void agregarApoyo(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 

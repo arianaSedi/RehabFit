@@ -167,7 +167,7 @@ public class PerfilFragment extends Fragment {
                         mostrarPerfilVacio();
                     }
 
-                    cargarContadores(uid);
+                    contarSesiones(uid);
                 })
                 .addOnFailureListener(e -> {
                     if (!isAdded()) {
@@ -177,8 +177,8 @@ public class PerfilFragment extends Fragment {
                     Toast.makeText(requireContext(), "Error al cargar perfil: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
-
-    private void cargarContadores(String uid) {
+//metodo encargado de contar sesiones y publicaciones de cada usuario
+    private void contarSesiones(String uid) {
         usuariosRef.child(uid).child("historialSesiones").get()
                 .addOnSuccessListener(snapshot -> {
                     if (!isAdded()) {

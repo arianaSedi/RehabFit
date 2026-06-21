@@ -74,7 +74,7 @@ public class EjerciciosFragment extends Fragment {
 
         configurarFiltros();
         configurarBuscador();
-        actualizarChips();
+        actualizarFiltro();
         cargarEjerciciosDesdeApi();
         return vista;
     }
@@ -143,7 +143,7 @@ public class EjerciciosFragment extends Fragment {
 
     private void mostrarTodos() {
         filtroSeleccionado = "Todos";
-        actualizarChips();
+        actualizarFiltro();
 
         edtBuscarEjercicio.setText("");
 
@@ -154,7 +154,7 @@ public class EjerciciosFragment extends Fragment {
 
     private void filtrarPorCategoria(String categoria) {
         filtroSeleccionado = categoria;
-        actualizarChips();
+        actualizarFiltro();
 
         edtBuscarEjercicio.setText("");
 
@@ -180,7 +180,7 @@ public class EjerciciosFragment extends Fragment {
 
         if (!busqueda.isEmpty()) {
             filtroSeleccionado = "Todos";
-            actualizarChips();
+            actualizarFiltro();
         }
 
         listaFiltrada.clear();
@@ -204,16 +204,16 @@ public class EjerciciosFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    private void actualizarChips() {
-        pintarChip(btnTodos, filtroSeleccionado.equalsIgnoreCase("Todos"));
-        pintarChip(btnRodilla, filtroSeleccionado.equalsIgnoreCase("Rodilla"));
-        pintarChip(btnTobillo, filtroSeleccionado.equalsIgnoreCase("Tobillo"));
-        pintarChip(btnHombro, filtroSeleccionado.equalsIgnoreCase("Hombro"));
-        pintarChip(btnEspalda, filtroSeleccionado.equalsIgnoreCase("Espalda"));
-        pintarChip(btnSentado, filtroSeleccionado.equalsIgnoreCase("Sentado"));
+    private void actualizarFiltro() {
+        aplicarEstiloFiltro(btnTodos, filtroSeleccionado.equalsIgnoreCase("Todos"));
+        aplicarEstiloFiltro(btnRodilla, filtroSeleccionado.equalsIgnoreCase("Rodilla"));
+        aplicarEstiloFiltro(btnTobillo, filtroSeleccionado.equalsIgnoreCase("Tobillo"));
+        aplicarEstiloFiltro(btnHombro, filtroSeleccionado.equalsIgnoreCase("Hombro"));
+        aplicarEstiloFiltro(btnEspalda, filtroSeleccionado.equalsIgnoreCase("Espalda"));
+        aplicarEstiloFiltro(btnSentado, filtroSeleccionado.equalsIgnoreCase("Sentado"));
     }
 
-    private void pintarChip(TextView chip, boolean seleccionado) {
+    private void aplicarEstiloFiltro(TextView chip, boolean seleccionado) {
         if (seleccionado) {
             chip.setBackgroundResource(R.drawable.bg_chip_verde);
             chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.verde_oscuro));
