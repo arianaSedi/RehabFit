@@ -13,12 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RutinaManager {
-
     private static final List<Ejercicio> ejerciciosRutina = new ArrayList<>();
     public interface RutinaCallback {
         void onRutinaCargada();
     }
-
     public interface AccionCallback {
         void onExito();
         void onError(String error);
@@ -30,11 +28,14 @@ public class RutinaManager {
         void onError(String error);
     }
 
+    //callback para devolver datos resumen al inicio
     public interface ResumenCallback {
         void onResumen(int sesionesSemana, int minutosTotales);
     }
 
+    //se obtiene el uid del usuario autenticado
     private static String obtenerUid() {
+
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
         if (usuario == null) {
@@ -45,18 +46,19 @@ public class RutinaManager {
     }
 
     private static DatabaseReference obtenerReferenciaUsuario() {
+
         String uid = obtenerUid();
 
         if (uid == null) {
             return null;
         }
 
-        return FirebaseDatabase.getInstance()
-                .getReference("usuarios")
-                .child(uid);
+        return FirebaseDatabase.getInstance().getReference("usuarios").child(uid);
     }
 
-    public static void cargarRutinaActual(RutinaCallback callback) {
+    //carga la rutina guardada en firebase
+    public static void cargarRutinaActual(RutinaCallback callback) {  //Un callback es una forma de que un metodo me devuelva una respuesta cuando termina de hacer algo
+
         DatabaseReference usuarioRef = obtenerReferenciaUsuario();
 
         if (usuarioRef == null) {
@@ -65,34 +67,36 @@ public class RutinaManager {
             if (callback != null) {
                 callback.onRutinaCargada();
             }
-
             return;
         }
 
-        usuarioRef.child("rutina").get()
-                .addOnSuccessListener(snapshot -> {
-                    ejerciciosRutina.clear();
+        usuarioRef.child("rutina").get().addOnSuccessListener(snapshot -> {
 
-                    for (DataSnapshot item : snapshot.getChildren()) {
-                        Ejercicio ejercicio = item.getValue(Ejercicio.class);
+            // limpia la lista para evitar duplicados
+            ejerciciosRutina.clear();
 
-                        if (ejercicio != null) {
-                            ejerciciosRutina.add(ejercicio);
-                        }
-                    }
+            for (DataSnapshot item : snapshot.getChildren()) {
+                Ejercicio ejercicio = item.getValue(Ejercicio.class);
 
-                    if (callback != null) {
-                        callback.onRutinaCargada();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onRutinaCargada();
-                    }
-                });
+                if (ejercicio != null) {
+                    ejerciciosRutina.add(ejercicio);
+                }
+            }
+
+            if (callback != null) {
+                callback.onRutinaCargada();
+            }
+
+        }).addOnFailureListener(e -> {
+            if (callback != null) {
+                callback.onRutinaCargada();
+            }
+        });
     }
 
+    // agrega un ejercicio a la rutina
     public static void agregarEjercicio(Ejercicio ejercicio, AccionCallback callback) {
+
         DatabaseReference usuarioRef = obtenerReferenciaUsuario();
 
         if (usuarioRef == null) {
@@ -102,7 +106,9 @@ public class RutinaManager {
             return;
         }
 
+        // verifica si el ejercicio ya existe en la rutina
         for (Ejercicio item : ejerciciosRutina) {
+
             if (item.getId() == ejercicio.getId()) {
                 if (callback != null) {
                     callback.onExito();
@@ -113,21 +119,21 @@ public class RutinaManager {
 
         String idEjercicio = String.valueOf(ejercicio.getId());
 
-        usuarioRef.child("rutina").child(idEjercicio).setValue(ejercicio)
-                .addOnSuccessListener(unused -> {
-                    ejerciciosRutina.add(ejercicio);
+        usuarioRef.child("rutina").child(idEjercicio).setValue(ejercicio).addOnSuccessListener(unused -> {
+            ejerciciosRutina.add(ejercicio);
 
-                    if (callback != null) {
-                        callback.onExito();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onError(e.getMessage());
-                    }
-                });
+            if (callback != null) {
+                callback.onExito();
+            }
+
+        }).addOnFailureListener(e -> {
+            if (callback != null) {
+                callback.onError(e.getMessage());
+            }
+        });
     }
 
+    //se agrega un ejercicio validando si ya existe
     public static void agregarEjercicioConValidacion(Ejercicio ejercicio, AgregarCallback callback) {
         DatabaseReference usuarioRef = obtenerReferenciaUsuario();
 
@@ -138,7 +144,9 @@ public class RutinaManager {
             return;
         }
 
+        //evita guardar ejercicios repetidos
         for (Ejercicio item : ejerciciosRutina) {
+
             if (item.getId() == ejercicio.getId()) {
                 if (callback != null) {
                     callback.onYaExistia();
@@ -149,22 +157,22 @@ public class RutinaManager {
 
         String idEjercicio = String.valueOf(ejercicio.getId());
 
-        usuarioRef.child("rutina").child(idEjercicio).setValue(ejercicio)
-                .addOnSuccessListener(unused -> {
-                    ejerciciosRutina.add(ejercicio);
+        usuarioRef.child("rutina").child(idEjercicio).setValue(ejercicio).addOnSuccessListener(unused -> {
 
-                    if (callback != null) {
-                        callback.onAgregado();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onError(e.getMessage());
-                    }
-                });
+            ejerciciosRutina.add(ejercicio);
+
+            if (callback != null) {
+                callback.onAgregado();
+            }
+        }).addOnFailureListener(e -> {
+            if (callback != null) {
+                callback.onError(e.getMessage());
+            }
+        });
     }
 
     public static void eliminarEjercicio(Ejercicio ejercicio, AccionCallback callback) {
+
         DatabaseReference usuarioRef = obtenerReferenciaUsuario();
 
         if (usuarioRef == null) {
@@ -176,42 +184,44 @@ public class RutinaManager {
 
         String idEjercicio = String.valueOf(ejercicio.getId());
 
-        usuarioRef.child("rutina").child(idEjercicio).removeValue()
-                .addOnSuccessListener(unused -> {
-                    for (int i = 0; i < ejerciciosRutina.size(); i++) {
-                        if (ejerciciosRutina.get(i).getId() == ejercicio.getId()) {
-                            ejerciciosRutina.remove(i);
-                            break;
-                        }
-                    }
+        usuarioRef.child("rutina").child(idEjercicio).removeValue().addOnSuccessListener(unused -> {
 
-                    if (callback != null) {
-                        callback.onExito();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onError(e.getMessage());
-                    }
-                });
+            // tambien se elimina de la lista local
+            for (int i = 0; i < ejerciciosRutina.size(); i++) {
+
+                if (ejerciciosRutina.get(i).getId() == ejercicio.getId()) {
+                    ejerciciosRutina.remove(i);
+                    break;
+                }
+            }
+            if (callback != null) {
+                callback.onExito();
+            }
+        }).addOnFailureListener(e -> {
+
+            if (callback != null) {
+                callback.onError(e.getMessage());
+            }
+        });
     }
 
+    //devuelve la lista actual de ejercicios
     public static List<Ejercicio> obtenerRutina() {
         return ejerciciosRutina;
     }
 
+    //calcula los minutos totales de la rutina
     public static int obtenerTotalMinutos() {
         int total = 0;
 
         for (Ejercicio ejercicio : ejerciciosRutina) {
             total += ejercicio.getDuracionMinutos();
         }
-
         return total;
     }
-    public static void guardarSesionTerminada(int minutosTotales, int cantidadEjercicios, int dolorAntes,
-                                              int dolorDespues, String zonaPrincipal, AccionCallback callback)
-    {
+
+    public static void guardarSesionTerminada(int minutosTotales, int cantidadEjercicios, int dolorAntes, int dolorDespues, String zonaPrincipal, AccionCallback callback) {
+
         DatabaseReference usuarioRef = obtenerReferenciaUsuario();
 
         if (usuarioRef == null) {
@@ -222,6 +232,7 @@ public class RutinaManager {
         }
 
         HashMap<String, Object> sesion = new HashMap<>();
+
         sesion.put("fechaMillis", System.currentTimeMillis());
         sesion.put("minutosTotales", minutosTotales);
         sesion.put("cantidadEjercicios", cantidadEjercicios);
@@ -229,20 +240,22 @@ public class RutinaManager {
         sesion.put("dolorDespues", dolorDespues);
         sesion.put("zonaPrincipal", zonaPrincipal);
 
-        usuarioRef.child("sesiones").push().setValue(sesion)
-                .addOnSuccessListener(unused -> {
-                    if (callback != null) {
-                        callback.onExito();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onError(e.getMessage());
-                    }
-                });
+        usuarioRef.child("sesiones").push().setValue(sesion).addOnSuccessListener(unused -> {
+
+            if (callback != null) {
+                callback.onExito();
+            }
+        }).addOnFailureListener(e -> {
+
+            if (callback != null) {
+                callback.onError(e.getMessage());
+            }
+        });
     }
 
+    //carga info resumen para la pantalla de inicio
     public static void cargarResumenInicio(ResumenCallback callback) {
+
         DatabaseReference usuarioRef = obtenerReferenciaUsuario();
 
         if (usuarioRef == null) {
@@ -252,52 +265,55 @@ public class RutinaManager {
             return;
         }
 
-        usuarioRef.child("sesiones").get()
-                .addOnSuccessListener(snapshot -> {
-                    int sesionesSemana = 0;
-                    int minutosTotales = 0;
+        usuarioRef.child("sesiones").get().addOnSuccessListener(snapshot -> {
 
-                    Calendar inicioSemana = Calendar.getInstance();
+            int sesionesSemana = 0;
+            int minutosTotales = 0;
 
-                    int diaActual = inicioSemana.get(Calendar.DAY_OF_WEEK);
-                    int diferencia;
+            Calendar inicioSemana = Calendar.getInstance();
+            int diaActual = inicioSemana.get(Calendar.DAY_OF_WEEK);
+            int diferencia;
 
-                    if (diaActual == Calendar.SUNDAY) {
-                        diferencia = -6;
-                    } else {
-                        diferencia = Calendar.MONDAY - diaActual;
-                    }
+            // calcula el inicio de la semana actual
+            if (diaActual == Calendar.SUNDAY) {
+                diferencia = -6;
+            } else {
+                diferencia = Calendar.MONDAY - diaActual;
+            }
 
-                    inicioSemana.add(Calendar.DAY_OF_MONTH, diferencia);
-                    inicioSemana.set(Calendar.HOUR_OF_DAY, 0);
-                    inicioSemana.set(Calendar.MINUTE, 0);
-                    inicioSemana.set(Calendar.SECOND, 0);
-                    inicioSemana.set(Calendar.MILLISECOND, 0);
+            inicioSemana.add(Calendar.DAY_OF_MONTH, diferencia);
+            inicioSemana.set(Calendar.HOUR_OF_DAY, 0);
+            inicioSemana.set(Calendar.MINUTE, 0);
+            inicioSemana.set(Calendar.SECOND, 0);
+            inicioSemana.set(Calendar.MILLISECOND, 0);
 
-                    long inicioSemanaMillis = inicioSemana.getTimeInMillis();
+            long inicioSemanaMillis = inicioSemana.getTimeInMillis();
 
-                    for (DataSnapshot item : snapshot.getChildren()) {
-                        Long fechaMillis = item.child("fechaMillis").getValue(Long.class);
-                        Integer minutos = item.child("minutosTotales").getValue(Integer.class);
+            for (DataSnapshot item : snapshot.getChildren()) {
+                Long fechaMillis = item.child("fechaMillis").getValue(Long.class);
+                Integer minutos = item.child("minutosTotales").getValue(Integer.class);
 
-                        if (minutos != null) {
-                            minutosTotales += minutos;
-                        }
+                if (minutos != null) {
+                    minutosTotales += minutos;
+                }
 
-                        if (fechaMillis != null && fechaMillis >= inicioSemanaMillis) {
-                            sesionesSemana++;
-                        }
-                    }
+                // cuenta cuantas sesiones se hicieron desde el inicio de la semana actual
+                if (fechaMillis != null && fechaMillis >= inicioSemanaMillis) {
+                    sesionesSemana++;
+                }
+            }
 
-                    if (callback != null) {
-                        callback.onResumen(sesionesSemana, minutosTotales);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    if (callback != null) {
-                        callback.onResumen(0, 0);
-                    }
-                });
+            if (callback != null) {
+                callback.onResumen(
+                        sesionesSemana,
+                        minutosTotales
+                );
+            }
+        }).addOnFailureListener(e -> {
+            if (callback != null) {
+                callback.onResumen(0, 0);
+            }
+        });
     }
 
     public static void limpiarRutinaLocal() {

@@ -4,14 +4,11 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.rehabfit.MainActivity;
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.PerfilAdaptado;
@@ -22,18 +19,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.example.rehabfit.utils.RutinaManager;
 
-
 public class InicioFragment extends Fragment {
 
     private TextView txtSaludo;
     private TextView txtSubSaludo;
     private TextView txtAvatar;
-
     private TextView txtSesionesSemana;
     private TextView txtTiempoTotal;
     private TextView txtZonaTrabajada;
     private TextView txtDolorPromedio;
-
     private AppCompatButton btnIniciarRutina;
     private AppCompatButton btnIrEjercicios;
     private AppCompatButton btnIrRutina;
@@ -46,7 +40,7 @@ public class InicioFragment extends Fragment {
     private DatabaseReference usuariosRef;
 
     public InicioFragment() {
-        // Required empty public constructor
+
     }
 
     public static InicioFragment newInstance(String param1, String param2) {
@@ -58,12 +52,11 @@ public class InicioFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View vista = inflater.inflate(R.layout.fragment_inicio, container, false);
 
         auth = FirebaseAuth.getInstance();
@@ -89,9 +82,12 @@ public class InicioFragment extends Fragment {
         return vista;
     }
 
+    //meotod que obtiene los datos del usuario desde Firebase
     private void cargarDatosUsuario() {
+
         FirebaseUser usuarioActual = auth.getCurrentUser();
 
+        // si no hay sesion iniciada muestra un mensaje generico
         if (usuarioActual == null) {
             txtSaludo.setText("Hola");
             txtSubSaludo.setText("Inicia sesión para ver tu información");
@@ -100,47 +96,52 @@ public class InicioFragment extends Fragment {
 
         String uid = usuarioActual.getUid();
 
-        usuariosRef.child(uid).get()
-                .addOnSuccessListener(snapshot -> {
+        usuariosRef.child(uid).get().addOnSuccessListener(snapshot -> {
 
-                    if (!snapshot.exists()) {
-                        txtSaludo.setText("Hola");
-                        txtSubSaludo.setText("Bienvenida a RehabFit");
-                        return;
-                    }
+            // si no existe informacion guardad
+            if (!snapshot.exists()) {
+                txtSaludo.setText("Hola");
+                txtSubSaludo.setText("Bienvenida a RehabFit");
+                return;
+            }
 
-                    Usuario usuario = snapshot.getValue(Usuario.class);
+            Usuario usuario = snapshot.getValue(Usuario.class);
 
-                    if (usuario != null && usuario.getNombre() != null && !usuario.getNombre().isEmpty()) {
-                        txtSaludo.setText("Hola, " + usuario.getNombre());
+            // muestra el nombre y la inicial del usuario
+            if (usuario != null && usuario.getNombre() != null && !usuario.getNombre().isEmpty()) {
 
-                        String inicial = usuario.getNombre().substring(0, 1).toUpperCase();
-                        txtAvatar.setText(inicial);
-                    } else {
-                        txtSaludo.setText("Hola");
-                    }
+                txtSaludo.setText("Hola, " + usuario.getNombre());
+                String inicial = usuario.getNombre().substring(0, 1).toUpperCase();
+                txtAvatar.setText(inicial);
 
-                    PerfilAdaptado perfil = snapshot.child("perfilAdaptado").getValue(PerfilAdaptado.class);
+            } else {
+                txtSaludo.setText("Hola");
+            }
 
-                    if (perfil != null) {
-                        txtSubSaludo.setText("¿Lista para tu sesión de hoy?");
-                        txtZonaTrabajada.setText(perfil.getObjetivoPrincipal() + "\nObjetivo");
-                        txtDolorPromedio.setText(perfil.getNivelDolor() + "/10\nDolor actual");
-                    } else {
-                        txtSubSaludo.setText("Completa tu perfil adaptado");
-                        txtZonaTrabajada.setText("Sin datos\nObjetivo");
-                        txtDolorPromedio.setText("0/10\nDolor actual");
-                    }
+            // obtiene informacion del perfil adaptado
+            PerfilAdaptado perfil = snapshot.child("perfilAdaptado").getValue(PerfilAdaptado.class);
 
-                    cargarResumenEstadisticas();
+            if (perfil != null) {
 
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(requireContext(), "Error al cargar datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+                txtSubSaludo.setText("¿Lista para tu sesión de hoy?");
+                txtZonaTrabajada.setText(perfil.getObjetivoPrincipal() + "\nObjetivo");
+                txtDolorPromedio.setText(perfil.getNivelDolor() + "/10\nDolor actual");
+
+            } else {
+
+                txtSubSaludo.setText("Completa tu perfil adaptado");
+                txtZonaTrabajada.setText("Sin datos\nObjetivo");
+                txtDolorPromedio.setText("0/10\nDolor actual");
+            }
+            cargarResumenEstadisticas();
+
+        }).addOnFailureListener(e -> {
+            Toast.makeText(requireContext(), "Error al cargar datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        });
     }
 
     private void configurarBotones() {
+
         txtAvatar.setOnClickListener(v -> irAPerfil());
         btnIniciarRutina.setOnClickListener(v -> irARutina());
         btnIrEjercicios.setOnClickListener(v -> irAEjercicios());
@@ -154,7 +155,8 @@ public class InicioFragment extends Fragment {
                     .commit();
         });
 
-        btnIrProgreso.setOnClickListener(v -> {getParentFragmentManager()
+        btnIrProgreso.setOnClickListener(v -> {
+            getParentFragmentManager()
                     .beginTransaction()
                     .replace(R.id.contenedorFragments, new ProgresoFragment())
                     .addToBackStack(null)
@@ -175,38 +177,40 @@ public class InicioFragment extends Fragment {
             ((MainActivity) getActivity()).cambiarFragmentBoton(R.id.nav_perfil);
         }
     }
-
     private void irAEjercicios() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).cambiarFragmentBoton(R.id.nav_ejercicios);
         }
     }
-
     private void irARutina() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).cambiarFragmentBoton(R.id.nav_rutina);
         }
     }
-
     private void irAComunidad() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).cambiarFragmentBoton(R.id.nav_comunidad);
         }
     }
+
+    //obtiene las estadisticas resumidas del usuario
     private void cargarResumenEstadisticas() {
         RutinaManager.cargarResumenInicio((sesionesSemana, minutosTotales) -> {
+
+            // evita errores si el fragment ya no esta visible
             if (!isAdded()) {
                 return;
             }
-
             txtSesionesSemana.setText(sesionesSemana + "\nSesiones esta semana");
             txtTiempoTotal.setText(minutosTotales + " min\nTiempo total");
         });
     }
+
     @Override
     public void onResume() {
         super.onResume();
 
+        // actualiza las estadisticas cada vez que se vuelve al inicio
         if (txtSesionesSemana != null && txtTiempoTotal != null) {
             cargarResumenEstadisticas();
         }
