@@ -1,14 +1,8 @@
 package com.example.rehabfit;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
-
 import com.example.rehabfit.fragments.ComunidadFragment;
 import com.example.rehabfit.fragments.EjerciciosFragment;
 import com.example.rehabfit.fragments.InicioFragment;
@@ -27,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.bottomNavigation);
 
+        //detecta la opcion seleccionada por el usuario
         bottomNavigation.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();
@@ -59,16 +54,19 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+        //al iniciar la aplicacion muestra la pantalla de inicio
         if (savedInstanceState == null) {
             bottomNavigation.setSelectedItemId(R.id.nav_inicio);
         }
     }
 
+    //metodo para cambiar de fragmento desde otra clase usando el menu
     public void cambiarFragmentBoton(int idMenu) {
         bottomNavigation.setVisibility(android.view.View.VISIBLE);
-        bottomNavigation.setSelectedItemId(idMenu);
+        bottomNavigation.setSelectedItemId(idMenu);  // selecciona la opcion indicada del menu
     }
 
+    //metodo que reemplaza el fragmento actual por otro dentro del contenedor
     private void cargarFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
