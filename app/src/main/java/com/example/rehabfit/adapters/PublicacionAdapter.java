@@ -5,10 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.PublicacionComunidad;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,15 +16,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.List;
 
 public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.PublicacionViewHolder> {
 
+    //interfaz utilizada para abrir el detalle de una publicacion
     public interface OnPublicacionClick {
         void onDetalleClick(PublicacionComunidad publicacion);
     }
-
     private List<PublicacionComunidad> lista;
     private OnPublicacionClick listener;
 
@@ -57,14 +54,18 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         holder.txtExperiencia.setText(p.getExperiencia());
 
         verificarApoyo(p, holder);
+
+        //permite dar o quitar apoyo a la publicacion
         holder.btnLike.setOnClickListener(v -> agregarApoyo(p, holder));
 
+        //abre el detalle al tocar el texto
         holder.txtVerDetalle.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onDetalleClick(p);
             }
         });
 
+        //tambien abre el detalle al tocar toda la tarjeta
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onDetalleClick(p);
@@ -80,59 +81,21 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     private void verificarApoyo(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
-
         if (usuario == null) return;
 
-        FirebaseDatabase.getInstance()
-                .getReference("publicacionesComunidad")
-                .child(publicacion.getId())
-                .child("usuariosInspirados")
+        FirebaseDatabase.getInstance().getReference("publicacionesComunidad").child(publicacion.getId()).child("usuariosInspirados")
                 .child(usuario.getUid())
-                .addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                if(snapshot.exists()) {
-                                    holder.btnLike.setImageResource(R.drawable.ic_like);
-
-                                } else {
-                                    holder.btnLike.setImageResource(R.drawable.ic_no_like);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                            }
-                        });
-    }
-
-    private void agregarApoyo(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
-
-        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
-
-        if(usuario == null) return;
-
-        DatabaseReference refApoyo = FirebaseDatabase.getInstance()
-                        .getReference("publicacionesComunidad")
-                        .child(publicacion.getId())
-                        .child("usuariosInspirados")
-                        .child(usuario.getUid());
-
-        refApoyo.addListenerForSingleValueEvent(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                        // si existe el registro significa que ya dio apoyo
                         if(snapshot.exists()) {
-                            refApoyo.removeValue();
-                            holder.btnLike.setImageResource(R.drawable.ic_no_like);
-
-                        }
-                        else {
-                            refApoyo.setValue(true);
                             holder.btnLike.setImageResource(R.drawable.ic_like);
+
+                        } else {
+                            holder.btnLike.setImageResource(R.drawable.ic_no_like);
                         }
                     }
 
@@ -141,6 +104,43 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                     }
                 });
     }
+
+    private void agregarApoyo(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
+
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+        if(usuario == null) return;
+
+        // referencia donde se guarda el apoyo del usuario
+        DatabaseReference refApoyo = FirebaseDatabase.getInstance()
+                .getReference("publicacionesComunidad")
+                .child(publicacion.getId())
+                .child("usuariosInspirados")
+                .child(usuario.getUid());
+
+        refApoyo.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                //si ya habia apoyado se elimina el apoyo
+                if(snapshot.exists()) {
+                    refApoyo.removeValue();
+                    holder.btnLike.setImageResource(R.drawable.ic_no_like);
+
+                }
+                else {
+                    //si no habia apoyado se guarda el apoyo
+                    refApoyo.setValue(true);
+                    holder.btnLike.setImageResource(R.drawable.ic_like);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
     static class PublicacionViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtAvatar;
@@ -156,7 +156,6 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
 
         public PublicacionViewHolder(@NonNull View itemView) {
             super(itemView);
-
             txtAvatar = itemView.findViewById(R.id.txtAvatar);
             txtNombre = itemView.findViewById(R.id.txtNombre);
             txtFecha = itemView.findViewById(R.id.txtFecha);

@@ -6,10 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.Ejercicio;
 import com.example.rehabfit.utils.RutinaManager;
@@ -17,10 +15,10 @@ import com.example.rehabfit.utils.RutinaManager;
 import java.util.List;
 
 public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaViewHolder> {
-
     private List<Ejercicio> listaRutina;
     private OnRutinaChangeListener listener;
 
+    //interfaz que permite comunicar cambios al fragment o activity
     public interface OnRutinaChangeListener {
         void onRutinaCambiada();
     }
@@ -33,22 +31,29 @@ public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaView
     @NonNull
     @Override
     public RutinaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rutina, parent, false);
         return new RutinaViewHolder(vista);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RutinaViewHolder holder, int position) {
+
         Ejercicio ejercicio = listaRutina.get(position);
 
+        //se muestra el numero del ejercicio dentro de la rutina
+        //se suma 1 porque las posiciones empiezan en 0
         holder.txtNumeroRutina.setText(String.valueOf(position + 1));
         holder.txtNombreRutina.setText(ejercicio.getNombre());
         holder.txtDetalleRutina.setText(ejercicio.getZona() + " · " + ejercicio.getDuracionMinutos() + " min · " + ejercicio.getRepeticiones() + " rep · " + ejercicio.getNivel());
+
         holder.EliminarRutina.setOnClickListener(v -> {
+
+            //se llama al manager encargado de eliminar ejercicios
             RutinaManager.eliminarEjercicio(ejercicio, new RutinaManager.AccionCallback() {
                 @Override
                 public void onExito() {
-                    notifyDataSetChanged();
+                    notifyDataSetChanged(); //actualiz la lista despues de eliminar
 
                     if (listener != null) {
                         listener.onRutinaCambiada();
@@ -69,7 +74,6 @@ public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaView
     public int getItemCount() {
         return listaRutina.size();
     }
-
     public static class RutinaViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtNumeroRutina;
@@ -79,7 +83,6 @@ public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaView
 
         public RutinaViewHolder(@NonNull View itemView) {
             super(itemView);
-
             txtNumeroRutina = itemView.findViewById(R.id.txtNumeroRutina);
             txtNombreRutina = itemView.findViewById(R.id.txtNombreRutina);
             txtDetalleRutina = itemView.findViewById(R.id.txtDetalleRutina);

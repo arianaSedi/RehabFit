@@ -4,10 +4,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.Ejercicio;
 
@@ -16,7 +14,6 @@ import java.util.List;
 public class EjercicioDetalleAdapter extends RecyclerView.Adapter<EjercicioDetalleAdapter.ViewHolder> {
 
     private final List<Ejercicio> ejercicios;
-
     public EjercicioDetalleAdapter(List<Ejercicio> ejercicios) {
         this.ejercicios = ejercicios;
     }
@@ -44,15 +41,12 @@ public class EjercicioDetalleAdapter extends RecyclerView.Adapter<EjercicioDetal
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView txtNombre;
         TextView txtDetalle;
         TextView txtTiempo;
-        TextView txtDescripcion;
-
+        TextView txtDescripcion
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             txtNombre = itemView.findViewById(R.id.txtNombreEjercicioDetalleIA);
             txtDetalle = itemView.findViewById(R.id.txtDetalleEjercicioDetalleIA);
             txtTiempo = itemView.findViewById(R.id.txtTiempoEjercicioDetalleIA);
