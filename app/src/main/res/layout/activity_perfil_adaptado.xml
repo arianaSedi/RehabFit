@@ -63,7 +63,7 @@
             android:layout_height="52dp"
             android:layout_marginTop="7dp"
             android:background="@drawable/bg_spinner"
-            android:popupBackground="@color/blanco"/>
+            android:spinnerMode="dropdown"/>
 
         <TextView
             style="@style/TextoLabel"
@@ -153,9 +153,9 @@
             android:layout_height="52dp"
             android:layout_marginTop="7dp"
             android:background="@drawable/bg_spinner"
-            android:popupBackground="@color/blanco"
             android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
+            android:paddingEnd="12dp"
+            android:spinnerMode="dropdown"/>
 
         <LinearLayout
             android:layout_width="match_parent"

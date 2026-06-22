@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.PublicacionComunidad;
@@ -54,6 +55,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         holder.txtExperiencia.setText(p.getExperiencia());
 
         verificarApoyo(p, holder);
+        contarInspirados(p, holder);
 
         //permite dar o quitar apoyo a la publicacion
         holder.btnLike.setOnClickListener(v -> agregarApoyo(p, holder));
@@ -126,12 +128,14 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                 if(snapshot.exists()) {
                     refApoyo.removeValue();
                     holder.btnLike.setImageResource(R.drawable.ic_no_like);
+                    holder.btnLike.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), R.color.texto_secundario));
 
                 }
                 else {
                     //si no habia apoyado se guarda el apoyo
                     refApoyo.setValue(true);
                     holder.btnLike.setImageResource(R.drawable.ic_like);
+                    holder.btnLike.setColorFilter(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_red_dark));
                 }
             }
 
@@ -139,6 +143,28 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
+
+    private void contarInspirados(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
+
+        FirebaseDatabase.getInstance()
+                .getReference("publicacionesComunidad")
+                .child(publicacion.getId())
+                .child("usuariosInspirados")
+                .addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        int total = (int) snapshot.getChildrenCount();
+                        holder.txtMeInspira.setText(total + " Me inspira");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     static class PublicacionViewHolder extends RecyclerView.ViewHolder {
@@ -153,6 +179,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         TextView txtExperiencia;
         ImageButton btnLike;
         TextView txtVerDetalle;
+        TextView txtMeInspira;
 
         public PublicacionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -165,6 +192,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
             txtDuracion = itemView.findViewById(R.id.txtDuracion);
             txtExperiencia = itemView.findViewById(R.id.txtExperiencia);
             btnLike = itemView.findViewById(R.id.btnInspirar);
+            txtMeInspira = itemView.findViewById(R.id.txtMeInspira);
             txtVerDetalle = itemView.findViewById(R.id.txtVerDetalle);
         }
     }

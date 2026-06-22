@@ -27,8 +27,6 @@
             android:layout_marginTop="4dp"
             android:text="Selecciona la zona que necesita rehabilitar" />
 
-        <!-- FILA 1 -->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,8 +53,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_brazo"
-                        android:tint="@color/verde_principal" />
+                        android:src="@drawable/musculo" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -90,8 +87,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_hombro"
-                        android:tint="@color/verde_principal" />
+                        android:src="@drawable/brazo" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -106,8 +102,6 @@
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-
-        <!-- FILA 2 -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -133,8 +127,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_muneca"
-                        android:tint="@color/verde_principal" />
+                        android:src="@drawable/muneca" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -167,8 +160,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_mano"
-                        android:tint="@color/verde_principal" />
+                        android:src="@drawable/mano" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -183,8 +175,6 @@
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-
-        <!-- FILA 3 -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -210,8 +200,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_espalda"
-                        android:tint="@color/verde_principal" />
+                        android:src="@drawable/espalda" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -244,8 +233,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_rodilla"
-                        android:tint="@color/verde_principal" />
+                        android:src="@drawable/rodilla" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -287,8 +275,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_pierna"
-                        android:tint="@color/verde_principal" />
+                        android:src="@drawable/pierna" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -321,8 +308,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_tobillo"
-                        android:tint="@color/verde_principal" />
+                        android:src="@drawable/tobillo" />
 
                     <TextView
                         android:layout_width="wrap_content"

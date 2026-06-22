@@ -119,6 +119,7 @@
             android:layout_height="40dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_no_like"
+            android:layout_gravity="center"
             app:tint="@color/texto_secundario" />
 
     </LinearLayout>

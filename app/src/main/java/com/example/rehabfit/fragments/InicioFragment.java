@@ -13,6 +13,7 @@ import com.example.rehabfit.MainActivity;
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.PerfilAdaptado;
 import com.example.rehabfit.models.Usuario;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -29,12 +30,12 @@ public class InicioFragment extends Fragment {
     private TextView txtZonaTrabajada;
     private TextView txtDolorPromedio;
     private AppCompatButton btnIniciarRutina;
-    private AppCompatButton btnIrEjercicios;
-    private AppCompatButton btnIrRutina;
-    private AppCompatButton btnIrHistorial;
-    private AppCompatButton btnIrProgreso;
-    private AppCompatButton btnIrIA;
-    private AppCompatButton btnIrComunidad;
+    private MaterialCardView cardEjercicios;
+    private MaterialCardView cardRutina;
+    private MaterialCardView cardHistorial;
+    private MaterialCardView cardProgreso;
+    private MaterialCardView cardIA;
+    private MaterialCardView cardComunidad;
 
     private FirebaseAuth auth;
     private DatabaseReference usuariosRef;
@@ -70,12 +71,12 @@ public class InicioFragment extends Fragment {
         txtZonaTrabajada = vista.findViewById(R.id.txtZonaTrabajada);
         txtDolorPromedio = vista.findViewById(R.id.txtDolorPromedio);
         btnIniciarRutina = vista.findViewById(R.id.btnIniciarRutina);
-        btnIrEjercicios = vista.findViewById(R.id.btnIrEjercicios);
-        btnIrRutina = vista.findViewById(R.id.btnIrRutina);
-        btnIrHistorial = vista.findViewById(R.id.btnIrHistorial);
-        btnIrProgreso = vista.findViewById(R.id.btnIrProgreso);
-        btnIrIA = vista.findViewById(R.id.btnIrIA);
-        btnIrComunidad = vista.findViewById(R.id.btnIrComunidad);
+        cardEjercicios = vista.findViewById(R.id.cardEjercicios);
+        cardRutina = vista.findViewById(R.id.cardRutina);
+        cardHistorial = vista.findViewById(R.id.cardHistorial);
+        cardProgreso = vista.findViewById(R.id.cardProgreso);
+        cardIA = vista.findViewById(R.id.cardIA);
+        cardComunidad = vista.findViewById(R.id.cardComunidad);
 
         cargarDatosUsuario();
         configurarBotones();
@@ -144,10 +145,13 @@ public class InicioFragment extends Fragment {
 
         txtAvatar.setOnClickListener(v -> irAPerfil());
         btnIniciarRutina.setOnClickListener(v -> irARutina());
-        btnIrEjercicios.setOnClickListener(v -> irAEjercicios());
-        btnIrRutina.setOnClickListener(v -> irARutina());
-        btnIrComunidad.setOnClickListener(v -> irAComunidad());
-        btnIrHistorial.setOnClickListener(v -> {
+        cardEjercicios.setOnClickListener(v -> irAEjercicios());
+
+        cardRutina.setOnClickListener(v -> irARutina());
+
+        cardComunidad.setOnClickListener(v -> irAComunidad());
+
+        cardHistorial.setOnClickListener(v -> {
             getParentFragmentManager()
                     .beginTransaction()
                     .replace(R.id.contenedorFragments, new HistorialFragment())
@@ -155,7 +159,7 @@ public class InicioFragment extends Fragment {
                     .commit();
         });
 
-        btnIrProgreso.setOnClickListener(v -> {
+        cardProgreso.setOnClickListener(v -> {
             getParentFragmentManager()
                     .beginTransaction()
                     .replace(R.id.contenedorFragments, new ProgresoFragment())
@@ -163,7 +167,7 @@ public class InicioFragment extends Fragment {
                     .commit();
         });
 
-        btnIrIA.setOnClickListener(v -> {
+        cardIA.setOnClickListener(v -> {
             getParentFragmentManager()
                     .beginTransaction()
                     .replace(R.id.contenedorFragments, new ConsultasIAFragment())
