@@ -44,7 +44,7 @@ public class EjercicioDetalleAdapter extends RecyclerView.Adapter<EjercicioDetal
         TextView txtNombre;
         TextView txtDetalle;
         TextView txtTiempo;
-        TextView txtDescripcion
+        TextView txtDescripcion;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombre = itemView.findViewById(R.id.txtNombreEjercicioDetalleIA);

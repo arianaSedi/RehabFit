@@ -200,7 +200,6 @@ public class EjerciciosFragment extends Fragment {
                 }
             }
         }
-
         adapter.notifyDataSetChanged();
     }
 
