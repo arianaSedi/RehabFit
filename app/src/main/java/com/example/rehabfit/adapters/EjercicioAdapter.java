@@ -178,17 +178,9 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
     //devuelve un icono dependiendo de la zona corporal
     private int obtenerIconoZona(Ejercicio ejercicio) {
 
-        String zona = ejercicio.getZona() != null
-                ? ejercicio.getZona().toLowerCase()
-                : "";
-
-        String nombre = ejercicio.getNombre() != null
-                ? ejercicio.getNombre().toLowerCase()
-                : "";
-
-        String posicion = ejercicio.getPosicion() != null
-                ? ejercicio.getPosicion().toLowerCase()
-                : "";
+        String zona = ejercicio.getZona() != null ? ejercicio.getZona().toLowerCase() : "";
+        String nombre = ejercicio.getNombre() != null ? ejercicio.getNombre().toLowerCase() : "";
+        String posicion = ejercicio.getPosicion() != null ? ejercicio.getPosicion().toLowerCase() : "";
 
         if (zona.contains("rodilla") || nombre.contains("rodilla")) {
             return R.drawable.rodilla;
@@ -206,10 +198,7 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
             return R.drawable.espalda;
         }
 
-        if (zona.contains("muñeca")
-                || zona.contains("muneca")
-                || nombre.contains("muñeca")
-                || nombre.contains("muneca")) {
+        if (zona.contains("muñeca") || zona.contains("muneca") || nombre.contains("muñeca") || nombre.contains("muneca")) {
 
             return R.drawable.muneca;
         }

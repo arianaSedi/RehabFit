@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -27,7 +28,7 @@ public class SesionFragment extends Fragment {
     private TextView txtProgresoEjercicio;
     private TextView txtPorcentajeSesion;
     private ProgressBar progresoSesion;
-    private TextView txtIconoSesion;
+    private ImageView imgIconoSesion;
     private TextView txtNombreEjercicioSesion;
     private TextView txtDescripcionSesion;
     private TextView txtCronometroSesion;
@@ -70,7 +71,7 @@ public class SesionFragment extends Fragment {
         txtProgresoEjercicio = vista.findViewById(R.id.txtProgresoEjercicio);
         txtPorcentajeSesion = vista.findViewById(R.id.txtPorcentajeSesion);
         progresoSesion = vista.findViewById(R.id.progresoSesion);
-        txtIconoSesion = vista.findViewById(R.id.txtIconoSesion);
+        imgIconoSesion = vista.findViewById(R.id.imgIconoSesion);
         txtNombreEjercicioSesion = vista.findViewById(R.id.txtNombreEjercicioSesion);
         txtDescripcionSesion = vista.findViewById(R.id.txtDescripcionSesion);
         txtCronometroSesion = vista.findViewById(R.id.txtCronometroSesion);
@@ -129,7 +130,7 @@ public class SesionFragment extends Fragment {
         txtPorcentajeSesion.setText(porcentaje + "%");
         progresoSesion.setProgress(porcentaje);
 
-        txtIconoSesion.setText(obtenerIconoEjercicio(ejercicio));
+        imgIconoSesion.setImageResource(obtenerIconoZona(ejercicio));
         txtNombreEjercicioSesion.setText(valorSeguro(ejercicio.getNombre(), "Ejercicio"));
         txtDescripcionSesion.setText(valorSeguro(ejercicio.getDescripcion(),
                 "Realiza el movimiento lentamente y sin forzar."));
@@ -319,32 +320,50 @@ public class SesionFragment extends Fragment {
         return zona;
     }
 
-    private String obtenerIconoEjercicio(Ejercicio ejercicio) {
+    private int obtenerIconoZona(Ejercicio ejercicio) {
+
         String zona = ejercicio.getZona() != null ? ejercicio.getZona().toLowerCase() : "";
-        String posicion = ejercicio.getPosicion() != null ? ejercicio.getPosicion().toLowerCase() : "";
         String nombre = ejercicio.getNombre() != null ? ejercicio.getNombre().toLowerCase() : "";
+        String posicion = ejercicio.getPosicion() != null ? ejercicio.getPosicion().toLowerCase() : "";
 
         if (zona.contains("rodilla") || nombre.contains("rodilla")) {
-            return "🦵";
+            return R.drawable.rodilla;
         }
 
         if (zona.contains("tobillo") || nombre.contains("tobillo")) {
-            return "🦶";
+            return R.drawable.tobillo;
         }
 
         if (zona.contains("hombro") || nombre.contains("hombro")) {
-            return "💪";
+            return R.drawable.brazo;
         }
 
         if (zona.contains("espalda") || nombre.contains("espalda")) {
-            return "🧍";
+            return R.drawable.espalda;
         }
 
-        if (posicion.contains("sentado") || nombre.contains("sentado")) {
-            return "🪑";
+        if (zona.contains("muñeca") || zona.contains("muneca")
+                || nombre.contains("muñeca") || nombre.contains("muneca")) {
+            return R.drawable.muneca;
         }
 
-        return "🏃";
+        if (zona.contains("mano") || nombre.contains("mano")) {
+            return R.drawable.mano;
+        }
+
+        if (zona.contains("brazo") || nombre.contains("brazo")) {
+            return R.drawable.musculo;
+        }
+
+        if (zona.contains("pierna") || nombre.contains("pierna")) {
+            return R.drawable.pierna;
+        }
+
+        if (posicion.contains("sentado")) {
+            return R.drawable.pierna;
+        }
+
+        return R.drawable.ic_ejercicios;
     }
 
     private String valorSeguro(String texto, String defecto) {
