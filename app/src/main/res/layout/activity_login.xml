@@ -26,7 +26,7 @@
                 android:layout_height="80dp"
                 android:background="@drawable/bg_circulo_verde"
                 android:padding="18dp"
-                android:src="@drawable/ic_heart_pulse"
+                android:src="@drawable/ejercicios"
                 app:tint="@color/blanco" />
 
             <TextView
@@ -117,28 +117,6 @@
                 android:textColor="@color/verde_principal"
                 android:textSize="14sp"
                 android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:src="@drawable/ic_wrench"
-                    app:tint="@color/borde" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="Firebase Authentication"
-                    android:textColor="@color/texto_secundario"
-                    android:textSize="12sp" />
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

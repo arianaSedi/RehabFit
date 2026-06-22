@@ -53,7 +53,6 @@ public class DetalleConsultasFragment extends Fragment {
         txtRecomendacionDetalleIA = vista.findViewById(R.id.txtRecomendacionDetalleIA);
         rvDetalleEjerciciosIA = vista.findViewById(R.id.rvDetalleEjerciciosIA);
         txtTituloDetalleConsultaIA = vista.findViewById(R.id.txtTituloDetalleConsultaIA);
-        btnVolverDetalleIA = vista.findViewById(R.id.btnVolverDetalleIA);
 
         rvDetalleEjerciciosIA.setLayoutManager(new LinearLayoutManager(requireContext()));
 

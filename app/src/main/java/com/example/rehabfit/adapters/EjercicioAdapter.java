@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -94,7 +95,7 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
         holder.txtDuracionEjercicio.setText("⏱ " + ejercicio.getDuracionMinutos() + " min · " + ejercicio.getRepeticiones() + " rep");
 
         //coloca un icono segun la zona corporal
-        holder.txtIconoEjercicio.setText(obtenerIconoEjercicio(ejercicio));
+        holder.imgIconoEjercicio.setImageResource(obtenerIconoZona(ejercicio));
 
         //actualiza la apariencia de la estrella
         Estrella(holder, favorito);
@@ -175,33 +176,61 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
     }
 
     //devuelve un icono dependiendo de la zona corporal
-    private String obtenerIconoEjercicio(Ejercicio ejercicio) {
+    private int obtenerIconoZona(Ejercicio ejercicio) {
 
-        String zona = ejercicio.getZona() != null ? ejercicio.getZona().toLowerCase() : "";
-        String posicion =ejercicio.getPosicion() != null ? ejercicio.getPosicion().toLowerCase() : "";
-        String nombre = ejercicio.getNombre() != null ? ejercicio.getNombre().toLowerCase() : "";
+        String zona = ejercicio.getZona() != null
+                ? ejercicio.getZona().toLowerCase()
+                : "";
+
+        String nombre = ejercicio.getNombre() != null
+                ? ejercicio.getNombre().toLowerCase()
+                : "";
+
+        String posicion = ejercicio.getPosicion() != null
+                ? ejercicio.getPosicion().toLowerCase()
+                : "";
 
         if (zona.contains("rodilla") || nombre.contains("rodilla")) {
-            return "🦵";
+            return R.drawable.rodilla;
         }
 
         if (zona.contains("tobillo") || nombre.contains("tobillo")) {
-            return "🦶";
+            return R.drawable.tobillo;
         }
 
         if (zona.contains("hombro") || nombre.contains("hombro")) {
-            return "💪";
+            return R.drawable.brazo;
         }
 
         if (zona.contains("espalda") || nombre.contains("espalda")) {
-            return "🧍";
+            return R.drawable.espalda;
         }
 
-        if (posicion.contains("sentado") || nombre.contains("sentado")) {
-            return "🪑";
+        if (zona.contains("muñeca")
+                || zona.contains("muneca")
+                || nombre.contains("muñeca")
+                || nombre.contains("muneca")) {
+
+            return R.drawable.muneca;
         }
 
-        return "🏃";
+        if (zona.contains("mano") || nombre.contains("mano")) {
+            return R.drawable.mano;
+        }
+
+        if (zona.contains("brazo") || nombre.contains("brazo")) {
+            return R.drawable.brazo;
+        }
+
+        if (zona.contains("pierna") || nombre.contains("pierna")) {
+            return R.drawable.pierna;
+        }
+
+        if (posicion.contains("sentado")) {
+            return R.drawable.pierna;
+        }
+
+        return R.drawable.ic_ejercicios;
     }
 
     //cambia la estrella de FAV dependiendo si esta guardado o no
@@ -241,7 +270,7 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
     }
 
     public static class EjercicioViewHolder extends RecyclerView.ViewHolder {
-        TextView txtIconoEjercicio;
+        ImageView imgIconoEjercicio;
         TextView txtNombreEjercicio;
         TextView txtDatosEjercicio;
         TextView txtDuracionEjercicio;
@@ -250,7 +279,7 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
         public EjercicioViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtIconoEjercicio = itemView.findViewById(R.id.txtIconoEjercicio);
+            imgIconoEjercicio = itemView.findViewById(R.id.imgIconoEjercicio);
             txtNombreEjercicio = itemView.findViewById(R.id.txtNombreEjercicio);
             txtDatosEjercicio = itemView.findViewById(R.id.txtDatosEjercicio);
             txtDuracionEjercicio = itemView.findViewById(R.id.txtDuracionEjercicio);

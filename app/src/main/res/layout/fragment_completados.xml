@@ -217,7 +217,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="〽 Registro de dolor"
+                android:text="Registro de dolor"
                 android:textColor="@color/verde_oscuro"
                 android:textSize="15sp"
                 android:textStyle="bold" />

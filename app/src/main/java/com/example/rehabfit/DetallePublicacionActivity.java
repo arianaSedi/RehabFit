@@ -82,7 +82,7 @@ public class DetallePublicacionActivity extends AppCompatActivity {
                 txtNombreDetalle.setText(publicacionActual.getNombreUsuario());
                 txtFechaDetalle.setText(publicacionActual.getFecha() + " · Comunidad RehabFit");
                 txtEjercicioDetalle.setText(publicacionActual.getEjercicio());
-                txtDatosDetalle.setText("🦵 " + publicacionActual.getZona() + "   ⏱️ " + publicacionActual.getDuracion());
+                txtDatosDetalle.setText(publicacionActual.getZona() + publicacionActual.getDuracion());
                 txtDificultadDetalle.setText("Dificultad: " + publicacionActual.getDificultad());
                 txtExperienciaDetalle.setText(publicacionActual.getExperiencia());
 

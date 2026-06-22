@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class DetalleEjerciciosFragment extends Fragment {
 
     private TextView btnVolverDetalle;
-    private TextView txtIconoDetalle;
+    private ImageView imgIconoDetalle;
     private TextView txtNombreDetalle;
     private TextView txtInfoDetalle;
     private TextView txtZonaDetalle;
@@ -63,8 +64,7 @@ public class DetalleEjerciciosFragment extends Fragment {
         View vista = inflater.inflate(R.layout.fragment_detalle_ejercicios, container, false);
         ocultarBottomNavigation();
 
-        btnVolverDetalle = vista.findViewById(R.id.btnVolverDetalle);
-        txtIconoDetalle = vista.findViewById(R.id.txtIconoDetalle);
+        imgIconoDetalle = vista.findViewById(R.id.imgIconoDetalle);
         txtNombreDetalle = vista.findViewById(R.id.txtNombreDetalle);
         txtInfoDetalle = vista.findViewById(R.id.txtInfoDetalle);
         txtZonaDetalle = vista.findViewById(R.id.txtZonaDetalle);
@@ -97,29 +97,24 @@ public class DetalleEjerciciosFragment extends Fragment {
         txtNombreDetalle.setText(valorSeguro(ejercicioActual.getNombre(), "Ejercicio"));
 
         txtInfoDetalle.setText("✓ " + valorSeguro(ejercicioActual.getNivel(), "Nivel no especificado") + " · Movilidad suave · Recomendado para " + valorSeguro(ejercicioActual.getZona(), "rehabilitación").toLowerCase());
-
         txtZonaDetalle.setText("Zona\n" + valorSeguro(ejercicioActual.getZona(), "No especificado"));
         txtDificultadDetalle.setText("Nivel\n" + valorSeguro(ejercicioActual.getNivel(), "No especificado"));
         txtPosicionDetalle.setText("Posición\n" + valorSeguro(ejercicioActual.getPosicion(), "No especificado"));
         txtDuracionDetalle.setText("Duración\n" + ejercicioActual.getDuracionMinutos() + " min");
         txtRepeticionesDetalle.setText("Repeticiones\n" + ejercicioActual.getRepeticiones() + " rep");
-
         txtDescripcionDetalle.setText(valorSeguro(ejercicioActual.getDescripcion(), "Sin descripción disponible"));
 
-        cargarInstruccionesComoFigma(crearInstrucciones(ejercicioActual));
+        cargarInstrucciones(crearInstrucciones(ejercicioActual));
 
         txtPrecaucionDetalle.setText("Precaución\n\n" + "• No realizar si causa dolor intenso al extender.\n" + "• Detente si aumenta la inflamación.\n" + "• Consulta con tu fisioterapeuta ante cualquier molestia.");
 
-        txtIconoDetalle.setText(obtenerIconoEjercicio(ejercicioActual));
+        imgIconoDetalle.setImageResource(obtenerIconoZona(ejercicioActual));
 
         prepararReferenciaFavorito();
         cargarEstadoFavorito();
     }
 
     private void configurarBotones() {
-        btnVolverDetalle.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-        });
 
         btnAgregarRutinaDetalle.setOnClickListener(v -> {
             if (ejercicioActual == null) {
@@ -172,7 +167,7 @@ public class DetalleEjerciciosFragment extends Fragment {
         }
     }
 
-    private void cargarInstruccionesComoFigma(String[] pasos) {
+    private void cargarInstrucciones(String[] pasos) {
         contenedorInstruccionesDetalle.removeAllViews();
 
         for (int i = 0; i < pasos.length; i++) {
@@ -388,32 +383,43 @@ public class DetalleEjerciciosFragment extends Fragment {
         };
     }
 
-    private String obtenerIconoEjercicio(Ejercicio ejercicio) {
-        String zona = ejercicio.getZona() != null ? ejercicio.getZona().toLowerCase() : "";
-        String posicion = ejercicio.getPosicion() != null ? ejercicio.getPosicion().toLowerCase() : "";
-        String nombre = ejercicio.getNombre() != null ? ejercicio.getNombre().toLowerCase() : "";
+    private int obtenerIconoZona(Ejercicio ejercicio) {
 
-        if (zona.contains("rodilla") || nombre.contains("rodilla")) {
-            return "🦵";
+        String zona = ejercicio.getZona().toLowerCase();
+
+        if (zona.contains("rodilla")) {
+            return R.drawable.rodilla;
         }
 
-        if (zona.contains("tobillo") || nombre.contains("tobillo")) {
-            return "🦶";
+        if (zona.contains("pierna")) {
+            return R.drawable.pierna;
         }
 
-        if (zona.contains("hombro") || nombre.contains("hombro")) {
-            return "💪";
+        if (zona.contains("hombro")) {
+            return R.drawable.brazo;
         }
 
-        if (zona.contains("espalda") || nombre.contains("espalda")) {
-            return "🧍";
+        if (zona.contains("tobillo")) {
+            return R.drawable.tobillo;
         }
 
-        if (posicion.contains("sentado") || nombre.contains("sentado")) {
-            return "🪑";
+        if (zona.contains("espalda")) {
+            return R.drawable.espalda;
         }
 
-        return "🏃";
+        if (zona.contains("mano")) {
+            return R.drawable.mano;
+        }
+
+        if (zona.contains("brazo")) {
+            return R.drawable.musculo;
+        }
+
+        if (zona.contains("muñeca") || zona.contains("muneca")) {
+            return R.drawable.muneca;
+        }
+
+        return R.drawable.musculo;
     }
 
     private void ocultarBottomNavigation() {

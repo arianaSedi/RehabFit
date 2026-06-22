@@ -11,16 +11,6 @@
         android:orientation="vertical"
         android:padding="18dp">
 
-        <ImageButton
-            android:id="@+id/btnVolverDetalleIA"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Volver"
-            android:padding="9dp"
-            android:src="@drawable/ic_arrow_back"
-            android:tint="@color/texto_principal" />
-
         <TextView
             android:id="@+id/txtTituloDetalleConsultaIA"
             android:layout_width="match_parent"

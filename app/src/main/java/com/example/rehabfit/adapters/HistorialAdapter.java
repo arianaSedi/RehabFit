@@ -46,7 +46,7 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
         }
 
         //muestra info resumida de la sesion
-        holder.txtDetalleSesion.setText("🏃 " + zona + " · ⏱ " + sesion.getMinutosTotales() + " min" + " · ✅ " + sesion.getCantidadEjercicios() + " ejercicios");
+        holder.txtDetalleSesion.setText(zona + sesion.getMinutosTotales() + " min"  + sesion.getCantidadEjercicios() + " ejercicios");
 
         //muestra los niveles de dolor registrados antes y despues
         if (sesion.getDolorAntes() > 0 || sesion.getDolorDespues() > 0) {

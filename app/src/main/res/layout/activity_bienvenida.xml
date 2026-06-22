@@ -16,7 +16,7 @@
         android:background="@drawable/bg_circulo_verde"
         android:elevation="6dp"
         android:padding="24dp"
-        android:src="@drawable/ic_heart_pulse"
+        android:src="@drawable/ejercicios"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -90,7 +90,7 @@
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:src="@drawable/ic_medical"
+            android:src="@drawable/corazon"
             app:tint="@color/alerta_texto" />
 
         <TextView

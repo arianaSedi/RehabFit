@@ -49,9 +49,9 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         holder.txtNombre.setText(p.getNombreUsuario());
         holder.txtFecha.setText(p.getFecha());
         holder.txtDificultad.setText(p.getDificultad());
-        holder.txtEjercicio.setText("💪 " + p.getEjercicio());
-        holder.txtZona.setText("🦵 " + p.getZona());
-        holder.txtDuracion.setText("⏱️ " + p.getDuracion());
+        holder.txtEjercicio.setText(p.getEjercicio());
+        holder.txtZona.setText(p.getZona());
+        holder.txtDuracion.setText(p.getDuracion());
         holder.txtExperiencia.setText(p.getExperiencia());
 
         verificarApoyo(p, holder);
