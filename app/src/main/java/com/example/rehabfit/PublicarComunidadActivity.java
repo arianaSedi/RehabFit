@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import com.example.rehabfit.models.PublicacionComunidad;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,7 +19,7 @@ public class PublicarComunidadActivity extends AppCompatActivity {
     private EditText edtEjercicio, edtDuracion, edtExperiencia;
     private Spinner spZona;
     private RadioGroup rgDificultad;
-    private Button btnGuardarPublicacion, btnCancelar;
+    private AppCompatButton btnGuardarPublicacion, btnCancelar;
 
     private FirebaseAuth auth;
     private DatabaseReference refPublicaciones, refUsuarios;
@@ -34,6 +36,21 @@ public class PublicarComunidadActivity extends AppCompatActivity {
         rgDificultad = findViewById(R.id.rgDificultad);
         btnGuardarPublicacion = findViewById(R.id.btnGuardarPublicacion);
         btnCancelar = findViewById(R.id.btnCancelar);
+        RadioButton rbBaja = findViewById(R.id.rbBaja);
+        RadioButton rbMedia = findViewById(R.id.rbMedia);
+        RadioButton rbAlta = findViewById(R.id.rbAlta);
+
+        CompoundButton.OnCheckedChangeListener listener = (buttonView, isChecked) -> {
+
+            if (!isChecked) return;
+            rbBaja.setChecked(buttonView == rbBaja);
+            rbMedia.setChecked(buttonView == rbMedia);
+            rbAlta.setChecked(buttonView == rbAlta);
+        };
+
+        rbBaja.setOnCheckedChangeListener(listener);
+        rbMedia.setOnCheckedChangeListener(listener);
+        rbAlta.setOnCheckedChangeListener(listener);
 
         //inicializa firebase auth y las referencias de la db
         auth = FirebaseAuth.getInstance();
@@ -58,7 +75,7 @@ public class PublicarComunidadActivity extends AppCompatActivity {
                 "Tobillo"
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, zonas);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.spinner_dropdowm_item, zonas);
         spZona.setAdapter(adapter);
     }
 
@@ -90,17 +107,22 @@ public class PublicarComunidadActivity extends AppCompatActivity {
             return;
         }
 
-        //se obtiene la dificultad seleccionada
-        int idRadio = rgDificultad.getCheckedRadioButtonId();
 
-        //se verifica que se haya elegido una dificultad
-        if (idRadio == -1) {
+        String dificultad = "";
+        RadioButton rbBaja = findViewById(R.id.rbBaja);
+        RadioButton rbMedia = findViewById(R.id.rbMedia);
+        RadioButton rbAlta = findViewById(R.id.rbAlta);
+
+        if (rbBaja.isChecked()) {
+            dificultad = "Baja";
+        } else if (rbMedia.isChecked()) {
+            dificultad = "Media";
+        } else if (rbAlta.isChecked()) {
+            dificultad = "Alta";
+        } else {
             Toast.makeText(this, "Selecciona la dificultad", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        RadioButton radioSeleccionado = findViewById(idRadio);
-        String dificultad = radioSeleccionado.getText().toString();
 
         FirebaseUser usuario = auth.getCurrentUser();
 

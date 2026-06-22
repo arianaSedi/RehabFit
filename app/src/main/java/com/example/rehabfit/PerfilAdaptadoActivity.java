@@ -85,7 +85,7 @@ public class PerfilAdaptadoActivity extends AppCompatActivity {
         nivelesMovilidad.add("Movilidad alta");
 
         ArrayAdapter<String> adapterMovilidad = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nivelesMovilidad);
-        adapterMovilidad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterMovilidad.setDropDownViewResource(R.layout.spinner_dropdowm_item);
         spNivelMovilidad.setAdapter(adapterMovilidad);
 
         ArrayList<String> objetivos = new ArrayList<>();
@@ -97,7 +97,7 @@ public class PerfilAdaptadoActivity extends AppCompatActivity {
         objetivos.add("Mejorar equilibrio");
 
         ArrayAdapter<String> adapterObjetivos = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, objetivos);
-        adapterObjetivos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterObjetivos.setDropDownViewResource(R.layout.spinner_dropdowm_item);
         spObjetivoPrincipal.setAdapter(adapterObjetivos);
     }
 

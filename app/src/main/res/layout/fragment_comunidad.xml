@@ -29,7 +29,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="RehabFit"
+                android:text="Explora las experiencias de los demas"
                 android:textColor="@color/texto_secundario"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -51,13 +51,6 @@
         android:background="@drawable/bg_chip_verde"
         android:padding="14dp"
         android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/corazon"
-            android:layout_marginEnd="8dp"
-            android:scaleType="fitCenter" />
 
         <TextView
             android:layout_width="wrap_content"

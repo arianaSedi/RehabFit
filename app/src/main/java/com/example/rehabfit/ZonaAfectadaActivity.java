@@ -142,7 +142,9 @@ public class ZonaAfectadaActivity extends AppCompatActivity {
                 .child("nivelDolor")
                 .setValue(seekDolor.getProgress());
 
-        startActivity(new Intent(ZonaAfectadaActivity.this, MainActivity.class));
+        Intent intent = new Intent(ZonaAfectadaActivity.this, MainActivity.class);
+        intent.putExtra("abrir_ejercicios", true);
+        startActivity(intent);
         finish();
     }
 }

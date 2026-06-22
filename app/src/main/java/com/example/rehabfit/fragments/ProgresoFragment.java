@@ -125,7 +125,7 @@ public class ProgresoFragment extends Fragment {
         double promedioDolor = contadorDolor > 0 ? sumaDolor / contadorDolor : 0.0;
         String zonaMasTrabajada = obtenerZonaMasTrabajada(zonas);
 
-        txtSesionesCompletadas.setText(totalSesiones + "\nSesiones completadas");
+        txtSesionesCompletadas.setText(totalSesiones + "\nSesiones completas");
         txtTiempoTerapia.setText(totalMinutos + " min\nTiempo de terapia");
         txtZonaMasTrabajada.setText(zonaMasTrabajada + "\nZona más trabajada");
         txtDolorPromedioProgreso.setText(String.format(Locale.getDefault(), "%.1f\nDolor promedio", promedioDolor));

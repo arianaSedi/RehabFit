@@ -56,7 +56,13 @@ public class MainActivity extends AppCompatActivity {
 
         //al iniciar la aplicacion muestra la pantalla de inicio
         if (savedInstanceState == null) {
-            bottomNavigation.setSelectedItemId(R.id.nav_inicio);
+            boolean abrirEjercicios = getIntent().getBooleanExtra("abrir_ejercicios", false);
+
+            if (abrirEjercicios) {
+                bottomNavigation.setSelectedItemId(R.id.nav_ejercicios);
+            } else {
+                bottomNavigation.setSelectedItemId(R.id.nav_inicio);
+            }
         }
     }
 

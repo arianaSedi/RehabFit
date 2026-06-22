@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/fondo">
 
     <LinearLayout
@@ -18,27 +19,13 @@
             android:textSize="26sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Comparte tu avance con la comunidad"
-            android:textColor="@color/texto_secundario"
-            android:textSize="14sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_chip_verde"
             android:padding="14dp"
             android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/corazon"
-                android:layout_marginEnd="8dp"
-                android:scaleType="fitCenter" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -78,8 +65,12 @@
         <Spinner
             android:id="@+id/spZona"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/bg_input" />
+            android:layout_height="52dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/bg_spinner"
+            android:spinnerMode="dropdown"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"/>
 
         <TextView
             android:layout_marginTop="14dp"
@@ -104,6 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Dificultad percibida"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/texto_principal"
             android:textStyle="bold" />
 
@@ -111,28 +103,53 @@
             android:id="@+id/rgDificultad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <RadioButton
-                android:id="@+id/rbBaja"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="Baja" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/rbMedia"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="Media" />
+                <RadioButton
+                    android:id="@+id/rbBaja"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_radio"
+                    android:paddingStart="10dp"
+                    android:text="Baja"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="13sp"
+                    app:buttonTint="@color/radio_verde" />
 
-            <RadioButton
-                android:id="@+id/rbAlta"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="Alta" />
+                <RadioButton
+                    android:id="@+id/rbMedia"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="3dp"
+                    android:background="@drawable/bg_radio"
+                    android:paddingStart="10dp"
+                    android:text="Media"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="13sp"
+                    app:buttonTint="@color/radio_verde" />
+
+                <RadioButton
+                    android:id="@+id/rbAlta"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_radio"
+                    android:paddingStart="10dp"
+                    android:text="Alta"
+                    android:textColor="@color/texto_principal"
+                    android:textSize="13sp"
+                    app:buttonTint="@color/radio_verde" />
+
+            </LinearLayout>
 
         </RadioGroup>
 
@@ -142,7 +159,8 @@
             android:layout_height="wrap_content"
             android:text="¿Cómo te sentiste?"
             android:textColor="@color/texto_principal"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"/>
 
         <EditText
             android:id="@+id/edtExperiencia"
@@ -155,27 +173,21 @@
             android:textColor="@color/texto_principal"
             android:textColorHint="@color/texto_secundario" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnGuardarPublicacion"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="@color/verde_principal"
-            android:text="✈ Publicar"
-            android:textAllCaps="false"
-            android:textColor="@color/blanco"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            style="@style/BotonVerde"
+            android:layout_marginTop="15dp"
+            android:elevation="4dp"
+            android:stateListAnimator="@null"
+            android:text="Publicar"
+            android:textAllCaps="false" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnCancelar"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
+            style="@style/BotonBorde"
             android:layout_marginTop="12dp"
-            android:backgroundTint="@color/blanco"
-            android:text="×  Cancelar"
-            android:textAllCaps="false"
-            android:textColor="@color/texto_secundario" />
+            android:text="Cancelar"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 </ScrollView>

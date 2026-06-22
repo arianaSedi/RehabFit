@@ -108,7 +108,7 @@
             android:layout_marginTop="18dp"
             android:gravity="center"
             android:padding="16dp"
-            android:text="✨ Cada avance cuenta.\nLa recuperación es un proceso personal y único."
+            android:text="Cada avance cuenta.\nLa recuperación es un proceso personal y único."
             android:textColor="@color/verde_oscuro"
             android:textSize="14sp"
             android:background="@drawable/bg_chip_verde" />

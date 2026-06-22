@@ -10,11 +10,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rehabfit.adapters.FiltroAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.rehabfit.R;
 import com.example.rehabfit.adapters.EjercicioAdapter;
 import com.example.rehabfit.models.Ejercicio;
@@ -24,7 +27,6 @@ import com.example.rehabfit.network.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,12 +36,9 @@ public class EjerciciosFragment extends Fragment {
     private RecyclerView rvEjercicios;
     private EditText edtBuscarEjercicio;
 
-    private TextView btnTodos;
-    private TextView btnRodilla;
-    private TextView btnTobillo;
-    private TextView btnHombro;
-    private TextView btnEspalda;
-    private TextView btnSentado;
+    private RecyclerView rvFiltros;
+    private FiltroAdapter filtroAdapter;
+    private ArrayList<String> filtros;
 
     private EjercicioAdapter adapter;
 
@@ -60,26 +59,42 @@ public class EjerciciosFragment extends Fragment {
 
         rvEjercicios = vista.findViewById(R.id.rvEjercicios);
         edtBuscarEjercicio = vista.findViewById(R.id.edtBuscarEjercicio);
-        btnTodos = vista.findViewById(R.id.btnTodos);
-        btnRodilla = vista.findViewById(R.id.btnRodilla);
-        btnTobillo = vista.findViewById(R.id.btnTobillo);
-        btnHombro = vista.findViewById(R.id.btnHombro);
-        btnEspalda = vista.findViewById(R.id.btnEspalda);
-        btnSentado = vista.findViewById(R.id.btnSentado);
+        rvFiltros = vista.findViewById(R.id.rvFiltros);
 
+        rvFiltros.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        filtros = new ArrayList<>();
+        filtros.add("Todos");
+        filtros.add("Brazo");
+        filtros.add("Hombro");
+        filtros.add("Muñeca");
+        filtros.add("Mano");
+        filtros.add("Espalda");
+        filtros.add("Rodilla");
+        filtros.add("Pierna");
+        filtros.add("Tobillo");
+        filtros.add("Sentado");
+
+        filtroAdapter = new FiltroAdapter(filtros, filtro -> {
+            if (filtro.equalsIgnoreCase("Todos")) {
+                mostrarTodos();
+            } else {
+                filtrarPorCategoria(filtro);
+            }
+        });
+
+        rvFiltros.setAdapter(filtroAdapter);
         rvEjercicios.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         adapter = new EjercicioAdapter(listaFiltrada);
         rvEjercicios.setAdapter(adapter);
 
-        configurarFiltros();
         configurarBuscador();
         actualizarFiltro();
-        cargarEjerciciosDesdeApi();
+        cargarEjerciciosAPI();
         return vista;
     }
 
-    private void cargarEjerciciosDesdeApi() {
+    private void cargarEjerciciosAPI() {
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
         callEjercicios = apiService.obtenerEjercicios();
 
@@ -98,6 +113,7 @@ public class EjerciciosFragment extends Fragment {
                     listaFiltrada.addAll(listaCompleta);
 
                     adapter.notifyDataSetChanged();
+                    aplicarZonaGuardada();
 
                 } else {
                     Toast.makeText(requireContext(), "No se pudieron cargar los ejercicios", Toast.LENGTH_SHORT).show();
@@ -114,16 +130,6 @@ public class EjerciciosFragment extends Fragment {
             }
         });
     }
-
-    private void configurarFiltros() {
-        btnTodos.setOnClickListener(v -> mostrarTodos());
-        btnRodilla.setOnClickListener(v -> filtrarPorCategoria("Rodilla"));
-        btnTobillo.setOnClickListener(v -> filtrarPorCategoria("Tobillo"));
-        btnHombro.setOnClickListener(v -> filtrarPorCategoria("Hombro"));
-        btnEspalda.setOnClickListener(v -> filtrarPorCategoria("Espalda"));
-        btnSentado.setOnClickListener(v -> filtrarPorCategoria("Sentado"));
-    }
-
     private void configurarBuscador() {
         edtBuscarEjercicio.addTextChangedListener(new TextWatcher() {
             @Override
@@ -179,7 +185,6 @@ public class EjerciciosFragment extends Fragment {
         String busqueda = texto.toLowerCase().trim();
 
         if (!busqueda.isEmpty()) {
-            filtroSeleccionado = "Todos";
             actualizarFiltro();
         }
 
@@ -204,24 +209,38 @@ public class EjerciciosFragment extends Fragment {
     }
 
     private void actualizarFiltro() {
-        aplicarEstiloFiltro(btnTodos, filtroSeleccionado.equalsIgnoreCase("Todos"));
-        aplicarEstiloFiltro(btnRodilla, filtroSeleccionado.equalsIgnoreCase("Rodilla"));
-        aplicarEstiloFiltro(btnTobillo, filtroSeleccionado.equalsIgnoreCase("Tobillo"));
-        aplicarEstiloFiltro(btnHombro, filtroSeleccionado.equalsIgnoreCase("Hombro"));
-        aplicarEstiloFiltro(btnEspalda, filtroSeleccionado.equalsIgnoreCase("Espalda"));
-        aplicarEstiloFiltro(btnSentado, filtroSeleccionado.equalsIgnoreCase("Sentado"));
-    }
 
-    private void aplicarEstiloFiltro(TextView chip, boolean seleccionado) {
-        if (seleccionado) {
-            chip.setBackgroundResource(R.drawable.bg_chip_verde);
-            chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.verde_oscuro));
-            chip.setTypeface(null, android.graphics.Typeface.BOLD);
-        } else {
-            chip.setBackgroundResource(R.drawable.bg_chip_gris);
-            chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.texto_principal));
-            chip.setTypeface(null, android.graphics.Typeface.NORMAL);
+        if (filtroAdapter != null) {
+            filtroAdapter.setFiltroSeleccionado(
+                    filtroSeleccionado);
         }
+    }
+    private void aplicarZonaGuardada() {
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            return;
+        }
+
+        String uid = FirebaseAuth.getInstance()
+                .getCurrentUser()
+                .getUid();
+
+        FirebaseDatabase.getInstance()
+                .getReference("usuarios")
+                .child(uid)
+                .child("perfilAdaptado")
+                .child("zonaAfectada")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+
+                    String zona = snapshot.getValue(String.class);
+
+                    if (zona == null || zona.isEmpty()) {
+                        return;
+                    }
+
+                    filtrarPorCategoria(zona);
+                });
     }
 
     @Override

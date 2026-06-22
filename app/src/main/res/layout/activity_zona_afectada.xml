@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/fondo"
-    android:id="@+id/main"
     tools:context=".ZonaAfectadaActivity">
 
     <LinearLayout
@@ -15,15 +15,15 @@
         android:padding="20dp">
 
         <TextView
+            style="@style/TituloPantalla"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/TituloPantalla"
             android:text="¿Qué zona deseas trabajar?" />
 
         <TextView
+            style="@style/SubtituloPantalla"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SubtituloPantalla"
             android:layout_marginTop="4dp"
             android:text="Selecciona la zona que necesita rehabilitar" />
 
@@ -38,7 +38,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardBrazo"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_weight="1"
                 android:layout_margin="6dp"
                 app:cardBackgroundColor="@color/blanco"
@@ -52,12 +52,19 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_brazo"
+                        android:tint="@color/verde_principal" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Brazo"
                         android:textColor="@color/texto_principal"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -66,7 +73,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardHombro"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_weight="1"
                 android:layout_margin="6dp"
                 app:cardBackgroundColor="@color/blanco"
@@ -80,12 +87,19 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_hombro"
+                        android:tint="@color/verde_principal" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Hombro"
                         android:textColor="@color/texto_principal"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -103,7 +117,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardMuneca"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_weight="1"
                 android:layout_margin="6dp"
                 app:cardBackgroundColor="@color/blanco"
@@ -113,14 +127,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_muneca"
+                        android:tint="@color/verde_principal" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Muñeca"
                         android:textColor="@color/texto_principal"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -129,7 +151,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardMano"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_weight="1"
                 android:layout_margin="6dp"
                 app:cardBackgroundColor="@color/blanco"
@@ -139,14 +161,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_mano"
+                        android:tint="@color/verde_principal" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Mano"
                         android:textColor="@color/texto_principal"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -164,7 +194,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardEspalda"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_weight="1"
                 android:layout_margin="6dp"
                 app:cardBackgroundColor="@color/blanco"
@@ -174,14 +204,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_espalda"
+                        android:tint="@color/verde_principal" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Espalda"
                         android:textColor="@color/texto_principal"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -190,25 +228,32 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardRodilla"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_weight="1"
                 android:layout_margin="6dp"
                 app:cardBackgroundColor="@color/blanco"
                 app:cardCornerRadius="16dp"
-                app:strokeColor="@color/borde"
-                app:strokeWidth="1dp">
+                app:strokeColor="@color/borde">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_rodilla"
+                        android:tint="@color/verde_principal" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Rodilla"
                         android:textColor="@color/texto_principal"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -226,7 +271,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPierna"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_weight="1"
                 android:layout_margin="6dp"
                 app:cardBackgroundColor="@color/blanco"
@@ -236,14 +281,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_pierna"
+                        android:tint="@color/verde_principal" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Pierna"
                         android:textColor="@color/texto_principal"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -252,7 +305,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardTobillo"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_weight="1"
                 android:layout_margin="6dp"
                 app:cardBackgroundColor="@color/blanco"
@@ -262,14 +315,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_tobillo"
+                        android:tint="@color/verde_principal" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Tobillo"
                         android:textColor="@color/texto_principal"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -291,21 +352,23 @@
             android:layout_height="wrap_content"
             android:text="3/10"
             android:textColor="@color/naranja_fuerte"
-            android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <SeekBar
             android:id="@+id/seekDolor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="10"
-            android:progress="3" />
+            android:progress="3"
+            android:progressTint="@color/verde_principal"
+            android:thumbTint="@color/verde_principal" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnContinuar"
             style="@style/BotonVerde"
             android:layout_marginTop="24dp"
-            android:text="Ver ejercicios recomendados →" />
+            android:text="Ver ejercicios recomendados" />
 
     </LinearLayout>
 
