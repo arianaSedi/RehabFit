@@ -55,11 +55,7 @@ public class DetalleConsultasFragment extends Fragment {
         txtTituloDetalleConsultaIA = vista.findViewById(R.id.txtTituloDetalleConsultaIA);
 
         rvDetalleEjerciciosIA.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        btnVolverDetalleIA.setOnClickListener(v -> {
-            getParentFragmentManager().popBackStack();
-        });
-
+        
         cargarDatos();
 
         return vista;
