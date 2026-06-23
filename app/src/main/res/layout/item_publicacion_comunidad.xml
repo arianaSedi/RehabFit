@@ -109,6 +109,8 @@
         android:textColor="@color/texto_principal"
         android:textSize="14sp" />
 
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -124,16 +126,15 @@
 
         <LinearLayout
             android:id="@+id/layoutLike"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/btnInspirar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_no_like"
                 app:tint="@color/texto_secundario" />
@@ -142,21 +143,45 @@
                 android:id="@+id/txtMeInspira"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="Me inspira"
+                android:text="0 Me inspira"
                 android:textColor="@color/texto_secundario"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutComentarios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_comentario"
+                app:tint="@color/texto_secundario" />
+
+            <TextView
+                android:id="@+id/txtTotalComentarios"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="0 comentarios"
+                android:textColor="@color/texto_secundario"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/txtVerDetalle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_weight="1"
+            android:gravity="end"
             android:text="Ver detalle"
             android:textColor="@color/verde_oscuro"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
-    </LinearLayout>
 
+    </LinearLayout>
 </LinearLayout>

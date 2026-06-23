@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -56,6 +57,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
 
         verificarApoyo(p, holder);
         contarInspirados(p, holder);
+        contarComentarios(p, holder);
 
         //permite dar o quitar apoyo a la publicacion
         holder.btnLike.setOnClickListener(v -> agregarApoyo(p, holder));
@@ -167,9 +169,35 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                 });
     }
 
+    private void contarComentarios(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
+
+        FirebaseDatabase.getInstance()
+                .getReference("publicacionesComunidad")
+                .child(publicacion.getId())
+                .child("comentarios")
+                .addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        int total = (int) snapshot.getChildrenCount();
+
+                        if (total == 1) {
+                            holder.txtTotalComentarios.setText("1 comentario");
+                        } else {
+                            holder.txtTotalComentarios.setText(total + " comentarios");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+    }
+
     static class PublicacionViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtAvatar;
+        ImageView ivAvatar;
         TextView txtNombre;
         TextView txtFecha;
         TextView txtDificultad;
@@ -180,10 +208,11 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         ImageButton btnLike;
         TextView txtVerDetalle;
         TextView txtMeInspira;
+        TextView txtTotalComentarios;
 
         public PublicacionViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtAvatar = itemView.findViewById(R.id.txtAvatar);
+            ivAvatar = itemView.findViewById(R.id.ivAvatar);
             txtNombre = itemView.findViewById(R.id.txtNombre);
             txtFecha = itemView.findViewById(R.id.txtFecha);
             txtDificultad = itemView.findViewById(R.id.txtDificultad);
@@ -194,6 +223,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
             btnLike = itemView.findViewById(R.id.btnInspirar);
             txtMeInspira = itemView.findViewById(R.id.txtMeInspira);
             txtVerDetalle = itemView.findViewById(R.id.txtVerDetalle);
+            txtTotalComentarios = itemView.findViewById(R.id.txtTotalComentarios);
         }
     }
 }
