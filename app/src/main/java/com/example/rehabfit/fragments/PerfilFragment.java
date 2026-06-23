@@ -179,25 +179,47 @@ public class PerfilFragment extends Fragment {
                 });
     }
 //metodo encargado de contar sesiones y publicaciones de cada usuario
-    private void contarSesiones(String uid) {
-        usuariosRef.child(uid).child("historialSesiones").get()
-                .addOnSuccessListener(snapshot -> {
-                    if (!isAdded()) {
-                        return;
+private void contarSesiones(String uid) {
+
+    usuariosRef.child(uid).child("sesiones").get()
+            .addOnSuccessListener(snapshot -> {
+                if (!isAdded()) {
+                    return;
+                }
+                txtSesionesPerfil.setText(String.valueOf(snapshot.getChildrenCount()));
+            })
+            .addOnFailureListener(e -> {
+                if (isAdded()) {
+                    txtSesionesPerfil.setText("0");
+                }
+            });
+
+    FirebaseDatabase.getInstance()
+            .getReference("publicacionesComunidad")
+            .get()
+            .addOnSuccessListener(snapshot -> {
+                if (!isAdded()) {
+                    return;
+                }
+
+                long totalPublicaciones = 0;
+
+                for (com.google.firebase.database.DataSnapshot publicacionSnapshot : snapshot.getChildren()) {
+                    String uidPublicacion = publicacionSnapshot.child("uid").getValue(String.class);
+
+                    if (uid.equals(uidPublicacion)) {
+                        totalPublicaciones++;
                     }
+                }
 
-                    txtSesionesPerfil.setText(String.valueOf(snapshot.getChildrenCount()));
-                });
-
-        usuariosRef.child(uid).child("publicaciones").get()
-                .addOnSuccessListener(snapshot -> {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    txtPublicacionesPerfil.setText(String.valueOf(snapshot.getChildrenCount()));
-                });
-    }
+                txtPublicacionesPerfil.setText(String.valueOf(totalPublicaciones));
+            })
+            .addOnFailureListener(e -> {
+                if (isAdded()) {
+                    txtPublicacionesPerfil.setText("0");
+                }
+            });
+}
 
     private String obtenerInicial(String nombre) {
         String nombreLimpio = nombre.trim();

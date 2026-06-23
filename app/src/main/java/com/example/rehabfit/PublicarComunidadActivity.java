@@ -172,18 +172,18 @@ public class PublicarComunidadActivity extends AppCompatActivity {
         });
     }
 
-    //metdo que crea y guarda la publicacion en firebase
+    //metodo encargado de guardar una publicacion en firebase
     private void guardarPublicacion(String uid, String nombre, String ejercicio, String zona, String duracion, String dificultad, String experiencia) {
 
         //genera un id unico para la publicacion
         String id = refPublicaciones.push().getKey();
 
+        //si no se pudo generar el id muestra un mensaje y termina
         if (id == null) {
-            Toast.makeText(this, "Error al generar publicación", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error al generar publicacion", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //genera la fecha actual en formato legible
         String fecha = new SimpleDateFormat("dd MMM yyyy", new Locale("es", "ES")).format(new Date());
 
         //guarda la fecha en milisegundos para ordenar publicaciones
@@ -191,13 +191,29 @@ public class PublicarComunidadActivity extends AppCompatActivity {
 
         PublicacionComunidad publicacion = new PublicacionComunidad(id, uid, nombre, fecha, ejercicio, zona, duracion, dificultad, experiencia, timestamp);
 
-        // guarda la publicacion en firebase
+        //guarda la publicacion dentro de publicacionesComunidad
         refPublicaciones.child(id).setValue(publicacion).addOnSuccessListener(unused -> {
-            Toast.makeText(this, "Publicación realizada", Toast.LENGTH_SHORT).show();
-            finish();
+
+            //guarda una referencia de la publicacion dentro del usuario
+            //esto permite contar publicaciones facilmente desde el perfil
+            refUsuarios.child(uid)
+                    .child("publicaciones")
+                    .child(id)
+                    .setValue(true)
+                    .addOnSuccessListener(unused2 -> {
+
+                        Toast.makeText(this, "Publicacion realizada", Toast.LENGTH_SHORT).show();
+                        finish();
+
+                    })
+                    .addOnFailureListener(e -> {
+
+                        //si falla la referencia del perfil la publicacion ya quedo guardada
+                        Toast.makeText(this, "Publicacion realizada, pero no se actualizo el perfil", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
 
         }).addOnFailureListener(e -> {
-            // muestra un mensaje si ocurre un error
             Toast.makeText(this, "Error al publicar", Toast.LENGTH_SHORT).show();
         });
     }

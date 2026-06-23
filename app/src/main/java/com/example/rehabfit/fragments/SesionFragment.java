@@ -242,7 +242,7 @@ public class SesionFragment extends Fragment {
         AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setTitle("Finalizar sesión")
                 .setMessage("¿Deseas finalizar la sesión actual?")
-                .setPositiveButton("Finalizar", (d, which) -> pedirDolorDespues())
+                .setPositiveButton("Finalizar", (d, which) -> finalizarSesionManual())
                 .setNegativeButton("Continuar", null)
                 .create();
 
@@ -251,6 +251,20 @@ public class SesionFragment extends Fragment {
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.verde_principal));
         });
         dialog.show();
+    }
+
+    //metodo para que cuando le damos a finalizar la app cuenta el ejercicio actual como completo
+    private void finalizarSesionManual() {
+        if (timer != null) {
+            timer.cancel();
+        }
+
+        int totalProcesados = ejerciciosCompletados + ejerciciosSaltados;
+
+        if (indiceActual >= totalProcesados && indiceActual < ejercicios.size()) {
+            ejerciciosCompletados++;
+        }
+        pedirDolorDespues();
     }
 
     private void pedirDolorDespues() {

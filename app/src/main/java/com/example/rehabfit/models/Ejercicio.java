@@ -39,7 +39,7 @@ public class Ejercicio implements Serializable {
     public String getImagen() {
         return imagen;
     }
-    public void setImage(String imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
     }
 }

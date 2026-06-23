@@ -66,12 +66,12 @@
 
         <ImageView
             android:id="@+id/imgIconoSesion"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
+            android:layout_width="175dp"
+            android:layout_height="175dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
             android:background="@drawable/bg_card_verde"
-            android:padding="24dp"
+            android:padding="12dp"
             android:scaleType="fitCenter"
             android:src="@drawable/pierna" />
 

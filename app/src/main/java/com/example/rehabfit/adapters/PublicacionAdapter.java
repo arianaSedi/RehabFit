@@ -167,12 +167,11 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                 .getReference("publicacionesComunidad")
                 .child(publicacion.getId())
                 .child("usuariosInspirados")
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        // cuenta cuantos usuarios han dado apoyo
                         int total = (int) snapshot.getChildrenCount();
 
                         if (total == 1) {
@@ -194,12 +193,11 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                 .getReference("publicacionesComunidad")
                 .child(publicacion.getId())
                 .child("comentarios")
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        // cuenta cuantos comentarios tiene esta publicacion
                         int total = (int) snapshot.getChildrenCount();
 
                         if (total == 1) {
