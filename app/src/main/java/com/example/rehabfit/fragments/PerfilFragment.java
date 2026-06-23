@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -242,17 +243,25 @@ public class PerfilFragment extends Fragment {
     }
 
     private void mostrarDialogoCerrarSesion() {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Cerrar sesión")
-                .setMessage("¿Estás segura de que deseas cerrar sesión?")
-                .setPositiveButton("Sí, cerrar sesión", (dialog, which) -> {
-                    auth.signOut();
 
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setTitle("Cerrar sesión")
+                .setMessage("¿Estás seguro de que deseas cerrar sesión?")
+                .setPositiveButton("Si, cerrar sesión", (d, which) -> {
+                    auth.signOut();
                     Intent intent = new Intent(requireContext(), BienvenidaActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+
                 })
-                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
-                .show();
+                .setNegativeButton("Cancelar", null)
+                .create();
+
+        dialog.setOnShowListener(d -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(requireContext(), R.color.verde_principal));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(requireContext(), R.color.verde_principal));
+        });
+
+        dialog.show();
     }
 }

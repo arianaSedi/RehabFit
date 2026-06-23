@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,7 +88,6 @@ public class RutinaFragment extends Fragment {
 
         pedirDolorAntes();
     }
-
     private void pedirDolorAntes() {
         LinearLayout contenedor = new LinearLayout(requireContext());
         contenedor.setOrientation(LinearLayout.VERTICAL);
@@ -96,11 +96,13 @@ public class RutinaFragment extends Fragment {
         TextView txtValorDolor = new TextView(requireContext());
         txtValorDolor.setText("Dolor seleccionado: 0/10");
         txtValorDolor.setTextSize(16);
-        txtValorDolor.setTextColor(getResources().getColor(R.color.texto_principal));
+        txtValorDolor.setTextColor(ContextCompat.getColor(requireContext(), R.color.texto_principal));
 
         SeekBar seekBarDolor = new SeekBar(requireContext());
         seekBarDolor.setMax(10);
         seekBarDolor.setProgress(0);
+        seekBarDolor.getProgressDrawable().setTint(ContextCompat.getColor(requireContext(), R.color.verde_principal));
+        seekBarDolor.getThumb().setTint(ContextCompat.getColor(requireContext(), R.color.verde_principal));
 
         seekBarDolor.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -111,23 +113,30 @@ public class RutinaFragment extends Fragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-            }
 
+            }
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
         contenedor.addView(txtValorDolor);
         contenedor.addView(seekBarDolor);
 
-        new AlertDialog.Builder(requireContext())
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setTitle("Dolor antes de iniciar")
                 .setMessage("Selecciona cuánto dolor sientes antes de empezar.")
                 .setView(contenedor)
-                .setPositiveButton("Iniciar sesión", (dialog, which) -> abrirSesionEnCurso())
+                .setPositiveButton("Iniciar sesión", (d, which) -> abrirSesionEnCurso())
                 .setNegativeButton("Cancelar", null)
-                .show();
+                .create();
+
+        dialog.setOnShowListener(d -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(requireContext(), R.color.verde_principal));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(requireContext(), R.color.verde_principal));
+        });
+        dialog.show();
     }
 
     private void abrirSesionEnCurso() {

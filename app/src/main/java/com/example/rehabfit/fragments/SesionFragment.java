@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.Ejercicio;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -130,7 +131,18 @@ public class SesionFragment extends Fragment {
         txtPorcentajeSesion.setText(porcentaje + "%");
         progresoSesion.setProgress(porcentaje);
 
-        imgIconoSesion.setImageResource(obtenerIconoZona(ejercicio));
+        if (ejercicio.getImagen() != null && !ejercicio.getImagen().isEmpty()) {
+
+            Glide.with(requireContext())
+                    .load(ejercicio.getImagen())
+                    .placeholder(R.drawable.bg_info)
+                    .error(R.drawable.ic_ejercicios)
+                    .fitCenter()
+                    .into(imgIconoSesion);
+        } else {
+
+            imgIconoSesion.setImageResource(R.drawable.ic_ejercicios);
+        }
         txtNombreEjercicioSesion.setText(valorSeguro(ejercicio.getNombre(), "Ejercicio"));
         txtDescripcionSesion.setText(valorSeguro(ejercicio.getDescripcion(),
                 "Realiza el movimiento lentamente y sin forzar."));
@@ -226,12 +238,19 @@ public class SesionFragment extends Fragment {
     }
 
     private void confirmarFinalizarSesion() {
-        new AlertDialog.Builder(requireContext())
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setTitle("Finalizar sesión")
-                .setMessage("¿Quieres finalizar la sesión actual?")
-                .setPositiveButton("Sí, finalizar", (dialog, which) -> pedirDolorDespues())
+                .setMessage("¿Deseas finalizar la sesión actual?")
+                .setPositiveButton("Finalizar", (d, which) -> pedirDolorDespues())
                 .setNegativeButton("Continuar", null)
-                .show();
+                .create();
+
+        dialog.setOnShowListener(d -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.verde_principal));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.verde_principal));
+        });
+        dialog.show();
     }
 
     private void pedirDolorDespues() {
@@ -272,14 +291,22 @@ public class SesionFragment extends Fragment {
 
         contenedor.addView(txtValorDolor);
         contenedor.addView(seekBarDolor);
+        seekBarDolor.getProgressDrawable().setTint(getResources().getColor(R.color.verde_principal));
+        seekBarDolor.getThumb().setTint(getResources().getColor(R.color.verde_principal));
 
-        new AlertDialog.Builder(requireContext())
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setTitle("Dolor después de la sesión")
                 .setMessage("Selecciona cuánto dolor sientes ahora.")
                 .setView(contenedor)
-                .setPositiveButton("Continuar", (dialog, which) -> abrirSesionCompletada(dolorDespues[0]))
-                .setCancelable(false)
-                .show();
+                .setPositiveButton("Continuar", (d, which) -> abrirSesionCompletada(dolorDespues[0]))
+                .setNegativeButton("Cancelar", null)
+                .create();
+
+        dialog.setOnShowListener(d -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.verde_principal));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.verde_principal));
+        });
+        dialog.show();
     }
 
     private void abrirSesionCompletada(int dolorDespues) {
@@ -319,53 +346,6 @@ public class SesionFragment extends Fragment {
         }
         return zona;
     }
-
-    private int obtenerIconoZona(Ejercicio ejercicio) {
-
-        String zona = ejercicio.getZona() != null ? ejercicio.getZona().toLowerCase() : "";
-        String nombre = ejercicio.getNombre() != null ? ejercicio.getNombre().toLowerCase() : "";
-        String posicion = ejercicio.getPosicion() != null ? ejercicio.getPosicion().toLowerCase() : "";
-
-        if (zona.contains("rodilla") || nombre.contains("rodilla")) {
-            return R.drawable.rodilla;
-        }
-
-        if (zona.contains("tobillo") || nombre.contains("tobillo")) {
-            return R.drawable.tobillo;
-        }
-
-        if (zona.contains("hombro") || nombre.contains("hombro")) {
-            return R.drawable.brazo;
-        }
-
-        if (zona.contains("espalda") || nombre.contains("espalda")) {
-            return R.drawable.espalda;
-        }
-
-        if (zona.contains("muñeca") || zona.contains("muneca")
-                || nombre.contains("muñeca") || nombre.contains("muneca")) {
-            return R.drawable.muneca;
-        }
-
-        if (zona.contains("mano") || nombre.contains("mano")) {
-            return R.drawable.mano;
-        }
-
-        if (zona.contains("brazo") || nombre.contains("brazo")) {
-            return R.drawable.musculo;
-        }
-
-        if (zona.contains("pierna") || nombre.contains("pierna")) {
-            return R.drawable.pierna;
-        }
-
-        if (posicion.contains("sentado")) {
-            return R.drawable.pierna;
-        }
-
-        return R.drawable.ic_ejercicios;
-    }
-
     private String valorSeguro(String texto, String defecto) {
         if (texto == null || texto.trim().isEmpty()) {
             return defecto;
