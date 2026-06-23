@@ -173,12 +173,14 @@ public class DetallePublicacionActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
 
                     refApoyo.removeValue().addOnSuccessListener(unused -> {
+                        verificarApoyo();
                         Toast.makeText(DetallePublicacionActivity.this, "Apoyo eliminado", Toast.LENGTH_SHORT).show();});
 
                 } else {
 
                     //si no existe registra el apoyo
                     refApoyo.setValue(true).addOnSuccessListener(unused -> {
+                        verificarApoyo();
                         Toast.makeText(DetallePublicacionActivity.this, "Gracias por apoyar", Toast.LENGTH_SHORT).show();});
                 }
             }

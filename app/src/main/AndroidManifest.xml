@@ -23,9 +23,6 @@
             android:name=".PublicarComunidadActivity"
             android:exported="false" />
         <activity
-            android:name=".utils.PublicarComunidadActivity"
-            android:exported="false" />
-        <activity
             android:name=".PerfilAdaptadoActivity"
             android:exported="false" />
         <activity
