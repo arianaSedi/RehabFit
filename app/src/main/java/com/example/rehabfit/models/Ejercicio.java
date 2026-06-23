@@ -13,6 +13,7 @@ public class Ejercicio implements Serializable {
     private int repeticiones;
     private String descripcion;
     private String advertencia;
+    private String imagen;
 
     public Ejercicio() {
     }
@@ -35,4 +36,10 @@ public class Ejercicio implements Serializable {
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
     public String getAdvertencia() {return advertencia;}
     public void setAdvertencia(String advertencia) {this.advertencia = advertencia;}
+    public String getImagen() {
+        return imagen;
+    }
+    public void setImage(String imagen) {
+        this.imagen = imagen;
+    }
 }

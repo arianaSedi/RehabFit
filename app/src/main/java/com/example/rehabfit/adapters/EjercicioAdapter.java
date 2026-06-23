@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.rehabfit.R;
 import com.example.rehabfit.fragments.DetalleEjerciciosFragment;
 import com.example.rehabfit.models.Ejercicio;
@@ -94,8 +96,17 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
         holder.txtDatosEjercicio.setText(ejercicio.getZona() + "   " + ejercicio.getNivel() + "   " + ejercicio.getPosicion());
         holder.txtDuracionEjercicio.setText("⏱ " + ejercicio.getDuracionMinutos() + " min · " + ejercicio.getRepeticiones() + " rep");
 
-        //coloca un icono segun la zona corporal
-        holder.imgIconoEjercicio.setImageResource(obtenerIconoZona(ejercicio));
+        //carga la img de la API con glide
+        if (ejercicio.getImagen() != null && !ejercicio.getImagen().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(ejercicio.getImagen())
+                    .placeholder(R.drawable.bg_info)
+                    .error(obtenerIconoZona(ejercicio))
+                    .fitCenter()
+                    .into(holder.imgIconoEjercicio);
+        } else {
+            holder.imgIconoEjercicio.setImageResource(obtenerIconoZona(ejercicio));
+        }
 
         //actualiza la apariencia de la estrella
         Estrella(holder, favorito);

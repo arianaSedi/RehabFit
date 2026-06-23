@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.rehabfit.MainActivity;
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.Ejercicio;
@@ -108,7 +109,17 @@ public class DetalleEjerciciosFragment extends Fragment {
 
         txtPrecaucionDetalle.setText("Precaución\n\n" + "• No realizar si causa dolor intenso al extender.\n" + "• Detente si aumenta la inflamación.\n" + "• Consulta con tu fisioterapeuta ante cualquier molestia.");
 
-        imgIconoDetalle.setImageResource(obtenerIconoZona(ejercicioActual));
+        //cargamos con Glide la img de la API
+        if (ejercicioActual.getImagen() != null && !ejercicioActual.getImagen().isEmpty()) {
+            Glide.with(requireContext())
+                    .load(ejercicioActual.getImagen())
+                    .placeholder(obtenerIconoZona(ejercicioActual))
+                    .error(obtenerIconoZona(ejercicioActual))
+                    .fitCenter()
+                    .into(imgIconoDetalle);
+        } else {
+            imgIconoDetalle.setImageResource(obtenerIconoZona(ejercicioActual));
+        }
 
         prepararReferenciaFavorito();
         cargarEstadoFavorito();

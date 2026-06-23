@@ -9,10 +9,10 @@
 
     <ImageView
         android:id="@+id/imgIconoEjercicio"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:background="@drawable/bg_info"
-        android:padding="8dp"
+        android:padding="6dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_ejercicios"/>
 
