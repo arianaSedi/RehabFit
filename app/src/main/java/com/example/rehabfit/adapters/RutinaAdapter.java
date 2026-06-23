@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.Ejercicio;
@@ -49,24 +51,38 @@ public class RutinaAdapter extends RecyclerView.Adapter<RutinaAdapter.RutinaView
 
         holder.EliminarRutina.setOnClickListener(v -> {
 
-            //se llama al manager encargado de eliminar ejercicios
-            RutinaManager.eliminarEjercicio(ejercicio, new RutinaManager.AccionCallback() {
-                @Override
-                public void onExito() {
-                    notifyDataSetChanged(); //actualiz la lista despues de eliminar
+            AlertDialog dialog = new AlertDialog.Builder(v.getContext())
+                    .setTitle("Eliminar ejercicio")
+                    .setMessage("¿Estás seguro de que deseas eliminar este ejercicio de tu rutina?")
+                    .setPositiveButton("Eliminar", (d, which) -> {
 
-                    if (listener != null) {
-                        listener.onRutinaCambiada();
-                    }
+                        RutinaManager.eliminarEjercicio(ejercicio, new RutinaManager.AccionCallback() {
+                            @Override
+                            public void onExito() {
+                                notifyDataSetChanged();
 
-                    Toast.makeText(v.getContext(), "Ejercicio eliminado", Toast.LENGTH_SHORT).show();
-                }
+                                if (listener != null) {
+                                    listener.onRutinaCambiada();
+                                }
 
-                @Override
-                public void onError(String error) {
-                    Toast.makeText(v.getContext(), "Error al eliminar: " + error, Toast.LENGTH_LONG).show();
-                }
+                                Toast.makeText(v.getContext(), "Ejercicio eliminado", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                Toast.makeText(v.getContext(), "Error al eliminar: " + error, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .create();
+
+            dialog.setOnShowListener(d -> {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(v.getContext(), R.color.verde_principal));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(v.getContext(), R.color.verde_principal));
             });
+
+            dialog.show();
         });
     }
 
