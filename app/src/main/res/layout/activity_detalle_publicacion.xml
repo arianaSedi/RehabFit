@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootDetallePublicacion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/fondo">
+    android:background="@color/fondo"
+    android:fitsSystemWindows="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -167,7 +169,11 @@
         android:elevation="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:fitsSystemWindows="true">
 
         <EditText
             android:id="@+id/edtComentario"
@@ -180,7 +186,9 @@
             android:background="@drawable/bg_input"
             android:textColor="@color/texto_principal"
             android:textColorHint="@color/texto_secundario"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:singleLine="true"
+            android:imeOptions="actionSend" />
 
         <ImageButton
             android:id="@+id/btnEnviarComentario"
