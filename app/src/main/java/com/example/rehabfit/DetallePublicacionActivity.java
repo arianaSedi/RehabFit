@@ -168,24 +168,6 @@ public class DetallePublicacionActivity extends AppCompatActivity {
             btnEliminarPublicacion.setVisibility(android.view.View.GONE);
         }
     }
-
-    private void eliminarPublicacion() {
-        if (publicacionActual == null) return;
-
-        refPublicacion.removeValue().addOnSuccessListener(unused -> {
-            refUsuarios.child(publicacionActual.getUid())
-                    .child("publicaciones")
-                    .child(publicacionActual.getId())
-                    .removeValue();
-
-            Toast.makeText(this, "Publicación eliminada", Toast.LENGTH_SHORT).show();
-            finish();
-
-        }).addOnFailureListener(e ->
-                Toast.makeText(this, "No se pudo eliminar la publicación", Toast.LENGTH_SHORT).show()
-        );
-    }
-
     private void verificarApoyo() {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
