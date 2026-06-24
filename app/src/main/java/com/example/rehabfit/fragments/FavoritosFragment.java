@@ -59,11 +59,10 @@ public class FavoritosFragment extends Fragment {
 
         return vista;
     }
-
     private void cargarFavoritos() {
         //obtiene el usuario que inicia sesion
         FirebaseUser usuarioActual = FirebaseAuth.getInstance().getCurrentUser();
-//si no hay usuario registrado pide que se inicie sesion
+      //si no hay usuario registrado pide que se inicie sesion
         if (usuarioActual == null) {
             Toast.makeText(requireContext(), "Debes iniciar sesión", Toast.LENGTH_SHORT).show();
             mostrarVacio();
@@ -114,7 +113,6 @@ public class FavoritosFragment extends Fragment {
         txtSinFavoritos.setVisibility(View.VISIBLE);
         rvFavoritos.setVisibility(View.GONE);
     }
-
     @Override
     //se ejecuta cuando salimos del fragment
     public void onDestroyView() {
