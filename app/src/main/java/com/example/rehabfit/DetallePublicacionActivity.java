@@ -1,10 +1,12 @@
 package com.example.rehabfit;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,11 +17,7 @@ import com.example.rehabfit.models.Comentario;
 import com.example.rehabfit.models.PublicacionComunidad;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,20 +27,17 @@ import java.util.Locale;
 
 public class DetallePublicacionActivity extends AppCompatActivity {
 
-    private TextView txtNombreDetalle;
-    private TextView txtFechaDetalle;
-    private TextView txtEjercicioDetalle;
-    private TextView txtDatosDetalle;
-    private TextView txtDificultadDetalle;
-    private TextView txtExperienciaDetalle;
-    private ImageButton btnInspirar;
-    private DatabaseReference refPublicacion;
-    private String idPublicacion;
+    private TextView txtNombreDetalle, txtFechaDetalle, txtEjercicioDetalle,
+            txtDatosDetalle, txtDificultadDetalle, txtExperienciaDetalle;
+
+    private ImageButton btnInspirar, btnEnviarComentario, btnEliminarPublicacion;
     private RecyclerView rvComentarios;
     private EditText edtComentario;
-    private ImageButton btnEnviarComentario;
 
-    private DatabaseReference refComentarios, refUsuarios;
+    private boolean eliminandoPublicacion = false;
+    private DatabaseReference refPublicacion, refComentarios, refUsuarios;
+    private String idPublicacion;
+
     private List<Comentario> listaComentarios;
     private ComentarioAdapter comentarioAdapter;
 
@@ -59,60 +54,91 @@ public class DetallePublicacionActivity extends AppCompatActivity {
         txtDatosDetalle = findViewById(R.id.txtDatosDetalle);
         txtDificultadDetalle = findViewById(R.id.txtDificultadDetalle);
         txtExperienciaDetalle = findViewById(R.id.txtExperienciaDetalle);
+
         btnInspirar = findViewById(R.id.btnInspirar);
+        btnEnviarComentario = findViewById(R.id.btnEnviarComentario);
+        btnEliminarPublicacion = findViewById(R.id.btnEliminarPublicacion);
+
         rvComentarios = findViewById(R.id.rvComentarios);
         edtComentario = findViewById(R.id.edtComentario);
-        btnEnviarComentario = findViewById(R.id.btnEnviarComentario);
 
-        listaComentarios = new ArrayList<>();
-        comentarioAdapter = new ComentarioAdapter(listaComentarios);
-
-        rvComentarios.setLayoutManager(new LinearLayoutManager(this));
-        rvComentarios.setAdapter(comentarioAdapter);
-
-        refUsuarios = FirebaseDatabase.getInstance().getReference("usuarios");
-
-        //se obtiene el id de la publicacion enviado desde la pantalla anterior
         idPublicacion = getIntent().getStringExtra("idPublicacion");
 
-        //verifica que exista una publicacion para mostrar
         if (idPublicacion == null) {
-
             Toast.makeText(this, "Publicación no encontrada", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        //referencia a la publicacion especifica en firebase
-        refPublicacion = FirebaseDatabase.getInstance().getReference("publicacionesComunidad").child(idPublicacion);
+        refPublicacion = FirebaseDatabase.getInstance()
+                .getReference("publicacionesComunidad")
+                .child(idPublicacion);
+
         refComentarios = refPublicacion.child("comentarios");
-        cargarComentarios();
+        refUsuarios = FirebaseDatabase.getInstance().getReference("usuarios");
+
+        listaComentarios = new ArrayList<>();
+
+        comentarioAdapter = new ComentarioAdapter(listaComentarios, comentario -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Eliminar comentario")
+                    .setMessage("¿Seguro que deseas eliminar este comentario?")
+                    .setPositiveButton("Eliminar", (dialog, which) -> eliminarComentario(comentario))
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        });
+
+        rvComentarios.setLayoutManager(new LinearLayoutManager(this));
+        rvComentarios.setAdapter(comentarioAdapter);
 
         btnEnviarComentario.setOnClickListener(v -> guardarComentario());
-        cargarDetalle();
-
         btnInspirar.setOnClickListener(v -> agregarApoyo());
+
+        btnEliminarPublicacion.setOnClickListener(v -> {
+            if (publicacionActual == null) return;
+
+            eliminandoPublicacion = true;
+
+            String uidAutor = publicacionActual.getUid();
+            String id = publicacionActual.getId();
+
+            refPublicacion.removeValue()
+                    .addOnSuccessListener(unused -> {
+
+                        if (uidAutor != null && id != null) {
+                            refUsuarios.child(uidAutor)
+                                    .child("publicaciones")
+                                    .child(id)
+                                    .removeValue();
+                        }
+
+                        Toast.makeText(this, "Publicación eliminada", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        eliminandoPublicacion = false;
+                        Toast.makeText(this, "No se pudo eliminar la publicación", Toast.LENGTH_SHORT).show();
+                    });
+        });
+
+        cargarDetalle();
+        cargarComentarios();
     }
 
-    //metodo qur obtiene los datos de la publicacion desde firebase
     private void cargarDetalle() {
-
         refPublicacion.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                //convierte los datos obtenidos al objeto PublicacionComunidad
                 publicacionActual = snapshot.getValue(PublicacionComunidad.class);
 
-                //verifica que la publicacion siga existiendo
                 if (publicacionActual == null) {
-                    Toast.makeText(DetallePublicacionActivity.this, "La publicación ya no existe", Toast.LENGTH_SHORT).show();
+                    if (!eliminandoPublicacion) {
+                        Toast.makeText(DetallePublicacionActivity.this, "La publicación ya no existe", Toast.LENGTH_SHORT).show();
+                    }
                     finish();
                     return;
                 }
 
-                // muestra los datos de la publicacion en pantalla
                 txtNombreDetalle.setText(publicacionActual.getNombreUsuario());
                 txtFechaDetalle.setText(publicacionActual.getFecha() + " · Comunidad RehabFit");
                 txtEjercicioDetalle.setText(publicacionActual.getEjercicio());
@@ -121,6 +147,7 @@ public class DetallePublicacionActivity extends AppCompatActivity {
                 txtExperienciaDetalle.setText(publicacionActual.getExperiencia());
 
                 verificarApoyo();
+                validarPermisoEliminarPublicacion();
             }
 
             @Override
@@ -130,63 +157,87 @@ public class DetallePublicacionActivity extends AppCompatActivity {
         });
     }
 
-    private void verificarApoyo() {
+    private void validarPermisoEliminarPublicacion() {
+        FirebaseUser usuarioActual = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (usuarioActual != null
+                && publicacionActual.getUid() != null
+                && publicacionActual.getUid().equals(usuarioActual.getUid())) {
+            btnEliminarPublicacion.setVisibility(android.view.View.VISIBLE);
+        } else {
+            btnEliminarPublicacion.setVisibility(android.view.View.GONE);
+        }
+    }
+
+    private void eliminarPublicacion() {
+        if (publicacionActual == null) return;
+
+        refPublicacion.removeValue().addOnSuccessListener(unused -> {
+            refUsuarios.child(publicacionActual.getUid())
+                    .child("publicaciones")
+                    .child(publicacionActual.getId())
+                    .removeValue();
+
+            Toast.makeText(this, "Publicación eliminada", Toast.LENGTH_SHORT).show();
+            finish();
+
+        }).addOnFailureListener(e ->
+                Toast.makeText(this, "No se pudo eliminar la publicación", Toast.LENGTH_SHORT).show()
+        );
+    }
+
+    private void verificarApoyo() {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
         if (usuario == null) return;
 
-        refPublicacion.child("usuariosInspirados").child(usuario.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        refPublicacion.child("usuariosInspirados")
+                .child(usuario.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            btnInspirar.setImageResource(R.drawable.ic_like);
+                        } else {
+                            btnInspirar.setImageResource(R.drawable.ic_no_like);
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+    }
+
+    private void agregarApoyo() {
+        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (usuario == null) return;
+
+        DatabaseReference refApoyo = refPublicacion
+                .child("usuariosInspirados")
+                .child(usuario.getUid());
+
+        refApoyo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                //cambia el icono segun el estado del apoyo
                 if (snapshot.exists()) {
-                    btnInspirar.setImageResource(R.drawable.ic_like);
-
+                    refApoyo.removeValue().addOnSuccessListener(unused -> {
+                        verificarApoyo();
+                        Toast.makeText(DetallePublicacionActivity.this, "Apoyo eliminado", Toast.LENGTH_SHORT).show();
+                    });
                 } else {
-                    btnInspirar.setImageResource(R.drawable.ic_no_like);
+                    refApoyo.setValue(true).addOnSuccessListener(unused -> {
+                        verificarApoyo();
+                        Toast.makeText(DetallePublicacionActivity.this, "Gracias por apoyar", Toast.LENGTH_SHORT).show();
+                    });
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(DetallePublicacionActivity.this, "Error al registrar apoyo", Toast.LENGTH_SHORT).show();
             }
-        });
-    }
-
-    //se agrega o elimina el apoyo del usuario a la publicacion
-    private void agregarApoyo() {
-
-        FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
-        if (usuario == null) return;
-
-        DatabaseReference refApoyo = refPublicacion.child("usuariosInspirados").child(usuario.getUid());
-
-        refApoyo.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                //si ya existe apoyo lo elimina
-                if (snapshot.exists()) {
-
-                    refApoyo.removeValue().addOnSuccessListener(unused -> {
-                        verificarApoyo();
-                        Toast.makeText(DetallePublicacionActivity.this, "Apoyo eliminado", Toast.LENGTH_SHORT).show();});
-
-                } else {
-
-                    //si no existe registra el apoyo
-                    refApoyo.setValue(true).addOnSuccessListener(unused -> {
-                        verificarApoyo();
-                        Toast.makeText(DetallePublicacionActivity.this, "Gracias por apoyar", Toast.LENGTH_SHORT).show();});
-                }
-            }
-
-            @Override public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(DetallePublicacionActivity.this, "Error al registrar apoyo", Toast.LENGTH_SHORT).show();}
         });
     }
 
@@ -198,10 +249,12 @@ public class DetallePublicacionActivity extends AppCompatActivity {
 
                 for (DataSnapshot data : snapshot.getChildren()) {
                     Comentario comentario = data.getValue(Comentario.class);
+
                     if (comentario != null) {
                         listaComentarios.add(comentario);
                     }
                 }
+
                 comentarioAdapter.notifyDataSetChanged();
             }
 
@@ -250,7 +303,14 @@ public class DetallePublicacionActivity extends AppCompatActivity {
                 String fecha = new SimpleDateFormat("dd MMM yyyy", new Locale("es", "ES")).format(new Date());
                 long timestamp = System.currentTimeMillis();
 
-                Comentario comentario = new Comentario(idComentario, usuario.getUid(), nombre, texto, fecha, timestamp);
+                Comentario comentario = new Comentario(
+                        idComentario,
+                        usuario.getUid(),
+                        nombre,
+                        texto,
+                        fecha,
+                        timestamp
+                );
 
                 refComentarios.child(idComentario).setValue(comentario).addOnSuccessListener(unused -> {
                     edtComentario.setText("");
@@ -263,5 +323,18 @@ public class DetallePublicacionActivity extends AppCompatActivity {
                 Toast.makeText(DetallePublicacionActivity.this, "Error al obtener usuario", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void eliminarComentario(Comentario comentario) {
+        if (comentario == null || comentario.getId() == null) return;
+
+        refComentarios.child(comentario.getId())
+                .removeValue()
+                .addOnSuccessListener(unused ->
+                        Toast.makeText(this, "Comentario eliminado", Toast.LENGTH_SHORT).show()
+                )
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "No se pudo eliminar el comentario", Toast.LENGTH_SHORT).show()
+                );
     }
 }
