@@ -19,10 +19,15 @@ import com.example.rehabfit.models.Ejercicio;
 import com.example.rehabfit.utils.RutinaManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HistorialConsultaFragment extends Fragment {
@@ -31,7 +36,7 @@ public class HistorialConsultaFragment extends Fragment {
     private AppCompatButton btnNuevaConsultaIA;
 
     private FirebaseAuth auth;
-    private FirebaseFirestore firestore;
+    private DatabaseReference usuariosRef;
 
     private ImageButton btnVolverHistorialIA;
     private final List<ConsultasIA> listaConsultas = new ArrayList<>();
@@ -43,12 +48,13 @@ public class HistorialConsultaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        // infla el layout del fragment de historial de consultas
+        // infla el layout del historial de consultas
         View vista = inflater.inflate(R.layout.fragment_historial_consulta, container, false);
 
-        // inicializa firebase auth y firestore
+        // inicializa firebase auth
         auth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
+        // obtiene la referencia al nodo usuarios
+        usuariosRef = FirebaseDatabase.getInstance().getReference("usuarios");
 
         // vincula los componentes visuales del layout
         rvHistorialConsultasIA = vista.findViewById(R.id.rvHistorialConsultasIA);
@@ -58,100 +64,112 @@ public class HistorialConsultaFragment extends Fragment {
         // configura el recycler view en forma de lista vertical
         rvHistorialConsultasIA.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        // crea el adaptador del historial con las acciones de ver detalle y agregar a rutina
-        adapter = new HistorialConsultaAdapter(listaConsultas, consulta -> mostrarDetalleConsulta(consulta), consulta -> agregarConsultaARutina(consulta));
+        // crea el adaptador con las acciones de ver detalle y agregar a rutina
+        adapter = new HistorialConsultaAdapter(
+                listaConsultas,
+                consulta -> mostrarDetalleConsulta(consulta),
+                consulta -> agregarConsultaARutina(consulta)
+        );
 
         // asigna el adaptador al recycler view
         rvHistorialConsultasIA.setAdapter(adapter);
 
-        // abre la pantalla para hacer una nueva consulta
+        // abre el fragment para realizar una nueva consulta
         btnNuevaConsultaIA.setOnClickListener(v -> abrirNuevaConsulta());
 
-        // vuelve al fragment anterior
+        // regresa al fragment anterior
         btnVolverHistorialIA.setOnClickListener(v -> {
             getParentFragmentManager().popBackStack();
         });
 
-        // carga el historial de consultas desde firestore
+        // carga las consultas guardadas
         cargarHistorial();
 
         // devuelve la vista del fragment
         return vista;
     }
 
-    // metodo encargado de cargar el historial de consultas del usuario
+    // metodo encargado de cargar el historial de consultas ia
     private void cargarHistorial() {
 
         // obtiene el usuario autenticado
         FirebaseUser usuario = auth.getCurrentUser();
 
-        // valida que exista una sesion iniciada
+        // valida que exista un usuario con sesion iniciada
         if (usuario == null) {
             Toast.makeText(requireContext(), "Debes iniciar sesión", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // consulta en firestore las consultas ia del usuario ordenadas por fecha
-        firestore.collection("users")
-                .document(usuario.getUid())
-                .collection("consultasIA")
-                .orderBy("fechaMillis", Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener(snapshot -> {
+        // crea la consulta al nodo consultas ia ordenada por fecha
+        Query consultaRef = usuariosRef
+                .child(usuario.getUid())
+                .child("consultasIA")
+                .orderByChild("fechaMillis");
 
-                    // valida que el fragment siga activo
-                    if (!isAdded()) {
-                        return;
+        // lee el historial una sola vez desde firebase
+        consultaRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                // valida que el fragment siga activo
+                if (!isAdded()) {
+                    return;
+                }
+
+                // limpia la lista antes de agregar datos actualizados
+                listaConsultas.clear();
+
+                // recorre cada consulta guardada
+                for (DataSnapshot item : snapshot.getChildren()) {
+
+                    // convierte cada registro en un objeto consultas ia
+                    ConsultasIA consulta = item.getValue(ConsultasIA.class);
+
+                    // valida que la consulta no sea nula
+                    if (consulta != null) {
+
+                        // agrega la consulta a la lista
+                        listaConsultas.add(consulta);
                     }
+                }
 
-                    // limpia la lista antes de cargar nuevos datos
-                    listaConsultas.clear();
+                // invierte la lista para mostrar primero las mas recientes
+                Collections.reverse(listaConsultas);
 
-                    // recorre los documentos encontrados en firestore
-                    for (com.google.firebase.firestore.DocumentSnapshot doc : snapshot.getDocuments()) {
+                // actualiza el recycler view
+                adapter.notifyDataSetChanged();
 
-                        // convierte cada documento en un objeto consultas ia
-                        ConsultasIA consulta = doc.toObject(ConsultasIA.class);
+                // muestra mensaje si no hay consultas guardadas
+                if (listaConsultas.isEmpty()) {
+                    Toast.makeText(requireContext(), "Aún no tienes consultas guardadas", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-                        // valida que la consulta no sea nula
-                        if (consulta != null) {
+            @Override
+            public void onCancelled(DatabaseError error) {
 
-                            // agrega la consulta a la lista
-                            listaConsultas.add(consulta);
-                        }
-                    }
+                // valida que el fragment siga activo
+                if (!isAdded()) {
+                    return;
+                }
 
-                    // actualiza el recycler view
-                    adapter.notifyDataSetChanged();
-
-                    // muestra mensaje si no hay consultas guardadas
-                    if (listaConsultas.isEmpty()) {
-                        Toast.makeText(requireContext(), "Aún no tienes consultas guardadas", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-
-                    // valida que el fragment siga activo
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    // muestra mensaje si ocurre un error al cargar el historial
-                    Toast.makeText(requireContext(), "Error al cargar historial: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+                // muestra mensaje si ocurre un error al cargar el historial
+                Toast.makeText(requireContext(), "Error al cargar historial: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     // metodo para agregar a la rutina los ejercicios recomendados de una consulta
     private void agregarConsultaARutina(ConsultasIA consulta) {
 
-        // valida que la consulta tenga ejercicios recomendados
+        // valida que existan ejercicios recomendados
         if (consulta.getEjerciciosRecomendados() == null || consulta.getEjerciciosRecomendados().isEmpty()) {
-
             Toast.makeText(requireContext(), "Esta consulta no tiene ejercicios recomendados", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // guarda la cantidad total de ejercicios a agregar
+        // cantidad total de ejercicios que se intentaran agregar
         final int total = consulta.getEjerciciosRecomendados().size();
 
         // contador de ejercicios agregados correctamente
@@ -160,10 +178,10 @@ public class HistorialConsultaFragment extends Fragment {
         // bandera para saber si ocurrio algun error
         final boolean[] huboError = {false};
 
-        // recorre cada ejercicio recomendado
+        // recorre los ejercicios recomendados
         for (Ejercicio ejercicio : consulta.getEjerciciosRecomendados()) {
 
-            // agrega el ejercicio a la rutina usando el rutina manager
+            // agrega cada ejercicio a la rutina usando rutina manager
             RutinaManager.agregarEjercicio(ejercicio, new RutinaManager.AccionCallback() {
                 @Override
                 public void onExito() {
@@ -176,7 +194,7 @@ public class HistorialConsultaFragment extends Fragment {
                         return;
                     }
 
-                    // muestra mensaje cuando todos los ejercicios se agregaron sin error
+                    // muestra mensaje cuando todos los ejercicios se agregaron sin errores
                     if (agregados[0] == total && !huboError[0]) {
                         Toast.makeText(requireContext(), "Ejercicios agregados a tu rutina", Toast.LENGTH_SHORT).show();
                     }
@@ -200,13 +218,13 @@ public class HistorialConsultaFragment extends Fragment {
         }
     }
 
-    // metodo para mostrar el detalle de una consulta seleccionada
+    // metodo para abrir el detalle de una consulta seleccionada
     private void mostrarDetalleConsulta(ConsultasIA consulta) {
 
         // crea el fragment de detalle enviando la consulta seleccionada
         DetalleConsultasFragment fragment = DetalleConsultasFragment.newInstance(consulta);
 
-        // reemplaza el fragment actual por el detalle de la consulta
+        // reemplaza el fragment actual por el detalle
         getParentFragmentManager()
                 .beginTransaction()
                 .replace(R.id.contenedorFragments, fragment)
@@ -214,7 +232,7 @@ public class HistorialConsultaFragment extends Fragment {
                 .commit();
     }
 
-    // metodo para abrir una nueva consulta ia
+    // metodo para abrir el fragment de nueva consulta ia
     private void abrirNuevaConsulta() {
 
         // reemplaza el fragment actual por el fragment de consultas ia

@@ -28,8 +28,8 @@ import com.example.rehabfit.network.RetrofitClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class ConsultasIAFragment extends Fragment {
     private TextView txtRespuestaIA;
     private TextView txtEjerciciosIA;
     private FirebaseAuth auth;
-    private FirebaseFirestore firestore;
+    private DatabaseReference usuariosRef;
     private String movilidad = "No especificada";
     private String objetivo = "No especificado";
     private String apoyoFisico = "No especificado";
@@ -69,9 +69,9 @@ public class ConsultasIAFragment extends Fragment {
         // infla el layout del fragment
         View vista = inflater.inflate(R.layout.fragment_consultas_ia, container, false);
 
-        // inicializa firebase auth y firestore
+        // inicializa firebase auth
         auth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
+        usuariosRef = FirebaseDatabase.getInstance().getReference("usuarios");
 
         // vincula los componentes visuales
         edtConsultaIA = vista.findViewById(R.id.edtConsultaIA);
@@ -254,31 +254,43 @@ public class ConsultasIAFragment extends Fragment {
         });
     }
 
-    // metodo para guardar la consulta realizada por el usuario en firestore
+    // metodo para guardar la consulta realizada por el usuario en realtime database
     private void guardarConsulta(String uid, String consulta, String recomendacion, List<Ejercicio> ejerciciosRecomendados) {
 
-        // genera un id unico para la consulta dentro de firestore
-        String id = firestore.collection("users")
-                .document(uid)
-                .collection("consultasIA")
-                .document()
-                .getId();
+        // crea la referencia al nodo donde se guardaran las consultas ia del usuario
+        DatabaseReference consultasRef = usuariosRef
+                .child(uid)
+                .child("consultasIA");
 
-        // crea el objeto consulta ia con la informacion del usuario, recomendacion y ejercicios
-        ConsultasIA consultaIA = new ConsultasIA(id, consulta, recomendacion, movilidad, objetivo, apoyoFisico, dolorActual, System.currentTimeMillis(), ejerciciosRecomendados);
+        // genera un id unico para la nueva consulta
+        String id = consultasRef.push().getKey();
 
-        // guarda la consulta dentro de la coleccion consultas ia del usuario
-        firestore.collection("users")
-                .document(uid)
-                .collection("consultasIA")
-                .document(id)
-                .set(consultaIA)
+        // valida que el id se haya generado correctamente
+        if (id == null) {
+            Toast.makeText(requireContext(), "Error al generar ID de consulta", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // crea el objeto consulta ia con todos los datos necesarios
+        ConsultasIA consultaIA = new ConsultasIA(
+                id,
+                consulta,
+                recomendacion,
+                movilidad,
+                objetivo,
+                apoyoFisico,
+                dolorActual,
+                System.currentTimeMillis(),
+                ejerciciosRecomendados
+        );
+
+        // guarda la consulta dentro del nodo consultas ia usando el id generado
+        consultasRef.child(id)
+                .setValue(consultaIA)
                 .addOnSuccessListener(unused -> {
 
-                    // valida que el fragment siga activo antes de actualizar la interfaz
-                    if (!isAdded()) {
-                        return;
-                    }
+                    // valida que el fragment siga activo antes de modificar la interfaz
+                    if (!isAdded()) return;
 
                     // restaura el texto original del boton
                     btnGenerarIA.setText("✈  Generar recomendación");
@@ -286,15 +298,13 @@ public class ConsultasIAFragment extends Fragment {
                     // habilita nuevamente el boton
                     btnGenerarIA.setEnabled(true);
 
-                    // muestra el resultado en pantalla
+                    // muestra la recomendacion y los ejercicios en pantalla
                     mostrarResultadoPantalla(recomendacion, ejerciciosRecomendados);
                 })
                 .addOnFailureListener(e -> {
 
-                    // valida que el fragment siga activo antes de actualizar la interfaz
-                    if (!isAdded()) {
-                        return;
-                    }
+                    // valida que el fragment siga activo antes de modificar la interfaz
+                    if (!isAdded()) return;
 
                     // restaura el texto original del boton
                     btnGenerarIA.setText("✈  Generar recomendación");
@@ -302,40 +312,12 @@ public class ConsultasIAFragment extends Fragment {
                     // habilita nuevamente el boton
                     btnGenerarIA.setEnabled(true);
 
-                    // muestra un mensaje si ocurre un error al guardar
+                    // muestra mensaje si ocurre un error al guardar
                     Toast.makeText(requireContext(), "Error al guardar: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
-                    // aunque falle el guardado, muestra el resultado en pantalla
+                    // aunque falle el guardado, muestra la recomendacion en pantalla
                     mostrarResultadoPantalla(recomendacion, ejerciciosRecomendados);
                 });
-    }
-
-    // metodo para mostrar la recomendacion en un cuadro de dialogo
-    private void mostrarResultado(String recomendacionCompleta) {
-        // crea y muestra un dialogo con la recomendacion completa
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Recomendación IA")
-                .setMessage(recomendacionCompleta)
-                .setPositiveButton("Aceptar", null)
-                .show();
-    }
-
-    // metodo para mostrar el detalle de una consulta guardada en el historial
-    private void mostrarDetalleHistorial(ConsultasIA consultaIA) {
-        // construye el texto con la consulta, recomendacion y ejercicios
-        String detalle = "Consulta:\n" + consultaIA.getConsulta()
-                + "\n\n"
-                + construirTextoConEjercicios(
-                consultaIA.getRecomendacion(),
-                consultaIA.getEjerciciosRecomendados()
-        );
-
-        // muestra el detalle en un cuadro de dialogo
-        new AlertDialog.Builder(requireContext())
-                .setTitle(formatearFecha(consultaIA.getFechaMillis()))
-                .setMessage(detalle)
-                .setPositiveButton("Aceptar", null)
-                .show();
     }
 
     // metodo para unir la recomendacion con los ejercicios recomendados en un solo texto
@@ -440,33 +422,6 @@ public class ConsultasIAFragment extends Fragment {
 
         // devuelve el texto original si es valido
         return texto;
-    }
-
-    // metodo para recortar textos largos
-    private String recortar(String texto, int maximo) {
-
-        // si el texto es nulo, devuelve un titulo por defecto
-        if (texto == null) {
-            return "Consulta";
-        }
-
-        // si el texto no supera el maximo, lo devuelve completo
-        if (texto.length() <= maximo) {
-            return texto;
-        }
-
-        // recorta el texto y agrega puntos suspensivos
-        return texto.substring(0, maximo) + "...";
-    }
-
-    // metodo para convertir la fecha en milisegundos a formato legible
-    private String formatearFecha(long fechaMillis) {
-
-        // define el formato de fecha y hora
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-
-        // convierte los milisegundos en una fecha con formato
-        return formato.format(new Date(fechaMillis));
     }
 
     // metodo para mostrar la recomendacion y ejercicios directamente en la pantalla
