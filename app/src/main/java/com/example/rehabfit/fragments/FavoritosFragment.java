@@ -105,7 +105,6 @@ public class FavoritosFragment extends Fragment {
                 Toast.makeText(requireContext(), "Error al cargar favoritos", Toast.LENGTH_SHORT).show();
             }
         };
-
         favoritosRef.addValueEventListener(favoritosListener);
     }
 
