@@ -178,48 +178,27 @@ public class PerfilFragment extends Fragment {
                     Toast.makeText(requireContext(), "Error al cargar perfil: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
-//metodo encargado de contar sesiones y publicaciones de cada usuario
-private void contarSesiones(String uid) {
+    //metodo encargado de contar sesiones y publicaciones de cada usuario
+    private void contarSesiones(String uid) {
 
-    usuariosRef.child(uid).child("sesiones").get()
-            .addOnSuccessListener(snapshot -> {
-                if (!isAdded()) {
-                    return;
-                }
-                txtSesionesPerfil.setText(String.valueOf(snapshot.getChildrenCount()));
-            })
-            .addOnFailureListener(e -> {
-                if (isAdded()) {
-                    txtSesionesPerfil.setText("0");
-                }
-            });
+        usuariosRef.child(uid).child("sesiones").get()
+                .addOnSuccessListener(snapshot -> {
+                    if (!isAdded()) return;
+                    txtSesionesPerfil.setText(String.valueOf(snapshot.getChildrenCount()));
+                })
+                .addOnFailureListener(e -> {
+                    if (isAdded()) txtSesionesPerfil.setText("0");
+                });
 
-    FirebaseDatabase.getInstance()
-            .getReference("publicacionesComunidad")
-            .get()
-            .addOnSuccessListener(snapshot -> {
-                if (!isAdded()) {
-                    return;
-                }
-
-                long totalPublicaciones = 0;
-
-                for (com.google.firebase.database.DataSnapshot publicacionSnapshot : snapshot.getChildren()) {
-                    String uidPublicacion = publicacionSnapshot.child("uid").getValue(String.class);
-
-                    if (uid.equals(uidPublicacion)) {
-                        totalPublicaciones++;
-                    }
-                }
-
-                txtPublicacionesPerfil.setText(String.valueOf(totalPublicaciones));
-            })
-            .addOnFailureListener(e -> {
-                if (isAdded()) {
-                    txtPublicacionesPerfil.setText("0");
-                }
-            });
-}
+        usuariosRef.child(uid).child("publicaciones").get()
+                .addOnSuccessListener(snapshot -> {
+                    if (!isAdded()) return;
+                    txtPublicacionesPerfil.setText(String.valueOf(snapshot.getChildrenCount()));
+                })
+                .addOnFailureListener(e -> {
+                    if (isAdded()) txtPublicacionesPerfil.setText("0");
+                });
+    }
 
     private String obtenerInicial(String nombre) {
         String nombreLimpio = nombre.trim();

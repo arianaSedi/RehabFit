@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.rehabfit.R;
 import com.example.rehabfit.models.Ejercicio;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import android.media.MediaPlayer;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -117,7 +117,7 @@ public class SesionFragment extends Fragment {
         txtEstadoCronometro.setOnClickListener(v -> pausarOContinuar());
     }
 
-    private void cargarEjercicioActual() {
+    private void cargarEjercicioActual(boolean iniciarAutomatico) {
         if (timer != null) {
             timer.cancel();
         }
@@ -132,7 +132,6 @@ public class SesionFragment extends Fragment {
         progresoSesion.setProgress(porcentaje);
 
         if (ejercicio.getImagen() != null && !ejercicio.getImagen().isEmpty()) {
-
             Glide.with(requireContext())
                     .load(ejercicio.getImagen())
                     .placeholder(R.drawable.bg_info)
@@ -140,12 +139,11 @@ public class SesionFragment extends Fragment {
                     .fitCenter()
                     .into(imgIconoSesion);
         } else {
-
             imgIconoSesion.setImageResource(R.drawable.ic_ejercicios);
         }
+
         txtNombreEjercicioSesion.setText(valorSeguro(ejercicio.getNombre(), "Ejercicio"));
-        txtDescripcionSesion.setText(valorSeguro(ejercicio.getDescripcion(),
-                "Realiza el movimiento lentamente y sin forzar."));
+        txtDescripcionSesion.setText(valorSeguro(ejercicio.getDescripcion(), "Realiza el movimiento lentamente y sin forzar."));
 
         int minutos = ejercicio.getDuracionMinutos();
 
@@ -156,7 +154,17 @@ public class SesionFragment extends Fragment {
         tiempoRestanteMillis = minutos * 60L * 1000L;
         pausado = false;
 
-        iniciarTimer();
+        pintarTiempo(tiempoRestanteMillis);
+
+        if (iniciarAutomatico) {
+            iniciarTimer();
+        } else {
+            txtEstadoCronometro.setText("Preparate para iniciar");
+        }
+    }
+
+    private void cargarEjercicioActual() {
+        cargarEjercicioActual(true);
     }
 
     private void iniciarTimer() {
@@ -165,7 +173,6 @@ public class SesionFragment extends Fragment {
         }
 
         txtEstadoCronometro.setText("Toca para pausar");
-
         timer = new CountDownTimer(tiempoRestanteMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -216,7 +223,13 @@ public class SesionFragment extends Fragment {
 
         if (indiceActual < ejercicios.size() - 1) {
             indiceActual++;
-            cargarEjercicioActual();
+            cargarEjercicioActual(false);
+
+            Toast.makeText(requireContext(), "Preparate para el siguiente ejercicio", Toast.LENGTH_SHORT).show();
+            reproducirSonidoCambioEjercicio(() -> {
+                iniciarTimer();
+            });
+
         } else {
             pedirDolorDespues();
         }
@@ -366,6 +379,28 @@ public class SesionFragment extends Fragment {
         }
 
         return texto;
+    }
+
+    private void reproducirSonidoCambioEjercicio(Runnable accionAlFinal) {
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(requireContext(), R.raw.contador
+        );
+
+        if (mediaPlayer == null) {
+            if (accionAlFinal != null) {
+                accionAlFinal.run();
+            }
+            return;
+        }
+
+        mediaPlayer.setOnCompletionListener(mp -> {
+            mp.release();
+
+            if (accionAlFinal != null) {
+                accionAlFinal.run();
+            }
+        });
+        mediaPlayer.start();
     }
 
     private void ocultarBottomNavigation() {

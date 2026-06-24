@@ -139,20 +139,20 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                 .child(usuario.getUid());
 
         refApoyo.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                // si ya habia apoyado, se elimina el apoyo
                 if (snapshot.exists()) {
-                    refApoyo.removeValue();
+                    refApoyo.removeValue().addOnSuccessListener(unused -> {
+                        verificarApoyo(publicacion, holder);
+                        contarInspirados(publicacion, holder);
+                    });
                 } else {
-                    // si no habia apoyado, se guarda su uid
-                    refApoyo.setValue(true);
+                    refApoyo.setValue(true).addOnSuccessListener(unused -> {
+                        verificarApoyo(publicacion, holder);
+                        contarInspirados(publicacion, holder);
+                    });
                 }
-
-                // se vuelve a verificar para cambiar el icono
-                verificarApoyo(publicacion, holder);
             }
 
             @Override

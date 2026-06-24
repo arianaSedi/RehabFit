@@ -31,7 +31,6 @@ public class DetalleConsultasFragment extends Fragment {
     private TextView txtConsultaDetalleIA;
     private TextView txtRecomendacionDetalleIA;
     private RecyclerView rvDetalleEjerciciosIA;
-    private ImageButton btnVolverDetalleIA;
 
     public DetalleConsultasFragment() {
     }
@@ -52,7 +51,6 @@ public class DetalleConsultasFragment extends Fragment {
         txtConsultaDetalleIA = vista.findViewById(R.id.txtConsultaDetalleIA);
         txtRecomendacionDetalleIA = vista.findViewById(R.id.txtRecomendacionDetalleIA);
         rvDetalleEjerciciosIA = vista.findViewById(R.id.rvDetalleEjerciciosIA);
-        txtTituloDetalleConsultaIA = vista.findViewById(R.id.txtTituloDetalleConsultaIA);
 
         rvDetalleEjerciciosIA.setLayoutManager(new LinearLayoutManager(requireContext()));
         
