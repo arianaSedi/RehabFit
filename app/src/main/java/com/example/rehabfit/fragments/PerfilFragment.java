@@ -20,6 +20,7 @@ import com.example.rehabfit.R;
 import com.example.rehabfit.ZonaAfectadaActivity;
 import com.example.rehabfit.models.PerfilAdaptado;
 import com.example.rehabfit.models.Usuario;
+import com.example.rehabfit.fragments.FavoritosFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -44,6 +45,7 @@ public class PerfilFragment extends Fragment {
     private AppCompatButton btnCambiarZona;
     private AppCompatButton btnMisConsultasIA;
     private AppCompatButton btnCerrarSesion;
+    private AppCompatButton btnMisFavoritos;
 
     private FirebaseAuth auth;
     private DatabaseReference usuariosRef;
@@ -93,6 +95,7 @@ public class PerfilFragment extends Fragment {
         btnCambiarZona = vista.findViewById(R.id.btnCambiarZona);
         btnMisConsultasIA = vista.findViewById(R.id.btnMisConsultasIA);
         btnCerrarSesion = vista.findViewById(R.id.btnCerrarSesion);
+        btnMisFavoritos = vista.findViewById(R.id.btnMisFavoritos);
     }
 
     private void cargarDatosPerfil() {
@@ -238,6 +241,14 @@ public class PerfilFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
 
+        });
+        btnMisFavoritos.setOnClickListener(v -> {
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.contenedorFragments, new FavoritosFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
 
         btnCerrarSesion.setOnClickListener(v -> mostrarDialogoCerrarSesion());

@@ -289,6 +289,20 @@
             android:textAllCaps="false"
             android:textColor="@color/verde_oscuro"
             android:textSize="14sp" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnMisFavoritos"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_card_blanca"
+            android:backgroundTint="@color/blanco"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="Mis ejercicios favoritos"
+            android:textAllCaps="false"
+            android:textColor="@color/verde_oscuro"
+            android:textSize="14sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnMisConsultasIA"

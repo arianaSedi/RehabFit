@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo"
+    android:orientation="vertical"
+    android:padding="18dp">
+
+    <ImageButton
+        android:id="@+id/btnVolverFavoritos"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="Volver"
+        android:padding="0dp"
+        android:src="@drawable/ic_arrow_back" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Ejercicios favoritos"
+        android:textColor="@color/texto_principal"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtSinFavoritos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Aún no tienes ejercicios favoritos."
+        android:textColor="@color/texto_secundario"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavoritos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="18dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
