@@ -123,33 +123,43 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                     }
                 });
     }
-
+    // metodo para agregar o quitar apoyo a una publicacion desde la lista
     private void agregarApoyo(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
 
+        // obtiene el usuario que tiene la sesion iniciada
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
+        // si no hay usuario, se detiene el metodo
         if (usuario == null) {
             return;
         }
 
+        // crea la referencia donde se guarda el apoyo del usuario actual
         DatabaseReference refApoyo = FirebaseDatabase.getInstance()
                 .getReference("publicacionesComunidad")
                 .child(publicacion.getId())
                 .child("usuariosInspirados")
                 .child(usuario.getUid());
 
+        // consulta una sola vez si el usuario ya habia dado apoyo
         refApoyo.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                // si el apoyo ya existe, lo elimina
                 if (snapshot.exists()) {
                     refApoyo.removeValue().addOnSuccessListener(unused -> {
+                        // actualiza el icono del boton
                         verificarApoyo(publicacion, holder);
+                        // actualiza el contador de apoyos
                         contarInspirados(publicacion, holder);
                     });
                 } else {
+                    // si el apoyo no existe, lo registra
                     refApoyo.setValue(true).addOnSuccessListener(unused -> {
+                        // actualiza el icono del boton
                         verificarApoyo(publicacion, holder);
+                        // actualiza el contador de apoyos
                         contarInspirados(publicacion, holder);
                     });
                 }
@@ -161,8 +171,10 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         });
     }
 
+    // metodo para contar cuantos usuarios apoyaron una publicacion
     private void contarInspirados(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
 
+        // accede al nodo donde estan los usuarios que dieron apoyo
         FirebaseDatabase.getInstance()
                 .getReference("publicacionesComunidad")
                 .child(publicacion.getId())
@@ -172,11 +184,14 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                        // obtiene la cantidad total de apoyos
                         int total = (int) snapshot.getChildrenCount();
 
+                        // muestra el texto en singular si solo hay un apoyo
                         if (total == 1) {
                             holder.txtMeInspira.setText("1 Me inspira");
                         } else {
+                            // muestra el texto en plural si hay cero o mas de un apoyo
                             holder.txtMeInspira.setText(total + " Me inspira");
                         }
                     }
@@ -187,8 +202,10 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                 });
     }
 
+    // metodo para contar cuantos comentarios tiene una publicacion
     private void contarComentarios(PublicacionComunidad publicacion, PublicacionViewHolder holder) {
 
+        // accede al nodo de comentarios de la publicacion
         FirebaseDatabase.getInstance()
                 .getReference("publicacionesComunidad")
                 .child(publicacion.getId())
@@ -198,11 +215,14 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                        // obtiene la cantidad total de comentarios
                         int total = (int) snapshot.getChildrenCount();
 
+                        // muestra el texto en singular si solo hay un comentario
                         if (total == 1) {
                             holder.txtTotalComentarios.setText("1 comentario");
                         } else {
+                            // muestra el texto en plural si hay cero o mas de un comentario
                             holder.txtTotalComentarios.setText(total + " comentarios");
                         }
                     }
@@ -213,9 +233,12 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                 });
     }
 
+    // view holder que almacena las vistas de cada publicacion
     static class PublicacionViewHolder extends RecyclerView.ViewHolder {
 
+        // imagen del avatar del usuario
         ImageView ivAvatar;
+        // textos con la informacion principal de la publicacion
         TextView txtNombre;
         TextView txtFecha;
         TextView txtDificultad;
@@ -223,14 +246,19 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         TextView txtZona;
         TextView txtDuracion;
         TextView txtExperiencia;
+        // boton para dar o quitar apoyo
         ImageButton btnLike;
+        // texto para abrir el detalle de la publicacion
         TextView txtVerDetalle;
+        // texto que muestra la cantidad de apoyos
         TextView txtMeInspira;
+        // texto que muestra la cantidad de comentarios
         TextView txtTotalComentarios;
 
         public PublicacionViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            // vincula cada variable con su componente visual del layout
             ivAvatar = itemView.findViewById(R.id.ivAvatar);
             txtNombre = itemView.findViewById(R.id.txtNombre);
             txtFecha = itemView.findViewById(R.id.txtFecha);
