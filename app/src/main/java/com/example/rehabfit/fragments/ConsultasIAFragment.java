@@ -42,6 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// fragment encargado de gestionar las consultas realizadas a la inteligencia artificial
 public class ConsultasIAFragment extends Fragment {
 
     private EditText edtConsultaIA;
@@ -51,26 +52,28 @@ public class ConsultasIAFragment extends Fragment {
     private LinearLayout layoutResultadoIA;
     private TextView txtRespuestaIA;
     private TextView txtEjerciciosIA;
-
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
-
     private String movilidad = "No especificada";
     private String objetivo = "No especificado";
     private String apoyoFisico = "No especificado";
     private int dolorActual = 0;
 
+    // constructor vacio requerido por fragment
     public ConsultasIAFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        // infla el layout del fragment
         View vista = inflater.inflate(R.layout.fragment_consultas_ia, container, false);
 
+        // inicializa firebase auth y firestore
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
+        // vincula los componentes visuales
         edtConsultaIA = vista.findViewById(R.id.edtConsultaIA);
         btnGenerarIA = vista.findViewById(R.id.btnGenerarIA);
         btnLimpiarIA = vista.findViewById(R.id.btnLimpiarIA);
@@ -79,27 +82,37 @@ public class ConsultasIAFragment extends Fragment {
         txtRespuestaIA = vista.findViewById(R.id.txtRespuestaIA);
         txtEjerciciosIA = vista.findViewById(R.id.txtEjerciciosIA);
 
+        // carga el perfil adaptado del usuario
         cargarPerfilUsuario();
+        // configura eventos de botones y campos
         configurarEventos();
 
         return vista;
     }
 
+    // metodo encargado de configurar eventos de la interfaz
     private void configurarEventos() {
+        // detecta cambios en el campo de texto
         edtConsultaIA.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // verifica si la consulta tiene al menos 10 caracteres
                 boolean tieneTexto = s.toString().trim().length() >= 10;
+                // habilita o deshabilita el boton
                 btnGenerarIA.setEnabled(tieneTexto);
 
                 if (tieneTexto) {
+                    // aplica estilo activo al boton
                     btnGenerarIA.setBackgroundResource(R.drawable.bg_boton_verde);
                     btnGenerarIA.setTextColor(getResources().getColor(R.color.blanco));
+
                 } else {
+                    // aplica estilo deshabilitado al boton
                     btnGenerarIA.setBackgroundResource(R.drawable.bg_chip_gris);
                     btnGenerarIA.setTextColor(getResources().getColor(android.R.color.darker_gray));
                 }
@@ -110,8 +123,11 @@ public class ConsultasIAFragment extends Fragment {
             }
         });
 
+        // genera una recomendacion al presionar el boton
         btnGenerarIA.setOnClickListener(v -> generarRecomendacion());
+        // limpia el contenido de la consulta
         btnLimpiarIA.setOnClickListener(v -> edtConsultaIA.setText(""));
+        // abre el historial de consultas realizadas
         txtVerHistorialIA.setOnClickListener(v -> {
             getParentFragmentManager()
                     .beginTransaction()
@@ -121,9 +137,12 @@ public class ConsultasIAFragment extends Fragment {
         });
     }
 
+    // carga el perfil adaptado almacenado del usuario
     private void cargarPerfilUsuario() {
+
         FirebaseUser usuario = auth.getCurrentUser();
 
+        // valida que exista una sesion iniciada
         if (usuario == null) {
             return;
         }
@@ -134,9 +153,11 @@ public class ConsultasIAFragment extends Fragment {
                 .child("perfilAdaptado")
                 .get()
                 .addOnSuccessListener(snapshot -> {
+                    // convierte los datos obtenidos en un objeto perfil adaptado
                     PerfilAdaptado perfil = snapshot.getValue(PerfilAdaptado.class);
 
                     if (perfil != null) {
+                        // guarda los datos del perfil para enviarlos a la ia
                         movilidad = valorSeguro(perfil.getNivelMovilidad(), "No especificada");
                         objetivo = valorSeguro(perfil.getObjetivoPrincipal(), "No especificado");
                         apoyoFisico = valorSeguro(perfil.getApoyoFisico(), "No especificado");
@@ -145,7 +166,9 @@ public class ConsultasIAFragment extends Fragment {
                 });
     }
 
+    // genera una recomendacion utilizando la api de inteligencia artificial
     private void generarRecomendacion() {
+        // obtiene el usuario autenticado
         FirebaseUser usuario = auth.getCurrentUser();
 
         if (usuario == null) {
@@ -153,22 +176,38 @@ public class ConsultasIAFragment extends Fragment {
             return;
         }
 
+        // obtiene la consulta escrita por el usuario
         String consulta = edtConsultaIA.getText().toString().trim();
 
+        // valida longitud minima de la consulta
         if (consulta.length() < 10) {
             Toast.makeText(requireContext(), "Escribe una consulta más detallada", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // bloquea el boton mientras se procesa la solicitud
         btnGenerarIA.setEnabled(false);
         btnGenerarIA.setText("Generando...");
 
-        IARequest request = new IARequest(usuario.getUid(), consulta, movilidad, objetivo, apoyoFisico, dolorActual);
+        // crea el objeto request con los datos del usuario
+        IARequest request = new IARequest(
+                usuario.getUid(),
+                consulta,
+                movilidad,
+                objetivo,
+                apoyoFisico,
+                dolorActual
+        );
+
+        // obtiene la interfaz de la api
         ApiService apiService = RetrofitClient.getClient().create(ApiService.class);
 
+        // envia la solicitud a la api
         apiService.generarRecomendacionIA(request).enqueue(new Callback<IAResponse>() {
+
             @Override
             public void onResponse(Call<IAResponse> call, Response<IAResponse> response) {
+                // valida que el fragment siga activo
                 if (!isAdded()) {
                     return;
                 }
@@ -176,77 +215,104 @@ public class ConsultasIAFragment extends Fragment {
                 String recomendacion;
                 List<Ejercicio> ejerciciosRecomendados = new ArrayList<>();
 
+                // verifica que la respuesta de la api sea valida
                 if (response.isSuccessful()
                         && response.body() != null
                         && response.body().getRecomendacion() != null
                         && !response.body().getRecomendacion().trim().isEmpty()) {
 
+                    // obtiene la recomendacion enviada por la api
                     recomendacion = response.body().getRecomendacion().trim();
 
+                    // obtiene la lista de ejercicios recomendados
                     if (response.body().getEjerciciosRecomendados() != null) {
                         ejerciciosRecomendados = response.body().getEjerciciosRecomendados();
                     }
 
                 } else {
+                    // genera una recomendacion local si la api falla
                     recomendacion = crearRecomendacionLocal(consulta);
                     ejerciciosRecomendados = Collections.emptyList();
                 }
 
+                // guarda la consulta realizada
                 guardarConsulta(usuario.getUid(), consulta, recomendacion, ejerciciosRecomendados);
             }
 
             @Override
             public void onFailure(Call<IAResponse> call, Throwable t) {
+                // valida que el fragment siga activo
                 if (!isAdded()) {
                     return;
                 }
 
+                // crea una recomendacion local cuando falla la conexion
                 String recomendacion = crearRecomendacionLocal(consulta);
+                // guarda la consulta realizada
                 guardarConsulta(usuario.getUid(), consulta, recomendacion, Collections.emptyList());
             }
         });
     }
 
+    // metodo para guardar la consulta realizada por el usuario en firestore
     private void guardarConsulta(String uid, String consulta, String recomendacion, List<Ejercicio> ejerciciosRecomendados) {
 
+        // genera un id unico para la consulta dentro de firestore
         String id = firestore.collection("users")
                 .document(uid)
                 .collection("consultasIA")
                 .document()
                 .getId();
 
+        // crea el objeto consulta ia con la informacion del usuario, recomendacion y ejercicios
         ConsultasIA consultaIA = new ConsultasIA(id, consulta, recomendacion, movilidad, objetivo, apoyoFisico, dolorActual, System.currentTimeMillis(), ejerciciosRecomendados);
 
+        // guarda la consulta dentro de la coleccion consultas ia del usuario
         firestore.collection("users")
                 .document(uid)
                 .collection("consultasIA")
                 .document(id)
                 .set(consultaIA)
                 .addOnSuccessListener(unused -> {
+
+                    // valida que el fragment siga activo antes de actualizar la interfaz
                     if (!isAdded()) {
                         return;
                     }
 
+                    // restaura el texto original del boton
                     btnGenerarIA.setText("✈  Generar recomendación");
+
+                    // habilita nuevamente el boton
                     btnGenerarIA.setEnabled(true);
 
+                    // muestra el resultado en pantalla
                     mostrarResultadoPantalla(recomendacion, ejerciciosRecomendados);
                 })
                 .addOnFailureListener(e -> {
+
+                    // valida que el fragment siga activo antes de actualizar la interfaz
                     if (!isAdded()) {
                         return;
                     }
 
+                    // restaura el texto original del boton
                     btnGenerarIA.setText("✈  Generar recomendación");
+
+                    // habilita nuevamente el boton
                     btnGenerarIA.setEnabled(true);
 
+                    // muestra un mensaje si ocurre un error al guardar
                     Toast.makeText(requireContext(), "Error al guardar: " + e.getMessage(), Toast.LENGTH_LONG).show();
 
+                    // aunque falle el guardado, muestra el resultado en pantalla
                     mostrarResultadoPantalla(recomendacion, ejerciciosRecomendados);
                 });
     }
 
+    // metodo para mostrar la recomendacion en un cuadro de dialogo
     private void mostrarResultado(String recomendacionCompleta) {
+        // crea y muestra un dialogo con la recomendacion completa
         new AlertDialog.Builder(requireContext())
                 .setTitle("Recomendación IA")
                 .setMessage(recomendacionCompleta)
@@ -254,7 +320,9 @@ public class ConsultasIAFragment extends Fragment {
                 .show();
     }
 
+    // metodo para mostrar el detalle de una consulta guardada en el historial
     private void mostrarDetalleHistorial(ConsultasIA consultaIA) {
+        // construye el texto con la consulta, recomendacion y ejercicios
         String detalle = "Consulta:\n" + consultaIA.getConsulta()
                 + "\n\n"
                 + construirTextoConEjercicios(
@@ -262,6 +330,7 @@ public class ConsultasIAFragment extends Fragment {
                 consultaIA.getEjerciciosRecomendados()
         );
 
+        // muestra el detalle en un cuadro de dialogo
         new AlertDialog.Builder(requireContext())
                 .setTitle(formatearFecha(consultaIA.getFechaMillis()))
                 .setMessage(detalle)
@@ -269,44 +338,79 @@ public class ConsultasIAFragment extends Fragment {
                 .show();
     }
 
+    // metodo para unir la recomendacion con los ejercicios recomendados en un solo texto
     private String construirTextoConEjercicios(String recomendacion, List<Ejercicio> ejercicios) {
+        // permite construir textos largos de forma ordenada
         StringBuilder builder = new StringBuilder();
 
+        // agrega primero la recomendacion
         builder.append(recomendacion);
 
+        // valida si existen ejercicios recomendados
         if (ejercicios != null && !ejercicios.isEmpty()) {
+            // agrega el titulo de la seccion de ejercicios
             builder.append("\n\nEjercicios recomendados:\n\n");
 
+            // recorre cada ejercicio recomendado
             for (Ejercicio ejercicio : ejercicios) {
+                // agrega el nombre del ejercicio
                 builder.append("• ").append(valorSeguro(ejercicio.getNombre(), "Ejercicio")).append("\n");
+                // agrega la zona del ejercicio
                 builder.append("  Zona: ").append(valorSeguro(ejercicio.getZona(), "No especificada")).append("\n");
+
+                // agrega el nivel del ejercicio
                 builder.append("  Nivel: ").append(valorSeguro(ejercicio.getNivel(), "No especificado")).append("\n");
+
+                // agrega la posicion del ejercicio
                 builder.append("  Posición: ").append(valorSeguro(ejercicio.getPosicion(), "No especificada")).append("\n");
+
+                // agrega la duracion del ejercicio
                 builder.append("  Duración: ").append(ejercicio.getDuracionMinutos()).append(" minutos\n");
+
+                // agrega la cantidad de repeticiones
                 builder.append("  Repeticiones: ").append(ejercicio.getRepeticiones()).append("\n\n");
             }
         } else {
+
+            // mensaje cuando no se reciben ejercicios desde la api
             builder.append("\n\nNo se encontraron ejercicios específicos desde la API.");
         }
+
+        // devuelve el texto completo construido
         return builder.toString();
     }
 
+    // metodo para crear una recomendacion local cuando la api no responde
     private String crearRecomendacionLocal(String consulta) {
+
+        // convierte la consulta a minusculas para facilitar la busqueda de palabras clave
         String consultaMinuscula = consulta.toLowerCase();
+
+        // zona por defecto si no se identifica una parte especifica del cuerpo
         String zona = "la zona afectada";
 
+        // identifica si la consulta menciona rodilla
         if (consultaMinuscula.contains("rodilla")) {
             zona = "la rodilla";
+
+            // identifica si la consulta menciona hombro
         } else if (consultaMinuscula.contains("hombro")) {
             zona = "el hombro";
+
+            // identifica si la consulta menciona espalda
         } else if (consultaMinuscula.contains("espalda")) {
             zona = "la espalda";
+
+            // identifica si la consulta menciona tobillo o pie
         } else if (consultaMinuscula.contains("tobillo") || consultaMinuscula.contains("pie")) {
             zona = "el tobillo o pie";
+
+            // identifica si la consulta menciona muneca o mano
         } else if (consultaMinuscula.contains("muñeca") || consultaMinuscula.contains("mano")) {
             zona = "la muñeca o mano";
         }
 
+        // devuelve una recomendacion general usando los datos del perfil adaptado
         return "Según tu consulta y tu perfil adaptado, puedes considerar ejercicios suaves para "
                 + zona + ".\n\n"
                 + "Cómo estructurar mejor tu consulta:\n"
@@ -326,62 +430,91 @@ public class ConsultasIAFragment extends Fragment {
                 + "Esta recomendación es general y no sustituye la valoración de un médico o fisioterapeuta.";
     }
 
+    // metodo para evitar valores nulos o vacios
     private String valorSeguro(String texto, String defecto) {
+
+        // si el texto no existe o esta vacio, devuelve el valor por defecto
         if (texto == null || texto.trim().isEmpty()) {
             return defecto;
         }
 
+        // devuelve el texto original si es valido
         return texto;
     }
 
+    // metodo para recortar textos largos
     private String recortar(String texto, int maximo) {
+
+        // si el texto es nulo, devuelve un titulo por defecto
         if (texto == null) {
             return "Consulta";
         }
 
+        // si el texto no supera el maximo, lo devuelve completo
         if (texto.length() <= maximo) {
             return texto;
         }
 
+        // recorta el texto y agrega puntos suspensivos
         return texto.substring(0, maximo) + "...";
     }
 
+    // metodo para convertir la fecha en milisegundos a formato legible
     private String formatearFecha(long fechaMillis) {
+
+        // define el formato de fecha y hora
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+
+        // convierte los milisegundos en una fecha con formato
         return formato.format(new Date(fechaMillis));
     }
 
+    // metodo para mostrar la recomendacion y ejercicios directamente en la pantalla
     private void mostrarResultadoPantalla(String recomendacion, List<Ejercicio> ejercicios) {
+        // hace visible el contenedor del resultado
         layoutResultadoIA.setVisibility(View.VISIBLE);
 
+        // limpia el formato del texto y lo muestra en pantalla
         txtRespuestaIA.setText(limpiarTextoIA(recomendacion));
 
+        // valida si existen ejercicios recomendados
         if (ejercicios != null && !ejercicios.isEmpty()) {
+            // construye el texto de ejercicios recomendados
             StringBuilder builder = new StringBuilder();
             builder.append("Ejercicios recomendados:\n\n");
 
+            // recorre cada ejercicio recomendado
             for (Ejercicio ejercicio : ejercicios) {
+                // agrega el nombre del ejercicio
                 builder.append("• ").append(valorSeguro(ejercicio.getNombre(), "Ejercicio")).append("\n");
+                // agrega zona y nivel del ejercicio
                 builder.append("  Zona: ").append(valorSeguro(ejercicio.getZona(), "No especificada"))
                         .append(" | Nivel: ").append(valorSeguro(ejercicio.getNivel(), "No especificado"))
                         .append("\n");
 
+                // agrega posicion y duracion del ejercicio
                 builder.append("  Posición: ").append(valorSeguro(ejercicio.getPosicion(), "No especificada"))
                         .append(" | Duración: ").append(ejercicio.getDuracionMinutos())
                         .append(" min").append("\n\n");
             }
 
+            // muestra los ejercicios en pantalla
             txtEjerciciosIA.setText(builder.toString());
+
         } else {
+            // muestra mensaje si no hay ejercicios recomendados
             txtEjerciciosIA.setText("No se encontraron ejercicios específicos desde la API.");
         }
     }
 
+    // metodo para limpiar simbolos de formato enviados por la ia
     private String limpiarTextoIA(String texto) {
+        // si el texto es nulo, devuelve texto vacio
         if (texto == null) {
             return "";
         }
 
+        // elimina asteriscos y cambia viñetas por un formato mas claro
         return texto.replace("**", "").replace("* ", "• ").replace("*", "•").trim();
     }
 }
